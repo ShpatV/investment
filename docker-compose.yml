@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: investment-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-investment}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-investment}
+      POSTGRES_DB: ${POSTGRES_DB:-investment}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - investment_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-investment} -d ${POSTGRES_DB:-investment}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    profiles: ["full"]
+    build: .
+    container_name: investment-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-investment}:${POSTGRES_PASSWORD:-investment}@db:5432/${POSTGRES_DB:-investment}?schema=public
+      HOST: 0.0.0.0
+      PORT: 4000
+    ports:
+      - "4000:4000"
+    volumes:
+      - investment_storage:/app/storage
+    command: sh -c "npx prisma migrate deploy && node dist/server.js"
+
+volumes:
+  investment_pgdata:
+  investment_storage:

@@ -1,0 +1,404 @@
+// Investment Management Platform — relational data model
+// All monetary values use exact Decimal types. Rates are stored as percentages
+// (e.g. 5.2500 = 5.25% per year).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum InstitutionStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum InvestmentStatus {
+  ACTIVE
+  PENDING
+  MATURED
+  CLOSED
+}
+
+enum CompoundingFrequency {
+  SIMPLE
+  MONTHLY
+  QUARTERLY
+  SEMIANNUALLY
+  ANNUALLY
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  INTEREST
+}
+
+enum TransactionStatus {
+  COMPLETED
+  PENDING
+  FAILED
+}
+
+enum DocumentCategory {
+  IDENTIFICATION
+  INVESTMENT_AGREEMENT
+  STATEMENT
+  TAX_DOCUMENT
+  OTHER
+}
+
+enum DocumentStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum AssignmentStatus {
+  ACTIVE
+  REPLACED
+  REMOVED
+}
+
+enum Commodity {
+  GOLD
+  OIL
+}
+
+enum AuthTokenType {
+  INVITE
+  PASSWORD_RESET
+}
+
+enum AuditOutcome {
+  SUCCESS
+  FAILURE
+}
+
+model User {
+  id                 String     @id @default(uuid()) @db.Uuid
+  firstName          String     @map("first_name") @db.VarChar(100)
+  lastName           String     @map("last_name") @db.VarChar(100)
+  email              String     @unique @db.VarChar(255)
+  phone              String?    @db.VarChar(40)
+  address            String?    @db.VarChar(500)
+  dateOfBirth        DateTime?  @map("date_of_birth") @db.Date
+  role               Role       @default(USER)
+  status             UserStatus @default(ACTIVE)
+  passwordHash       String     @map("password_hash")
+  mustChangePassword Boolean    @default(false) @map("must_change_password")
+  securityQuestion   String?    @map("security_question") @db.VarChar(255)
+  securityAnswerHash String?    @map("security_answer_hash")
+  lastLoginAt        DateTime?  @map("last_login_at")
+  disabledAt         DateTime?  @map("disabled_at")
+  createdAt          DateTime   @default(now()) @map("created_at")
+  updatedAt          DateTime   @updatedAt @map("updated_at")
+
+  sessions             Session[]
+  authTokens           AuthToken[]
+  notifications        Notification[]
+  auditLogs            AuditLog[]        @relation("AuditActor")
+  investmentsAsClient  Investment[]      @relation("InvestmentClient")
+  investmentsCreated   Investment[]      @relation("InvestmentCreatedBy")
+  investmentsUpdated   Investment[]      @relation("InvestmentUpdatedBy")
+  transactionsAsClient Transaction[]     @relation("TransactionClient")
+  transactionsCreated  Transaction[]     @relation("TransactionCreatedBy")
+  transactionsUpdated  Transaction[]     @relation("TransactionUpdatedBy")
+  documentsAsClient    Document[]        @relation("DocumentClient")
+  documentsUploaded    Document[]        @relation("DocumentUploadedBy")
+  assignmentsAsClient  AdminAssignment[] @relation("AssignmentClient")
+  assignmentsAsAdmin   AdminAssignment[] @relation("AssignmentAdmin")
+  assignmentsMade      AdminAssignment[] @relation("AssignmentAssignedBy")
+  priceOverrides       PriceOverride[]   @relation("OverrideCreatedBy")
+  publishedPrices      PublishedPrice[]  @relation("PriceUpdatedBy")
+  settingsUpdated      SystemSetting[]   @relation("SettingUpdatedBy")
+
+  @@index([role, status])
+  @@index([status])
+  @@map("users")
+}
+
+model Session {
+  id         String    @id @default(uuid()) @db.Uuid
+  userId     String    @map("user_id") @db.Uuid
+  tokenHash  String    @unique @map("token_hash") @db.VarChar(128)
+  expiresAt  DateTime  @map("expires_at")
+  revokedAt  DateTime? @map("revoked_at")
+  ipAddress  String?   @map("ip_address") @db.VarChar(64)
+  userAgent  String?   @map("user_agent") @db.VarChar(500)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  lastUsedAt DateTime? @map("last_used_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model AuthToken {
+  id          String        @id @default(uuid()) @db.Uuid
+  userId      String        @map("user_id") @db.Uuid
+  type        AuthTokenType
+  tokenHash   String        @unique @map("token_hash") @db.VarChar(128)
+  expiresAt   DateTime      @map("expires_at")
+  usedAt      DateTime?     @map("used_at")
+  createdById String?       @map("created_by_id") @db.Uuid
+  createdAt   DateTime      @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+  @@index([expiresAt])
+  @@map("auth_tokens")
+}
+
+model Institution {
+  id          String            @id @default(uuid()) @db.Uuid
+  name        String            @unique @db.VarChar(200)
+  description String?           @db.VarChar(1000)
+  status      InstitutionStatus @default(ACTIVE)
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+
+  investments Investment[]
+
+  @@map("institutions")
+}
+
+model Investment {
+  id                   String               @id @default(uuid()) @db.Uuid
+  clientId             String               @map("client_id") @db.Uuid
+  institutionId        String               @map("institution_id") @db.Uuid
+  name                 String               @db.VarChar(200)
+  principalAmount      Decimal              @map("principal_amount") @db.Decimal(20, 2)
+  currency             String               @default("USD") @db.VarChar(3)
+  annualInterestRate   Decimal              @map("annual_interest_rate") @db.Decimal(9, 4)
+  compoundingFrequency CompoundingFrequency @default(SIMPLE) @map("compounding_frequency")
+  startDate            DateTime             @map("start_date") @db.Date
+  maturityDate         DateTime             @map("maturity_date") @db.Date
+  status               InvestmentStatus     @default(ACTIVE)
+  notes                String?              @db.VarChar(2000)
+  createdById          String?              @map("created_by_id") @db.Uuid
+  updatedById          String?              @map("updated_by_id") @db.Uuid
+  createdAt            DateTime             @default(now()) @map("created_at")
+  updatedAt            DateTime             @updatedAt @map("updated_at")
+
+  client       User          @relation("InvestmentClient", fields: [clientId], references: [id], onDelete: Restrict)
+  institution  Institution   @relation(fields: [institutionId], references: [id], onDelete: Restrict)
+  createdBy    User?         @relation("InvestmentCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy    User?         @relation("InvestmentUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  transactions Transaction[]
+  documents    Document[]
+
+  @@index([clientId, status])
+  @@index([institutionId])
+  @@index([maturityDate])
+  @@map("investments")
+}
+
+model Transaction {
+  id               String            @id @default(uuid()) @db.Uuid
+  clientId         String            @map("client_id") @db.Uuid
+  investmentId     String?           @map("investment_id") @db.Uuid
+  type             TransactionType
+  amount           Decimal           @db.Decimal(20, 2)
+  currency         String            @default("USD") @db.VarChar(3)
+  description      String?           @db.VarChar(1000)
+  status           TransactionStatus @default(PENDING)
+  affectsPrincipal Boolean           @default(true) @map("affects_principal")
+  idempotencyKey   String?           @unique @map("idempotency_key") @db.VarChar(100)
+  transactionDate  DateTime          @map("transaction_date")
+  createdById      String?           @map("created_by_id") @db.Uuid
+  updatedById      String?           @map("updated_by_id") @db.Uuid
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+
+  client     User        @relation("TransactionClient", fields: [clientId], references: [id], onDelete: Restrict)
+  investment Investment? @relation(fields: [investmentId], references: [id], onDelete: SetNull)
+  createdBy  User?       @relation("TransactionCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy  User?       @relation("TransactionUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@index([clientId, transactionDate])
+  @@index([investmentId])
+  @@index([status])
+  @@index([type])
+  @@map("transactions")
+}
+
+model Document {
+  id               String           @id @default(uuid()) @db.Uuid
+  clientId         String           @map("client_id") @db.Uuid
+  investmentId     String?          @map("investment_id") @db.Uuid
+  title            String           @db.VarChar(200)
+  category         DocumentCategory
+  description      String?          @db.VarChar(1000)
+  storageKey       String           @map("storage_key") @db.VarChar(500)
+  originalFilename String           @map("original_filename") @db.VarChar(255)
+  mimeType         String           @map("mime_type") @db.VarChar(150)
+  fileSize         Int              @map("file_size")
+  checksum         String?          @db.VarChar(128)
+  status           DocumentStatus   @default(ACTIVE)
+  uploadedById     String?          @map("uploaded_by_id") @db.Uuid
+  archivedAt       DateTime?        @map("archived_at")
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+
+  client     User        @relation("DocumentClient", fields: [clientId], references: [id], onDelete: Restrict)
+  investment Investment? @relation(fields: [investmentId], references: [id], onDelete: SetNull)
+  uploadedBy User?       @relation("DocumentUploadedBy", fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  @@index([clientId, status])
+  @@index([investmentId])
+  @@index([category])
+  @@map("documents")
+}
+
+model AdminAssignment {
+  id           String           @id @default(uuid()) @db.Uuid
+  clientId     String           @map("client_id") @db.Uuid
+  adminId      String           @map("admin_id") @db.Uuid
+  assignedById String?          @map("assigned_by_id") @db.Uuid
+  assignedAt   DateTime         @default(now()) @map("assigned_at")
+  endedAt      DateTime?        @map("ended_at")
+  status       AssignmentStatus @default(ACTIVE)
+  notes        String?          @db.VarChar(1000)
+
+  client     User  @relation("AssignmentClient", fields: [clientId], references: [id], onDelete: Restrict)
+  admin      User  @relation("AssignmentAdmin", fields: [adminId], references: [id], onDelete: Restrict)
+  assignedBy User? @relation("AssignmentAssignedBy", fields: [assignedById], references: [id], onDelete: SetNull)
+
+  @@index([clientId, status])
+  @@index([adminId, status])
+  @@map("admin_assignments")
+}
+
+model PublishedPrice {
+  id                  String    @id @default(uuid()) @db.Uuid
+  commodity           Commodity @unique
+  price               Decimal?  @db.Decimal(20, 4)
+  currency            String    @default("USD") @db.VarChar(3)
+  unit                String    @db.VarChar(50)
+  provider            String    @db.VarChar(100)
+  providerPrice       Decimal?  @map("provider_price") @db.Decimal(20, 4)
+  providerFetchedAt   DateTime? @map("provider_fetched_at")
+  manualOverridePrice Decimal?  @map("manual_override_price") @db.Decimal(20, 4)
+  overrideReason      String?   @map("override_reason") @db.VarChar(1000)
+  overrideStartsAt    DateTime? @map("override_starts_at")
+  overrideEndsAt      DateTime? @map("override_ends_at")
+  overrideById        String?   @map("override_by_id") @db.Uuid
+  lastPublishedAt     DateTime? @map("last_published_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  overrideBy User? @relation("PriceUpdatedBy", fields: [overrideById], references: [id], onDelete: SetNull)
+
+  @@map("published_prices")
+}
+
+model PriceOverride {
+  id            String    @id @default(uuid()) @db.Uuid
+  commodity     Commodity
+  previousPrice Decimal?  @map("previous_price") @db.Decimal(20, 4)
+  newPrice      Decimal   @map("new_price") @db.Decimal(20, 4)
+  currency      String    @db.VarChar(3)
+  unit          String    @db.VarChar(50)
+  reason        String    @db.VarChar(1000)
+  startsAt      DateTime  @map("starts_at")
+  endsAt        DateTime? @map("ends_at")
+  clearedAt     DateTime? @map("cleared_at")
+  createdById   String?   @map("created_by_id") @db.Uuid
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  createdBy User? @relation("OverrideCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([commodity, createdAt])
+  @@map("price_overrides")
+}
+
+model PriceSnapshot {
+  id        String    @id @default(uuid()) @db.Uuid
+  commodity Commodity
+  price     Decimal   @db.Decimal(20, 4)
+  currency  String    @db.VarChar(3)
+  unit      String    @db.VarChar(50)
+  provider  String    @db.VarChar(100)
+  fetchedAt DateTime  @default(now()) @map("fetched_at")
+
+  @@index([commodity, fetchedAt])
+  @@map("price_snapshots")
+}
+
+model AuditLog {
+  id         BigInt       @id @default(autoincrement())
+  actorId    String?      @map("actor_id") @db.Uuid
+  actorRole  Role?        @map("actor_role")
+  action     String       @db.VarChar(100)
+  entityType String       @map("entity_type") @db.VarChar(60)
+  entityId   String?      @map("entity_id") @db.VarChar(100)
+  clientId   String?      @map("client_id") @db.Uuid
+  summary    String?      @db.VarChar(500)
+  beforeData Json?        @map("before_data")
+  afterData  Json?        @map("after_data")
+  outcome    AuditOutcome @default(SUCCESS)
+  ipAddress  String?      @map("ip_address") @db.VarChar(64)
+  createdAt  DateTime     @default(now()) @map("created_at")
+
+  actor User? @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([actorId])
+  @@index([entityType, entityId])
+  @@index([clientId])
+  @@map("audit_logs")
+}
+
+model Notification {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  type      String    @db.VarChar(60)
+  title     String    @db.VarChar(200)
+  body      String?   @db.VarChar(1000)
+  link      String?   @db.VarChar(300)
+  readAt    DateTime? @map("read_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model SystemSetting {
+  key         String   @id @db.VarChar(100)
+  value       Json
+  description String?  @db.VarChar(500)
+  updatedById String?  @map("updated_by_id") @db.Uuid
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  updatedBy User? @relation("SettingUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@map("system_settings")
+}
+
+model NewsCache {
+  key       String   @id @db.VarChar(100)
+  payload   Json
+  fetchedAt DateTime @map("fetched_at")
+  expiresAt DateTime @map("expires_at")
+
+  @@map("news_cache")
+}
