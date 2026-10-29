@@ -2,6 +2,7 @@ import { buildApp } from './app';
 import { config } from './config';
 import { prisma } from './lib/prisma';
 import { startScheduledJobs, stopScheduledJobs } from './jobs';
+import { closeMailTransport } from './services/mail';
 
 async function main(): Promise<void> {
   const app = await buildApp();
@@ -9,6 +10,7 @@ async function main(): Promise<void> {
   const shutdown = async (signal: string) => {
     app.log.info({ signal }, 'Shutting down');
     stopScheduledJobs();
+    closeMailTransport();
     await app.close();
     await prisma.$disconnect();
     process.exit(0);

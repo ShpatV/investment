@@ -10,6 +10,7 @@ import { hashPassword, hashSecurityAnswer, verifyPassword } from '../../lib/pass
 import { authenticate, currentUser } from '../../plugins/auth';
 import { recordAudit } from '../../lib/audit';
 import { serializeUser } from '../../lib/serializers';
+import { deliverAuthEmail } from '../../services/mail';
 import {
   authenticateCredentials,
   createAuthToken,
@@ -275,6 +276,16 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
       let devToken: string | undefined;
       if (user && user.status === 'ACTIVE') {
         const created = await createAuthToken(user.id, 'PASSWORD_RESET', null, 60);
+        const delivered = await deliverAuthEmail('PASSWORD_RESET', {
+          email: user.email,
+          firstName: user.firstName,
+          role: user.role,
+          token: created.token,
+          expiresAt: created.expiresAt,
+        });
+        if (delivered.error) {
+          request.log.error({ error: delivered.error }, 'Failed to send password reset email');
+        }
         devToken = maybeExposeToken(created.token).token;
         await recordAudit({
           actorId: user.id,

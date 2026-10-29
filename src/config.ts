@@ -13,6 +13,12 @@ const boolFromString = z
   .optional()
   .transform((value) => value === undefined ? undefined : ['1', 'true', 'yes', 'on'].includes(value.toLowerCase()));
 
+const blankToUndefined = (value: unknown): unknown =>
+  typeof value === 'string' && value.trim() === '' ? undefined : value;
+
+const optionalString = z.preprocess(blankToUndefined, z.string().trim().min(1).optional());
+const optionalEmail = z.preprocess(blankToUndefined, z.string().trim().email().optional());
+
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   HOST: z.string().default('0.0.0.0'),
@@ -31,6 +37,19 @@ const envSchema = z.object({
   STORAGE_DIR: z.string().default('./storage/documents'),
   MAX_UPLOAD_MB: z.coerce.number().int().min(1).max(100).default(10),
   SIGNED_URL_TTL_SECONDS: z.coerce.number().int().min(30).max(3600).default(120),
+
+  SMTP_HOST: optionalString,
+  SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(587),
+  SMTP_SECURE: boolFromString,
+  SMTP_USER: optionalString,
+  SMTP_PASS: optionalString,
+  SMTP_REJECT_UNAUTHORIZED: boolFromString,
+  MAIL_FROM: optionalEmail,
+  MAIL_FROM_NAME: z.string().trim().min(1).max(120).default('Investment Platform'),
+  CLIENT_APP_URL: z.preprocess(blankToUndefined, z.string().url().default('http://localhost:5173')),
+  ADMIN_APP_URL: z.preprocess(blankToUndefined, z.string().url().default('http://localhost:5174')),
+  MAIL_INVITE_PATH: z.preprocess(blankToUndefined, z.string().trim().startsWith('/').default('/accept-invitation')),
+  MAIL_RESET_PATH: z.preprocess(blankToUndefined, z.string().trim().startsWith('/').default('/reset-password')),
 
   PRICE_PROVIDER: z.enum(['stooq', 'none']).default('stooq'),
   PRICE_REFRESH_CRON: z.string().default('*/15 * * * *'),
@@ -58,6 +77,16 @@ if (!parsed.success) {
 
 const env = parsed.data;
 
+const smtpConfigured = Boolean(env.SMTP_HOST);
+if (smtpConfigured && !env.MAIL_FROM) {
+  throw new Error('MAIL_FROM must be set when SMTP_HOST is configured (for example "no-reply@yourdomain.com").');
+}
+if (smtpConfigured && env.SMTP_USER && env.SMTP_PASS === undefined) {
+  throw new Error('SMTP_PASS must be set when SMTP_USER is configured.');
+}
+
+const trimTrailingSlash = (value: string): string => value.replace(/\/$/, '');
+
 export const config = {
   env: env.NODE_ENV,
   isProduction: env.NODE_ENV === 'production',
@@ -78,6 +107,22 @@ export const config = {
   storageDir: resolve(process.cwd(), env.STORAGE_DIR),
   maxUploadBytes: env.MAX_UPLOAD_MB * 1024 * 1024,
   signedUrlTtlSeconds: env.SIGNED_URL_TTL_SECONDS,
+
+  mail: {
+    enabled: smtpConfigured,
+    host: env.SMTP_HOST,
+    port: env.SMTP_PORT,
+    secure: env.SMTP_SECURE ?? env.SMTP_PORT === 465,
+    user: env.SMTP_USER,
+    pass: env.SMTP_PASS,
+    rejectUnauthorized: env.SMTP_REJECT_UNAUTHORIZED ?? true,
+    from: env.MAIL_FROM,
+    fromName: env.MAIL_FROM_NAME,
+    clientAppUrl: trimTrailingSlash(env.CLIENT_APP_URL),
+    adminAppUrl: trimTrailingSlash(env.ADMIN_APP_URL),
+    invitePath: env.MAIL_INVITE_PATH,
+    resetPath: env.MAIL_RESET_PATH,
+  },
 
   priceProvider: env.PRICE_PROVIDER,
   priceRefreshCron: env.PRICE_REFRESH_CRON,

@@ -11,6 +11,7 @@ import { recordAudit } from '../../lib/audit';
 import { serializeAdminListItem, serializeUser } from '../../lib/serializers';
 import { generateTemporaryPassword, hashPassword } from '../../lib/passwords';
 import { createAuthToken, maybeExposeToken } from '../auth/service';
+import { deliverAuthEmail } from '../../services/mail';
 import { dec, moneyNumber } from '../../services/finance';
 import { project } from '../../services/investments';
 
@@ -140,13 +141,28 @@ export async function adminRoutes(app: FastifyInstance): Promise<void> {
         return { user, invitation };
       });
 
+      let invitationDelivery: 'email' | 'manual' | 'email_failed' | null = null;
+      if (created.invitation) {
+        const delivered = await deliverAuthEmail('INVITE', {
+          email: created.user.email,
+          firstName: created.user.firstName,
+          role: created.user.role,
+          token: created.invitation.token,
+          expiresAt: created.invitation.expiresAt,
+        });
+        invitationDelivery = delivered.delivery;
+        if (delivered.error) {
+          request.log.error({ error: delivered.error }, 'Failed to send account invitation email');
+        }
+      }
+
       return reply.status(201).send({
         data: {
           ...serializeUser(created.user),
           invitation: created.invitation
             ? {
                 expiresAt: created.invitation.expiresAt,
-                delivery: 'manual',
+                delivery: invitationDelivery ?? 'manual',
                 ...maybeExposeToken(created.invitation.token),
               }
             : null,

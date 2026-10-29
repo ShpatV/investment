@@ -91,7 +91,14 @@ See [`.env.example`](./.env.example) for the full annotated list. Key settings:
 | `JWT_SECRET` | — | **Required**, minimum 32 characters |
 | `JWT_ACCESS_TTL` | `15m` | Access token lifetime |
 | `REFRESH_TOKEN_DAYS` | `30` | Opaque rotating refresh token lifetime |
-| `EXPOSE_DEV_TOKENS` | `true` in dev | Exposes invite/reset tokens in API responses for local testing |
+| `EXPOSE_DEV_TOKENS` | `true` in dev | Exposes invite/reset tokens in API responses **only when SMTP is not configured** |
+| `SMTP_HOST` | — | Enables email delivery when set (with `MAIL_FROM`) |
+| `SMTP_PORT` | `587` | `465` with `SMTP_SECURE=true` for implicit TLS |
+| `SMTP_USER` / `SMTP_PASS` | — | SMTP credentials, if required by the provider |
+| `MAIL_FROM` | — | Sender address; required when `SMTP_HOST` is set |
+| `MAIL_FROM_NAME` | `Investment Platform` | Display name in outgoing email |
+| `CLIENT_APP_URL` | `http://localhost:5173` | Client frontend base URL used in invite/reset links |
+| `ADMIN_APP_URL` | `http://localhost:5174` | Admin frontend base URL used in invite/reset links |
 | `STORAGE_DIR` | `./storage/documents` | Private document storage (not web-served) |
 | `MAX_UPLOAD_MB` | `10` | Per-file upload limit |
 | `SIGNED_URL_TTL_SECONDS` | `120` | Lifetime of signed document download links |
@@ -206,6 +213,63 @@ only need CORS, not a shared parent domain. Store refresh tokens in `httpOnly` c
 the frontend has a server layer, otherwise in secure storage — never in `localStorage` on a
 public site.
 
+### Email delivery (SMTP)
+
+Invitation and password-reset messages are sent over SMTP when `SMTP_HOST` and `MAIL_FROM`
+are configured:
+
+```env
+SMTP_HOST=smtp.yourprovider.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=postmaster@yourdomain.com
+SMTP_PASS=your-smtp-password
+MAIL_FROM=no-reply@yourdomain.com
+MAIL_FROM_NAME=Investment Platform
+CLIENT_APP_URL=https://app.yourdomain.com
+ADMIN_APP_URL=https://admin.yourdomain.com
+```
+
+Behavior:
+
+- **SMTP configured:** emails are sent for client/admin invitations and password resets.
+  One-time tokens are **never returned by the API**.
+- **SMTP not configured:** the API keeps the development fallback — the token is returned
+  only when `EXPOSE_DEV_TOKENS=true` and `NODE_ENV` is not `production`.
+- Sending uses a pooled transport with 10s connection/greeting timeouts, 20s socket
+  timeout, and one retry. A failed send does **not** roll back the account or token;
+  the response reports `delivery: "email_failed"` and the error is logged server-side
+  (never with the token).
+- `invitation.delivery` / invite-response `delivery` is one of `email`, `manual`, or
+  `email_failed`.
+- Invite links expire after **7 days**; password-reset links after **60 minutes**. Tokens
+  are stored only as SHA-256 hashes and are single-use.
+
+The email links point at your frontends, which must provide these routes:
+
+| Email | Default link | Frontend route |
+| --- | --- | --- |
+| Client/admin invitation | `<CLIENT_APP_URL or ADMIN_APP_URL>/accept-invitation?token=…` | Collect a new password, then `POST /api/auth/reset-password` |
+| Password reset | `<CLIENT_APP_URL or ADMIN_APP_URL>/reset-password?token=…` | Collect a new password, then `POST /api/auth/reset-password` |
+
+Paths are configurable with `MAIL_INVITE_PATH` and `MAIL_RESET_PATH`.
+
+To test delivery locally without a real mailbox, run
+[Mailpit](https://github.com/axllent/mailpit):
+
+```powershell
+docker run -d --name mailpit -p 1025:1025 -p 8025:8025 axllent/mailpit
+```
+
+```env
+SMTP_HOST=localhost
+SMTP_PORT=1025
+MAIL_FROM=no-reply@example.com
+```
+
+Sign in to <http://localhost:8025> to read the messages. Remove `SMTP_HOST` to return to the
+manual-token development flow.
+
 ---
 
 ## 6. Financial calculation methodology
@@ -289,6 +353,9 @@ For each investment:
   passwords are never returned by any endpoint.
 - JWTs are short-lived access tokens; refresh tokens are opaque, rotating, hashed at rest,
   and revocable per session. Login errors do not reveal whether an email exists.
+- Invitation and password-reset tokens are single-use, stored as SHA-256 hashes, and expire
+  after 7 days / 60 minutes. When SMTP is configured they are delivered by email and never
+  returned by the API; email failures are logged without the token.
 - Security middleware: Helmet, CORS allow-list, global and per-route rate limits,
   request-ID correlation, and redacted logs for secrets/authorization headers.
 - **Audit logging** covers authentication events, client/admin lifecycle, assignments,
@@ -329,6 +396,8 @@ npm test
 - `tests/api-permissions.test.ts` — end-to-end Fastify injection tests against a real
   database: client isolation, administrator scoping, privilege escalation, withdrawal
   limits, interest/principal rules, last-super-admin protection, and self-disable guards.
+- `tests/mail.test.ts` — invitation/reset links, HTML escaping, SMTP-disabled fallback,
+  message rendering, transport success, and failure handling.
 
 The API tests create uniquely named fixture data and clean up after themselves. They need
 the database from `docker compose up -d db` and a valid `.env`.
@@ -363,7 +432,7 @@ src/
   app.ts           Fastify composition (plugins, routes, error handling)
   server.ts        process bootstrap, graceful shutdown, cron jobs
   modules/         feature routes (auth, clients, admins, investments, …)
-  services/        financial engine, investment loaders, notifications, settings
+  services/        financial engine, investment loaders, notifications, email, settings
   lib/             scoping/RBAC, schemas, serializers, audit, storage, signed URLs
   plugins/         auth, Swagger, error handler
   jobs/            price refresh and maturity/reminder jobs
@@ -382,5 +451,6 @@ tests/             unit, security, and API permission tests
 | `P1000` auth failure | Ensure `DATABASE_URL` credentials match `POSTGRES_*` |
 | Prices show `UNAVAILABLE` | Run `POST /api/prices/refresh` as an admin, or the provider is unreachable |
 | News is `unconfigured` | Set `NEWS_API_KEY` or use `NEWS_PROVIDER=none` |
+| Invite/reset email not received | Check `SMTP_*`, `MAIL_FROM`, and `CLIENT_APP_URL`/`ADMIN_APP_URL`; responses with `delivery: "email_failed"` log the SMTP error. Use Mailpit locally |
 | Uploads fail | Check `MAX_UPLOAD_MB`, MIME/extension allow-list, and `STORAGE_DIR` permissions |
 | Seed login fails | Re-check the current `SEED_*_PASSWORD` values in `.env` |

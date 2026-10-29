@@ -11,6 +11,7 @@ import {
 } from '../../lib/passwords';
 import type { AuthUser } from '../../lib/scope';
 import { config } from '../../config';
+import { isMailEnabled } from '../../services/mail';
 
 const DUMMY_HASH_PROMISE = hashPassword('invalid-password-placeholder');
 
@@ -194,9 +195,9 @@ export async function consumeAuthToken(
   return { user: record.user, tokenId: record.id, tokenType: record.type };
 }
 
-/** Development convenience only; never returns tokens in production. */
+/** Development convenience only; never returns tokens in production or when email delivery is configured. */
 export function maybeExposeToken(token: string): { token: string } | Record<string, never> {
-  if (!config.isProduction && config.exposeDevTokens) return { token };
+  if (!config.isProduction && config.exposeDevTokens && !isMailEnabled()) return { token };
   return {};
 }
 

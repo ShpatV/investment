@@ -28,6 +28,7 @@ import { dec, moneyNumber } from '../../services/finance';
 import { project, projectionView, summarize } from '../../services/investments';
 import { notify } from '../../services/notifications';
 import { createAuthToken, maybeExposeToken } from '../auth/service';
+import { deliverAuthEmail } from '../../services/mail';
 
 const createClientSchema = z.object({
   firstName: z.string().trim().min(1).max(100),
@@ -215,11 +216,11 @@ export async function clientRoutes(app: FastifyInstance): Promise<void> {
         }
 
         let invitation:
-          | { token: string; expiresAt: Date; delivery: string }
+          | { token: string; expiresAt: Date }
           | undefined;
         if (!body.initialPassword) {
           const created = await createAuthToken(client.id, 'INVITE', auth.id, 7 * 24 * 60, tx);
-          invitation = { ...created, delivery: 'manual' };
+          invitation = { token: created.token, expiresAt: created.expiresAt };
         }
 
         await recordAudit(
@@ -278,6 +279,21 @@ export async function clientRoutes(app: FastifyInstance): Promise<void> {
         return { client, invitation };
       });
 
+      let invitationDelivery: 'email' | 'manual' | 'email_failed' | null = null;
+      if (result.invitation) {
+        const delivered = await deliverAuthEmail('INVITE', {
+          email: result.client.email,
+          firstName: result.client.firstName,
+          role: result.client.role,
+          token: result.invitation.token,
+          expiresAt: result.invitation.expiresAt,
+        });
+        invitationDelivery = delivered.delivery;
+        if (delivered.error) {
+          request.log.error({ error: delivered.error }, 'Failed to send client invitation email');
+        }
+      }
+
       return reply.status(201).send({
         data: {
           ...serializeUser(result.client),
@@ -291,10 +307,8 @@ export async function clientRoutes(app: FastifyInstance): Promise<void> {
           invitation: result.invitation
             ? {
                 expiresAt: result.invitation.expiresAt,
-                delivery: result.invitation.delivery,
-                ...(maybeExposeToken(result.invitation.token).token
-                  ? { token: result.invitation.token }
-                  : {}),
+                delivery: invitationDelivery ?? 'manual',
+                ...maybeExposeToken(result.invitation.token),
               }
             : null,
         },
@@ -525,6 +539,16 @@ export async function clientRoutes(app: FastifyInstance): Promise<void> {
       if (!client) throw AppError.notFound('Client not found');
 
       const created = await createAuthToken(client.id, 'INVITE', auth.id, 7 * 24 * 60);
+      const delivered = await deliverAuthEmail('INVITE', {
+        email: client.email,
+        firstName: client.firstName,
+        role: client.role,
+        token: created.token,
+        expiresAt: created.expiresAt,
+      });
+      if (delivered.error) {
+        request.log.error({ error: delivered.error }, 'Failed to send client invitation email');
+      }
       await recordAudit({
         actorId: auth.id,
         actorRole: auth.role,
@@ -538,7 +562,7 @@ export async function clientRoutes(app: FastifyInstance): Promise<void> {
       return reply.send({
         data: {
           expiresAt: created.expiresAt,
-          delivery: 'manual',
+          delivery: delivered.delivery,
           ...maybeExposeToken(created.token),
         },
       });
