@@ -72,11 +72,9 @@ export async function buildApp(options: BuildOptions = {}): Promise<FastifyInsta
 
   await app.register(cors, {
     origin: (origin, callback) => {
-      if (!origin || config.corsOrigins.includes(origin)) {
-        callback(null, true);
-        return;
-      }
-      callback(new Error('Origin is not allowed by CORS'), false);
+      // No Origin header (curl, server-to-server) is allowed; unknown browser
+      // origins simply receive no CORS headers instead of a 500 error.
+      callback(null, !origin || config.corsOrigins.includes(origin));
     },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],

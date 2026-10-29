@@ -1,4 +1,5 @@
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import type { Role } from '@prisma/client';
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { prisma } from '../../lib/prisma';
@@ -40,66 +41,126 @@ const changePasswordSchema = z.object({
 
 const forgotSchema = z.object({ email: emailSchema });
 
+type Portal = 'client' | 'admin' | 'super-admin';
+
+/**
+ * Each portal is served by its own frontend, so a valid credential for the wrong
+ * portal must not produce a session. The role list is enforced server-side.
+ */
+const PORTAL_ROLES: Record<Portal, readonly Role[]> = {
+  client: ['USER'],
+  admin: ['ADMIN', 'SUPER_ADMIN'],
+  'super-admin': ['SUPER_ADMIN'],
+};
+
+const PORTALS: ReadonlyArray<{ path: string; portal: Portal; summary: string }> = [
+  {
+    path: '/auth/login/client',
+    portal: 'client',
+    summary: 'Client portal sign-in (client accounts only)',
+  },
+  {
+    path: '/auth/login/admin',
+    portal: 'admin',
+    summary: 'Admin portal sign-in (admin and super admin accounts)',
+  },
+  {
+    path: '/auth/login/super-admin',
+    portal: 'super-admin',
+    summary: 'Super admin portal sign-in (super admin accounts only)',
+  },
+];
+
+async function handleLogin(
+  app: FastifyInstance,
+  request: FastifyRequest,
+  reply: FastifyReply,
+  portal?: Portal,
+) {
+  const body = parseBody(loginSchema, request.body);
+  try {
+    const user = await authenticateCredentials(body.email, body.password);
+    if (portal && !PORTAL_ROLES[portal].includes(user.role)) {
+      throw AppError.forbidden(`This account cannot sign in to the ${portal} portal`);
+    }
+    const tokens = await issueSessionTokens(app, user, request);
+    await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
+    await recordAudit({
+      actorId: user.id,
+      actorRole: user.role,
+      action: 'AUTH_LOGIN',
+      entityType: 'AUTH',
+      entityId: user.id,
+      summary: portal ? `User signed in via the ${portal} portal` : 'User signed in',
+      outcome: 'SUCCESS',
+      ipAddress: request.ip,
+    });
+
+    const assignment =
+      user.role === 'USER'
+        ? await prisma.adminAssignment.findFirst({
+            where: { clientId: user.id, status: 'ACTIVE' },
+            include: { admin: true },
+          })
+        : null;
+
+    return reply.send({
+      data: {
+        user: {
+          ...serializeUser(user),
+          advisor: assignment
+            ? {
+                id: assignment.admin.id,
+                fullName: `${assignment.admin.firstName} ${assignment.admin.lastName}`.trim(),
+                email: assignment.admin.email,
+              }
+            : null,
+        },
+        ...tokens,
+        tokenType: 'Bearer',
+        ...(portal ? { portal } : {}),
+      },
+    });
+  } catch (error) {
+    await recordAudit({
+      action: 'AUTH_LOGIN_FAILED',
+      entityType: 'AUTH',
+      summary: portal
+        ? `Failed sign-in attempt (${portal} portal)`
+        : 'Failed sign-in attempt',
+      outcome: 'FAILURE',
+      ipAddress: request.ip,
+    });
+    throw error;
+  }
+}
+
 export async function authRoutes(app: FastifyInstance): Promise<void> {
   app.post(
     '/auth/login',
     {
       config: { rateLimit: { max: 10, timeWindow: '1 minute' } },
-      schema: { tags: ['Auth'], summary: 'Sign in and receive access/refresh tokens' },
+      schema: {
+        tags: ['Auth'],
+        summary: 'Sign in and receive access/refresh tokens (any role)',
+        description:
+          'Generic sign-in used by single-frontend deployments. When each role runs in its own ' +
+          'frontend, prefer POST /auth/login/client, /auth/login/admin or /auth/login/super-admin.',
+      },
     },
-    async (request, reply) => {
-      const body = parseBody(loginSchema, request.body);
-      try {
-        const user = await authenticateCredentials(body.email, body.password);
-        const tokens = await issueSessionTokens(app, user, request);
-        await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
-        await recordAudit({
-          actorId: user.id,
-          actorRole: user.role,
-          action: 'AUTH_LOGIN',
-          entityType: 'AUTH',
-          entityId: user.id,
-          summary: 'User signed in',
-          outcome: 'SUCCESS',
-          ipAddress: request.ip,
-        });
-
-        const assignment =
-          user.role === 'USER'
-            ? await prisma.adminAssignment.findFirst({
-                where: { clientId: user.id, status: 'ACTIVE' },
-                include: { admin: true },
-              })
-            : null;
-
-        return reply.send({
-          data: {
-            user: {
-              ...serializeUser(user),
-              advisor: assignment
-                ? {
-                    id: assignment.admin.id,
-                    fullName: `${assignment.admin.firstName} ${assignment.admin.lastName}`.trim(),
-                    email: assignment.admin.email,
-                  }
-                : null,
-            },
-            ...tokens,
-            tokenType: 'Bearer',
-          },
-        });
-      } catch (error) {
-        await recordAudit({
-          action: 'AUTH_LOGIN_FAILED',
-          entityType: 'AUTH',
-          summary: 'Failed sign-in attempt',
-          outcome: 'FAILURE',
-          ipAddress: request.ip,
-        });
-        throw error;
-      }
-    },
+    async (request, reply) => handleLogin(app, request, reply),
   );
+
+  for (const { path, portal, summary } of PORTALS) {
+    app.post(
+      path,
+      {
+        config: { rateLimit: { max: 10, timeWindow: '1 minute' } },
+        schema: { tags: ['Auth'], summary },
+      },
+      async (request, reply) => handleLogin(app, request, reply, portal),
+    );
+  }
 
   app.post(
     '/auth/refresh',

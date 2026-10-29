@@ -279,6 +279,87 @@ describe('administrator scoping', () => {
   });
 });
 
+describe('portal-scoped login', () => {
+  it('allows a client into the client portal only', async () => {
+    const clientEmail = `clientaid.${suffix}@example.com`;
+    const ok = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login/client',
+      payload: { email: clientEmail, password },
+    });
+    expect(ok.statusCode, ok.body).toBe(200);
+    expect(ok.json().data.user.role).toBe('USER');
+    expect(ok.json().data.portal).toBe('client');
+
+    for (const url of ['/api/auth/login/admin', '/api/auth/login/super-admin']) {
+      const denied = await app.inject({
+        method: 'POST',
+        url,
+        payload: { email: clientEmail, password },
+      });
+      expect(denied.statusCode, denied.body).toBe(403);
+      expect(denied.json().error.message).toContain('cannot sign in');
+      expect(denied.json().data).toBeUndefined();
+    }
+  });
+
+  it('allows an admin into the admin portal but not the super admin portal', async () => {
+    const adminEmail = `adminassignedid.${suffix}@example.com`;
+
+    const adminPortal = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login/admin',
+      payload: { email: adminEmail, password },
+    });
+    expect(adminPortal.statusCode, adminPortal.body).toBe(200);
+    expect(adminPortal.json().data.user.role).toBe('ADMIN');
+
+    const superPortal = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login/super-admin',
+      payload: { email: adminEmail, password },
+    });
+    expect(superPortal.statusCode, superPortal.body).toBe(403);
+
+    const clientPortal = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login/client',
+      payload: { email: adminEmail, password },
+    });
+    expect(clientPortal.statusCode, clientPortal.body).toBe(403);
+  });
+
+  it('allows a super admin into the super admin and admin portals', async () => {
+    const superEmail = `superadminid.${suffix}@example.com`;
+
+    const superPortal = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login/super-admin',
+      payload: { email: superEmail, password },
+    });
+    expect(superPortal.statusCode, superPortal.body).toBe(200);
+    expect(superPortal.json().data.user.role).toBe('SUPER_ADMIN');
+    expect(superPortal.json().data.portal).toBe('super-admin');
+
+    const adminPortal = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login/admin',
+      payload: { email: superEmail, password },
+    });
+    expect(adminPortal.statusCode, adminPortal.body).toBe(200);
+  });
+
+  it('does not issue tokens when the password is wrong on a portal route', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login/client',
+      payload: { email: `clientaid.${suffix}@example.com`, password: 'WrongPassword123!' },
+    });
+    expect(response.statusCode).toBe(401);
+    expect(response.json().data).toBeUndefined();
+  });
+});
+
 describe('financial mutation guards', () => {
   it('rejects withdrawals larger than the current principal', async () => {
     const token = await login(`superadminid.${suffix}@example.com`);

@@ -149,7 +149,7 @@ Errors use `{ "error": { "code", "message", "details?" }, "requestId" }`.
 
 | Area | Endpoints |
 | --- | --- |
-| Auth | `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`, `POST /auth/change-password`, `POST /auth/forgot-password`, `POST /auth/reset-password`, `GET/PATCH /auth/security-question` |
+| Auth | `POST /auth/login`, `POST /auth/login/client`, `POST /auth/login/admin`, `POST /auth/login/super-admin`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`, `POST /auth/change-password`, `POST /auth/forgot-password`, `POST /auth/reset-password`, `GET/PATCH /auth/security-question` |
 | Profile | `GET /profile`, `PATCH /profile` |
 | Clients | `GET/POST /clients`, `GET/PATCH /clients/:id`, `POST /clients/:id/disable`, `POST /clients/:id/reactivate`, `POST /clients/:id/invite` |
 | Admins | `GET/POST /admins`, `GET/PATCH /admins/:id`, `POST /admins/:id/disable`, `POST /admins/:id/reactivate`, `GET /admins/:id/clients` |
@@ -168,6 +168,43 @@ Errors use `{ "error": { "code", "message", "details?" }, "requestId" }`.
 Common list query parameters: `page` (default 1), `pageSize` (default 20, max 100), plus
 resource-specific filters such as `search`, `status`, `clientId`, `institutionId`,
 `type`, `from`, `to`, `sortBy`, and `sortDir`.
+
+### Separate frontends (client / admin / super admin)
+
+Each role can run in its own frontend. Three role-scoped login endpoints are provided;
+they validate the credentials **and** the account role before issuing any token:
+
+| Frontend | Login endpoint | Accepted roles |
+| --- | --- | --- |
+| Client portal | `POST /api/auth/login/client` | `USER` |
+| Admin portal | `POST /api/auth/login/admin` | `ADMIN`, `SUPER_ADMIN` |
+| Super admin portal | `POST /api/auth/login/super-admin` | `SUPER_ADMIN` |
+
+A valid credential used against the wrong portal returns **403**
+(`This account cannot sign in to the <portal> portal`) and **no tokens**. The generic
+`POST /api/auth/login` remains available for single-frontend deployments and accepts any
+role. Portal responses are identical to the generic response plus `"portal"`.
+
+Recommended per-frontend flow:
+
+1. `POST /api/auth/login/<portal>` with `{ email, password }`.
+2. Keep `accessToken` in memory; send it as `Authorization: Bearer <token>`.
+3. On `401`, call `POST /api/auth/refresh` with the stored `refreshToken` (tokens rotate —
+   always replace both tokens with the response values).
+4. On sign-out, call `POST /api/auth/logout` with the current `refreshToken`.
+5. Call `GET /api/auth/me` on boot to restore the session and read `user.role`.
+
+CORS must list every frontend origin (comma-separated, no wildcard because credentials are
+enabled):
+
+```env
+CORS_ORIGIN=http://localhost:5173,http://localhost:5174,http://localhost:5175
+```
+
+Cookie-based auth is not used; the API is token-based, so frontends on different origins
+only need CORS, not a shared parent domain. Store refresh tokens in `httpOnly` cookies if
+the frontend has a server layer, otherwise in secure storage — never in `localStorage` on a
+public site.
 
 ---
 
