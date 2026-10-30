@@ -60,7 +60,7 @@ export async function buildApp(options: BuildOptions = {}): Promise<FastifyInsta
                   },
                 }),
           },
-    trustProxy: true,
+    trustProxy: config.trustProxy,
     genReqId: () => randomUUID(),
     bodyLimit: 1024 * 1024,
   });

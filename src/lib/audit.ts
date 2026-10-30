@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import type { Db } from './prisma';
 import { prisma } from './prisma';
 import type { AuthUser } from './scope';
@@ -22,7 +22,12 @@ export function sanitizeAuditData(value: unknown, depth = 0): unknown {
   if (value === null || value === undefined) return value;
   if (depth > 6) return '[truncated]';
   if (value instanceof Date) return value.toISOString();
+  // Prisma returns Decimal instances (e.g. transaction amounts). They contain
+  // an enumerable `constructor` function, so they must be converted before the
+  // generic object walk or Prisma will reject the JSON snapshot.
+  if (Prisma.Decimal.isDecimal(value)) return value.toString();
   if (Array.isArray(value)) return value.map((item) => sanitizeAuditData(item, depth + 1));
+  if (typeof value === 'function') return undefined;
   if (typeof value === 'object') {
     const result: Record<string, unknown> = {};
     for (const [key, item] of Object.entries(value as Record<string, unknown>)) {

@@ -8,6 +8,7 @@ import {
   currencySchema,
   dateOnlySchema,
   decimalStringSchema,
+  moneyAmountSchema,
   pageSchema,
   trimmedOptional,
   uuidSchema,
@@ -32,7 +33,7 @@ const createSchema = z
     clientId: uuidSchema,
     institutionId: uuidSchema,
     name: z.string().trim().min(2).max(200),
-    principalAmount: decimalStringSchema.refine((value) => Number(value) > 0, 'Principal must be greater than zero'),
+    principalAmount: moneyAmountSchema.refine((value) => Number(value) > 0, 'Principal must be greater than zero'),
     currency: currencySchema,
     annualInterestRate: rateSchema,
     compoundingFrequency: z.enum(['SIMPLE', 'MONTHLY', 'QUARTERLY', 'SEMIANNUALLY', 'ANNUALLY']).default('SIMPLE'),
@@ -50,7 +51,7 @@ const updateSchema = z
   .object({
     institutionId: uuidSchema.optional(),
     name: z.string().trim().min(2).max(200).optional(),
-    principalAmount: decimalStringSchema
+    principalAmount: moneyAmountSchema
       .refine((value) => Number(value) > 0, 'Principal must be greater than zero')
       .optional(),
     currency: currencySchema.optional(),
@@ -241,6 +242,12 @@ export async function investmentRoutes(app: FastifyInstance): Promise<void> {
         include: { institution: true, client: true, transactions: true },
       });
       if (!before) throw AppError.notFound('Investment not found');
+
+      if (body.currency !== undefined && body.currency !== before.currency && before.transactions.length > 0) {
+        throw AppError.conflict(
+          'The investment currency cannot be changed after transactions have been recorded',
+        );
+      }
 
       const startDate = body.startDate ?? before.startDate;
       const maturityDate = body.maturityDate ?? before.maturityDate;

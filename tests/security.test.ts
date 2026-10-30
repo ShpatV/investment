@@ -1,6 +1,57 @@
 import { describe, expect, it } from 'vitest';
+import { Prisma } from '@prisma/client';
 import { createSignedDocumentUrl, verifyDocumentSignature } from '../src/lib/signed-url';
+import { dateOnlySchema, decimalStringSchema, moneyAmountSchema } from '../src/lib/schemas';
+import { sanitizeAuditData } from '../src/lib/audit';
+import { assertFileSignature } from '../src/lib/storage';
 import { hashSecurityAnswer, hashPassword, normalizeSecurityAnswer, verifyPassword, verifySecurityAnswer } from '../src/lib/passwords';
+
+describe('upload content sniffing', () => {
+  it('rejects files whose bytes contradict the declared MIME type', () => {
+    expect(() => assertFileSignature(Buffer.from('<script>alert(1)</script>'), 'application/pdf')).toThrow();
+    expect(() => assertFileSignature(Buffer.from('not a png'), 'image/png')).toThrow();
+  });
+
+  it('accepts files with a matching signature and unverifiable text formats', () => {
+    expect(() => assertFileSignature(Buffer.from('%PDF-1.7\n'), 'application/pdf')).not.toThrow();
+    expect(() => assertFileSignature(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), 'image/png')).not.toThrow();
+    expect(() => assertFileSignature(Buffer.from('a,b\n1,2'), 'text/csv')).not.toThrow();
+  });
+});
+
+describe('audit snapshots', () => {
+  it('serializes Prisma decimals and redacts secrets', () => {
+    const snapshot = sanitizeAuditData({
+      amount: new Prisma.Decimal('123.45'),
+      password: 'plain-text',
+      nested: { tokenHash: 'abc' },
+    });
+    expect(snapshot).toEqual({
+      amount: '123.45',
+      password: '[redacted]',
+      nested: { tokenHash: '[redacted]' },
+    });
+  });
+});
+
+describe('input schema hardening', () => {
+  it('rejects impossible calendar dates', () => {
+    expect(dateOnlySchema.safeParse('2026-02-31').success).toBe(false);
+    expect(dateOnlySchema.safeParse('2026-13-01').success).toBe(false);
+    expect(dateOnlySchema.safeParse('2024-02-29').success).toBe(true);
+  });
+
+  it('bounds decimal precision to the storage capacity', () => {
+    expect(decimalStringSchema.safeParse('1'.repeat(19)).success).toBe(false);
+    expect(decimalStringSchema.safeParse('1.23456').success).toBe(false);
+    expect(decimalStringSchema.safeParse('123456789012345678.1234').success).toBe(true);
+  });
+
+  it('rejects sub-cent money values', () => {
+    expect(moneyAmountSchema.safeParse('1.234').success).toBe(false);
+    expect(moneyAmountSchema.safeParse('1.23').success).toBe(true);
+  });
+});
 
 describe('signed document URLs', () => {
   it('creates a verifiable short-lived URL', () => {

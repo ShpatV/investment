@@ -6,6 +6,23 @@ const prisma = new PrismaClient();
 
 const PASSWORD_OPTIONS = { memoryCost: 19456, timeCost: 2, parallelism: 1 };
 
+const DEFAULT_DEMO_PASSWORDS = new Set(['SuperAdmin123!', 'Admin1234!', 'Client1234!']);
+
+/** Demo credentials must never become production credentials by accident. */
+function assertProductionSeedConfig(): void {
+  if (!config.isProduction) return;
+  const passwords = [
+    config.seed.superAdminPassword,
+    config.seed.adminPassword,
+    config.seed.clientPassword,
+  ];
+  if (passwords.some((password) => DEFAULT_DEMO_PASSWORDS.has(password))) {
+    throw new Error(
+      'Refusing to seed production with the default demo passwords. Set SEED_SUPER_ADMIN_PASSWORD, SEED_ADMIN_PASSWORD, and SEED_CLIENT_PASSWORD first.',
+    );
+  }
+}
+
 function daysAgo(days: number): Date {
   const date = new Date();
   date.setUTCHours(0, 0, 0, 0);
@@ -47,6 +64,7 @@ async function upsertUser(input: {
 }
 
 async function main(): Promise<void> {
+  assertProductionSeedConfig();
   console.log('Seeding investment platform demo data…');
 
   const superAdmin = await upsertUser({

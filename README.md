@@ -78,6 +78,8 @@ After `npm run db:seed` (development only, values from `.env`):
 Passwords are read from `SEED_*_PASSWORD`. The seed is idempotent (upserts by email) and
 creates institutions, investments, transactions, and assignments. Market prices are
 intentionally left empty until a provider refresh runs; the seed never fabricates prices.
+When `NODE_ENV=production`, the seed refuses to run with any of the default demo passwords;
+set all three `SEED_*_PASSWORD` values first.
 
 ---
 
@@ -97,6 +99,7 @@ See [`.env.example`](./.env.example) for the full annotated list. Key settings:
 | `SMTP_USER` / `SMTP_PASS` | — | SMTP credentials, if required by the provider |
 | `MAIL_FROM` | — | Sender address; required when `SMTP_HOST` is set |
 | `MAIL_FROM_NAME` | `Investment Platform` | Display name in outgoing email |
+| `TRUST_PROXY` | `false` | Set when behind a reverse proxy so per-IP rate limits use `X-Forwarded-For`; accepts `true`, a hop count (`1`), or a trusted address/CIDR. Leave `false` when directly exposed |
 | `CLIENT_APP_URL` | `http://localhost:5173` | Client frontend base URL used in invite/reset links |
 | `ADMIN_APP_URL` | `http://localhost:5174` | Admin frontend base URL used in invite/reset links |
 | `STORAGE_DIR` | `./storage/documents` | Private document storage (not web-served) |
@@ -136,14 +139,16 @@ Additional rules:
 - Access to a client that is not assigned returns **404** (not 403) so record existence is
   not leaked. Administrative-only endpoints return **403**.
 - Ordinary admins may only assign new clients to themselves; only super admins can assign
-  to other administrators or reassign existing clients.
+  to other administrators or reassign existing clients. The unassigned-client list is
+  visible to ordinary admins only when the `assignments.allowAdminSelfAssign` setting is on.
 - Disabling a user revokes all their active sessions immediately.
 - The **last active super admin** cannot be disabled, demoted, or removed.
 - Disabled/deleted clients cannot be accessed even by former advisors (scoping uses
   `status: ACTIVE` assignments).
 - Clients may upload only `IDENTIFICATION`, `TAX_DOCUMENT`, and `OTHER` documents.
 - Completed transactions are immutable except for `description`. Withdrawals are rejected
-  if they exceed the investment's current principal.
+  if they exceed the investment's current principal. Balance checks and writes run under a
+  per-investment database advisory lock so concurrent withdrawals cannot overdraw.
 
 ---
 
@@ -348,11 +353,18 @@ For each investment:
 - Downloads require authentication and scope checks. Time-limited HMAC-signed URLs are
   available via `POST /documents/:id/signed-url` and validated by
   `GET /documents/download/:id?expires=…&signature=…`.
-- Uploads enforce MIME/extension allow-lists, size limits, and role-based categories.
+- Uploads enforce MIME/extension allow-lists, size limits, and role-based categories. Files
+  with a reliable signature (PDF, PNG/JPEG/WebP, DOCX/XLSX) are checked against their bytes,
+  so a client cannot simply declare an arbitrary payload as a document type. Downloads are
+  always sent as attachments with `X-Content-Type-Options: nosniff`.
 - Passwords and security answers use **Argon2id** hashing (`@node-rs/argon2`); the
   passwords are never returned by any endpoint.
 - JWTs are short-lived access tokens; refresh tokens are opaque, rotating, hashed at rest,
-  and revocable per session. Login errors do not reveal whether an email exists.
+  and revocable per session. Rotation is atomic, so concurrent reuse of the same refresh
+  token produces exactly one new session and the replay is rejected. Login errors do not
+  reveal whether an email exists.
+- Money and rate inputs are validated for storage precision (18 integer digits, 4 decimal
+  places, 2 for money) before reaching PostgreSQL; impossible calendar dates are rejected.
 - Invitation and password-reset tokens are single-use, stored as SHA-256 hashes, and expire
   after 7 days / 60 minutes. When SMTP is configured they are delivered by email and never
   returned by the API; email failures are logged without the token.
@@ -362,7 +374,8 @@ For each investment:
   investments, transactions, documents, price overrides, and settings changes, storing
   actor, role, entity, before/after state, outcome, IP, and timestamp.
 - **Idempotency**: transaction creation accepts an `Idempotency-Key` header; repeated
-  requests with the same key return the original transaction instead of double-posting.
+  requests with the same key and payload return the original transaction instead of
+  double-posting. Reusing a key with a different payload returns **409**.
 
 ---
 
@@ -392,10 +405,11 @@ npm test
 - `tests/finance.test.ts` — simple/compound interest, cash-flow projections, portfolio
   summaries.
 - `tests/security.test.ts` — signed URL integrity/expiry, password and security-answer
-  hashing.
+  hashing, decimal/calendar input bounds, and audit-snapshot serialization.
 - `tests/api-permissions.test.ts` — end-to-end Fastify injection tests against a real
-  database: client isolation, administrator scoping, privilege escalation, withdrawal
-  limits, interest/principal rules, last-super-admin protection, and self-disable guards.
+  database: client isolation, administrator scoping, unassigned-client visibility,
+  privilege escalation, refresh-token rotation/reuse, withdrawal limits, idempotency
+  conflicts, interest/principal rules, last-super-admin protection, and self-disable guards.
 - `tests/mail.test.ts` — invitation/reset links, HTML escaping, SMTP-disabled fallback,
   message rendering, transport success, and failure handling.
 

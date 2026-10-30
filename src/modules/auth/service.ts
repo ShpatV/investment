@@ -102,16 +102,25 @@ export async function rotateRefreshToken(
   }
 
   const nextRefreshToken = generateOpaqueToken();
+  const nextTokenHash = hashOpaqueToken(nextRefreshToken);
   const expiresAt = refreshExpiry();
-  await prisma.session.update({
-    where: { id: session.id },
+  const now = new Date();
+  // Atomic claim: only one concurrent request presenting this exact refresh
+  // token can rotate it. Without the conditional update, two parallel refreshes
+  // could both succeed and the last write would silently invalidate the other
+  // client's freshly issued token.
+  const claimed = await prisma.session.updateMany({
+    where: { id: session.id, tokenHash, revokedAt: null, expiresAt: { gt: now } },
     data: {
-      tokenHash: hashOpaqueToken(nextRefreshToken),
+      tokenHash: nextTokenHash,
       expiresAt,
-      lastUsedAt: new Date(),
+      lastUsedAt: now,
       ipAddress: session.ipAddress,
     },
   });
+  if (claimed.count === 0) {
+    throw AppError.unauthorized('Refresh token is invalid or expired');
+  }
 
   const accessToken = app.jwt.sign({
     sub: session.user.id,

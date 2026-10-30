@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { Prisma } from '@prisma/client';
+import { Prisma, type Transaction } from '@prisma/client';
 import { z } from 'zod';
 import { prisma } from '../../lib/prisma';
 import { AppError } from '../../lib/errors';
@@ -70,15 +70,47 @@ function resolveDateFilter(value: string | undefined, endOfDay = false): Date | 
   return date;
 }
 
-async function validateTransactionInput(input: {
-  clientId: string;
-  investmentId?: string | null;
-  type: 'DEPOSIT' | 'WITHDRAWAL' | 'INTEREST';
-  amount: string;
-  currency: string;
-  status: 'COMPLETED' | 'PENDING' | 'FAILED';
-  affectsPrincipal?: boolean;
-}) {
+type TransactionDb = Pick<Prisma.TransactionClient, 'investment'>;
+
+/**
+ * Takes a transaction-scoped advisory lock keyed by investment. This serialises
+ * concurrent balance-affecting mutations for the same investment, including
+ * across multiple API instances, so two withdrawals cannot both validate
+ * against the same starting principal.
+ */
+async function lockInvestment(db: Prisma.TransactionClient, investmentId: string): Promise<void> {
+  // Cast the void result to text so Prisma can deserialize the row.
+  await db.$queryRaw`SELECT pg_advisory_xact_lock(hashtext(${investmentId}))::text`;
+}
+
+function assertIdempotentReplay(existing: Transaction, body: z.infer<typeof createSchema>): void {
+  const same =
+    existing.clientId === body.clientId &&
+    existing.type === body.type &&
+    existing.currency === body.currency &&
+    existing.status === body.status &&
+    (existing.investmentId ?? null) === (body.investmentId ?? null) &&
+    existing.transactionDate.getTime() === body.transactionDate.getTime() &&
+    (existing.description ?? null) === (body.description ?? null) &&
+    existing.amount.toFixed(2) === new Prisma.Decimal(body.amount).toFixed(2);
+  if (!same) {
+    throw AppError.conflict('Idempotency-Key was already used with a different payload');
+  }
+}
+
+async function validateTransactionInput(
+  input: {
+    clientId: string;
+    investmentId?: string | null;
+    type: 'DEPOSIT' | 'WITHDRAWAL' | 'INTEREST';
+    amount: string;
+    currency: string;
+    status: 'COMPLETED' | 'PENDING' | 'FAILED';
+    affectsPrincipal?: boolean;
+  },
+  db: TransactionDb = prisma,
+  excludeTransactionId?: string,
+) {
   let affectsPrincipal = input.affectsPrincipal;
   if (input.type === 'INTEREST') {
     if (!input.investmentId) throw AppError.validation('Interest transactions must reference an investment');
@@ -94,9 +126,17 @@ async function validateTransactionInput(input: {
 
   let investment = null;
   if (input.investmentId) {
-    investment = await prisma.investment.findUnique({
+    investment = await db.investment.findUnique({
       where: { id: input.investmentId },
-      include: { institution: true, transactions: true },
+      include: {
+        institution: true,
+        // When editing a transaction, re-project as if that transaction did
+        // not exist yet. Otherwise editing a completed withdrawal would count
+        // itself against the withdrawal limit.
+        transactions: excludeTransactionId
+          ? { where: { id: { not: excludeTransactionId } } }
+          : true,
+      },
     });
     if (!investment) throw AppError.validation('Investment not found');
     if (investment.clientId !== input.clientId) {
@@ -200,13 +240,15 @@ export async function transactionRoutes(app: FastifyInstance): Promise<void> {
           if (existing.clientId !== body.clientId) {
             throw AppError.conflict('Idempotency key has already been used for another client');
           }
+          assertIdempotentReplay(existing, body);
           return reply.status(200).send({ data: serializeTransaction(existing), idempotent: true });
         }
       }
 
-      const { affectsPrincipal } = await validateTransactionInput(body);
-
       const created = await prisma.$transaction(async (tx) => {
+        if (body.investmentId) await lockInvestment(tx, body.investmentId);
+        const { affectsPrincipal } = await validateTransactionInput(body, tx);
+
         const transaction = await tx.transaction.create({
           data: {
             clientId: body.clientId,
@@ -293,34 +335,65 @@ export async function transactionRoutes(app: FastifyInstance): Promise<void> {
       });
       if (!before) throw AppError.notFound('Transaction not found');
 
-      if (before.status === 'COMPLETED') {
-        const allowedFields = new Set(['description']);
-        const attempted = Object.entries(body).filter(([, value]) => value !== undefined).map(([key]) => key);
-        if (attempted.some((field) => !allowedFields.has(field))) {
-          throw AppError.conflict(
-            'Completed transactions are immutable except for their description. Record a correcting transaction instead.',
-          );
-        }
-      }
-
-      const nextType = body.type ?? before.type;
-      const nextInvestmentId =
+      const requestedInvestmentId =
         body.investmentId !== undefined ? body.investmentId : before.investmentId;
-      const nextStatus = body.status ?? before.status;
-      const nextAmount = body.amount ?? before.amount.toFixed(2);
-      const nextCurrency = body.currency ?? before.currency;
-
-      const { affectsPrincipal } = await validateTransactionInput({
-        clientId: before.clientId,
-        investmentId: nextInvestmentId,
-        type: nextType,
-        amount: nextAmount,
-        currency: nextCurrency,
-        status: nextStatus,
-        affectsPrincipal: body.affectsPrincipal ?? before.affectsPrincipal,
-      });
 
       const updated = await prisma.$transaction(async (tx) => {
+        // Lock every investment involved, in a stable order, so two concurrent
+        // withdrawals cannot both pass the principal check. Re-read the row
+        // under the lock so the validation uses the committed state.
+        const lockIds = [
+          ...new Set(
+            [before.investmentId, requestedInvestmentId].filter(
+              (value): value is string => Boolean(value),
+            ),
+          ),
+        ].sort();
+        for (const investmentId of lockIds) await lockInvestment(tx, investmentId);
+
+        const current = await tx.transaction.findUnique({ where: { id } });
+        if (!current) throw AppError.notFound('Transaction not found');
+
+        const attempted = Object.entries(body)
+          .filter(([, value]) => value !== undefined)
+          .map(([key]) => key);
+
+        if (current.status === 'COMPLETED') {
+          const allowedFields = new Set(['description']);
+          if (attempted.some((field) => !allowedFields.has(field))) {
+            throw AppError.conflict(
+              'Completed transactions are immutable except for their description. Record a correcting transaction instead.',
+            );
+          }
+        }
+
+        const descriptionOnly =
+          current.status === 'COMPLETED' && attempted.every((field) => field === 'description');
+
+        let affectsPrincipal = current.affectsPrincipal;
+        if (!descriptionOnly) {
+          const nextType = body.type ?? current.type;
+          const nextInvestmentId =
+            body.investmentId !== undefined ? body.investmentId : current.investmentId;
+          const nextStatus = body.status ?? current.status;
+          const nextAmount = body.amount ?? current.amount.toFixed(2);
+          const nextCurrency = body.currency ?? current.currency;
+
+          ({ affectsPrincipal } = await validateTransactionInput(
+            {
+              clientId: current.clientId,
+              investmentId: nextInvestmentId,
+              type: nextType,
+              amount: nextAmount,
+              currency: nextCurrency,
+              status: nextStatus,
+              affectsPrincipal: body.affectsPrincipal ?? current.affectsPrincipal,
+            },
+            tx,
+            id,
+          ));
+        }
+
         const transaction = await tx.transaction.update({
           where: { id },
           data: {
@@ -344,14 +417,14 @@ export async function transactionRoutes(app: FastifyInstance): Promise<void> {
             entityType: 'TRANSACTION',
             entityId: id,
             clientId: transaction.clientId,
-            summary: `Transaction updated (${before.status} → ${transaction.status})`,
+            summary: `Transaction updated (${current.status} → ${transaction.status})`,
             before,
             after: transaction,
             ipAddress: request.ip,
           },
           tx,
         );
-        if (before.status !== transaction.status) {
+        if (current.status !== transaction.status) {
           await notify(
             {
               userId: transaction.clientId,

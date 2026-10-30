@@ -26,6 +26,7 @@ const envSchema = z.object({
   PUBLIC_BASE_URL: z.string().url().default('http://localhost:4000'),
   CORS_ORIGIN: z.string().default('http://localhost:3000,http://localhost:5173'),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
+  TRUST_PROXY: z.string().trim().optional(),
 
   DATABASE_URL: z.string().min(1),
 
@@ -87,6 +88,24 @@ if (smtpConfigured && env.SMTP_USER && env.SMTP_PASS === undefined) {
 
 const trimTrailingSlash = (value: string): string => value.replace(/\/$/, '');
 
+/**
+ * Fastify accepts a boolean, an address/CIDR string, or a trust function.
+ * A numeric value is treated as a hop count (1 = one reverse proxy).
+ * Default is `false`: trusting X-Forwarded-For when the API is directly exposed
+ * would let clients spoof their IP and bypass per-IP rate limits.
+ */
+function parseTrustProxy(
+  value: string | undefined,
+): boolean | string | ((address: string, hop: number) => boolean) {
+  if (!value) return false;
+  const normalized = value.toLowerCase();
+  if (['true', 'yes', 'on'].includes(normalized)) return true;
+  if (['false', 'no', 'off', '0'].includes(normalized)) return false;
+  const hops = Number(value);
+  if (Number.isInteger(hops) && hops > 0) return (_address, hop) => hop < hops;
+  return value;
+}
+
 export const config = {
   env: env.NODE_ENV,
   isProduction: env.NODE_ENV === 'production',
@@ -96,6 +115,7 @@ export const config = {
   publicBaseUrl: env.PUBLIC_BASE_URL.replace(/\/$/, ''),
   corsOrigins: env.CORS_ORIGIN.split(',').map((origin) => origin.trim()).filter(Boolean),
   logLevel: env.LOG_LEVEL,
+  trustProxy: parseTrustProxy(env.TRUST_PROXY),
 
   databaseUrl: env.DATABASE_URL,
 

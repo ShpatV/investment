@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../../lib/prisma';
+import type { Db } from '../../lib/prisma';
 import { AppError } from '../../lib/errors';
 import { paginated, paginationArgs, parseBody, parseQuery, parseWith } from '../../lib/http';
 import { pageSchema, trimmedOptional, uuidSchema } from '../../lib/schemas';
@@ -41,8 +42,19 @@ async function assertAssignableAdmin(adminId: string) {
   return admin;
 }
 
-async function activeAssignmentFor(clientId: string) {
-  return prisma.adminAssignment.findFirst({
+type AssignmentDb = Pick<Db, 'adminAssignment'>;
+
+/**
+ * Serialises assignment changes per client. Without this, two concurrent
+ * requests can both see no active assignment and create two ACTIVE rows,
+ * leaving a client visible to two advisors at once.
+ */
+async function lockClientAssignments(db: Db, clientId: string): Promise<void> {
+  await db.$queryRaw`SELECT pg_advisory_xact_lock(hashtext(${`assignment:${clientId}`}))::text`;
+}
+
+async function activeAssignmentFor(clientId: string, db: AssignmentDb = prisma) {
+  return db.adminAssignment.findFirst({
     where: { clientId, status: 'ACTIVE' },
     include: assignmentInclude,
   });
@@ -112,10 +124,21 @@ export async function assignmentRoutes(app: FastifyInstance): Promise<void> {
       schema: { tags: ['Assignments'], summary: 'List clients without an active assignment' },
     },
     async (request, reply) => {
+      const auth = currentUser(request);
       const query = parseQuery(
         z.object({ ...pageSchema, search: z.string().trim().max(200).optional() }),
         request.query,
       );
+
+      if (!isSuperAdmin(auth)) {
+        // The list exposes client PII. Ordinary administrators only need it
+        // when they are allowed to claim unassigned clients themselves.
+        const allowed = await getBooleanSetting(SETTING_KEYS.allowAdminSelfAssign, false);
+        if (!allowed) {
+          throw AppError.forbidden('Administrators are not permitted to view unassigned clients');
+        }
+      }
+
       const where = {
         role: 'USER' as const,
         status: 'ACTIVE' as const,
@@ -176,6 +199,14 @@ export async function assignmentRoutes(app: FastifyInstance): Promise<void> {
       }
 
       const created = await prisma.$transaction(async (tx) => {
+        await lockClientAssignments(tx, body.clientId);
+        const existing = await activeAssignmentFor(body.clientId, tx);
+        if (existing && !isSuperAdmin(auth)) {
+          throw AppError.conflict('This client already has an assigned administrator');
+        }
+        if (existing && existing.adminId === body.adminId) {
+          throw AppError.conflict('This client is already assigned to that administrator');
+        }
         if (existing) {
           await tx.adminAssignment.update({
             where: { id: existing.id },
@@ -278,6 +309,18 @@ export async function assignmentRoutes(app: FastifyInstance): Promise<void> {
       if (body.adminId && body.adminId !== before.adminId) {
         const admin = await assertAssignableAdmin(body.adminId);
         const replacement = await prisma.$transaction(async (tx) => {
+          await lockClientAssignments(tx, before.clientId);
+          const currentAssignment = await tx.adminAssignment.findUnique({ where: { id } });
+          if (!currentAssignment || currentAssignment.status !== 'ACTIVE') {
+            throw AppError.conflict('This assignment is no longer active');
+          }
+          const otherActive = await tx.adminAssignment.findFirst({
+            where: { clientId: before.clientId, status: 'ACTIVE', id: { not: id } },
+            select: { id: true },
+          });
+          if (otherActive) {
+            throw AppError.conflict('This client already has an assigned administrator');
+          }
           await tx.adminAssignment.update({
             where: { id },
             data: { status: 'REPLACED', endedAt: new Date() },
@@ -323,6 +366,24 @@ export async function assignmentRoutes(app: FastifyInstance): Promise<void> {
       }
 
       const updated = await prisma.$transaction(async (tx) => {
+        if (body.status === 'ACTIVE') {
+          await lockClientAssignments(tx, before.clientId);
+          const current = await tx.adminAssignment.findUnique({
+            where: { id },
+            select: { status: true },
+          });
+          if (!current) throw AppError.notFound('Assignment not found');
+          if (current.status !== 'ACTIVE') {
+            const otherActive = await tx.adminAssignment.findFirst({
+              where: { clientId: before.clientId, status: 'ACTIVE', id: { not: id } },
+              select: { id: true },
+            });
+            if (otherActive) {
+              throw AppError.conflict('This client already has an assigned administrator');
+            }
+          }
+        }
+
         const assignment = await tx.adminAssignment.update({
           where: { id },
           data: {

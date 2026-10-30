@@ -4,6 +4,7 @@ import { buildApp } from '../src/app';
 import { config } from '../src/config';
 import { prisma } from '../src/lib/prisma';
 import { hashPassword } from '../src/lib/passwords';
+import { getSetting, setSetting, SETTING_KEYS } from '../src/services/settings';
 
 const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 const password = 'ApiTestPass123!';
@@ -262,6 +263,30 @@ describe('administrator scoping', () => {
     expect(filteredList.json().data).toEqual([]);
   });
 
+  it('hides unassigned clients from administrators who cannot self-assign', async () => {
+    const previous = await getSetting<boolean>(SETTING_KEYS.allowAdminSelfAssign, false);
+    await setSetting(SETTING_KEYS.allowAdminSelfAssign, false);
+    try {
+      const adminToken = await login(`adminassignedid.${suffix}@example.com`);
+      const denied = await app.inject({
+        method: 'GET',
+        url: '/api/assignments/unassigned',
+        headers: auth(adminToken),
+      });
+      expect(denied.statusCode, denied.body).toBe(403);
+
+      const superToken = await login(`superadminid.${suffix}@example.com`);
+      const allowed = await app.inject({
+        method: 'GET',
+        url: '/api/assignments/unassigned',
+        headers: auth(superToken),
+      });
+      expect(allowed.statusCode, allowed.body).toBe(200);
+    } finally {
+      await setSetting(SETTING_KEYS.allowAdminSelfAssign, previous);
+    }
+  });
+
   it('prevents ordinary administrators from managing administrator accounts', async () => {
     const token = await login(`adminassignedid.${suffix}@example.com`);
     const response = await app.inject({
@@ -360,7 +385,100 @@ describe('portal-scoped login', () => {
   });
 });
 
+describe('refresh token rotation', () => {
+  it('allows only one concurrent rotation and rejects reuse of the old token', async () => {
+    const loginResponse = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { email: `clientaid.${suffix}@example.com`, password },
+    });
+    expect(loginResponse.statusCode, loginResponse.body).toBe(200);
+    const original = loginResponse.json().data.refreshToken as string;
+
+    const [first, second] = await Promise.all([
+      app.inject({ method: 'POST', url: '/api/auth/refresh', payload: { refreshToken: original } }),
+      app.inject({ method: 'POST', url: '/api/auth/refresh', payload: { refreshToken: original } }),
+    ]);
+    expect([first.statusCode, second.statusCode].sort()).toEqual([200, 401]);
+
+    const winner = first.statusCode === 200 ? first : second;
+    const rotated = winner.json().data.refreshToken as string;
+    expect(rotated).not.toBe(original);
+
+    const reuse = await app.inject({
+      method: 'POST',
+      url: '/api/auth/refresh',
+      payload: { refreshToken: original },
+    });
+    expect(reuse.statusCode).toBe(401);
+
+    const nextRotation = await app.inject({
+      method: 'POST',
+      url: '/api/auth/refresh',
+      payload: { refreshToken: rotated },
+    });
+    expect(nextRotation.statusCode, nextRotation.body).toBe(200);
+  });
+});
+
 describe('financial mutation guards', () => {
+  it('allows a description-only edit of a completed withdrawal for the full principal', async () => {
+    const token = await login(`superadminid.${suffix}@example.com`);
+    const created = await app.inject({
+      method: 'POST',
+      url: '/api/transactions',
+      headers: auth(token),
+      payload: {
+        clientId: ids.clientAId,
+        investmentId: ids.investmentAId,
+        type: 'WITHDRAWAL',
+        amount: '100000',
+        status: 'COMPLETED',
+        transactionDate: '2025-05-01',
+      },
+    });
+    expect(created.statusCode, created.body).toBe(201);
+
+    const edited = await app.inject({
+      method: 'PATCH',
+      url: `/api/transactions/${created.json().data.id}`,
+      headers: auth(token),
+      payload: { description: 'Corrected statement reference' },
+    });
+    expect(edited.statusCode, edited.body).toBe(200);
+    expect(edited.json().data.description).toBe('Corrected statement reference');
+  });
+
+  it('refuses to replay an idempotency key with a different payload', async () => {
+    const token = await login(`superadminid.${suffix}@example.com`);
+    const key = `idem-${suffix}`;
+    const payload = {
+      clientId: ids.clientAId,
+      investmentId: ids.investmentAId,
+      type: 'DEPOSIT',
+      amount: '250.00',
+      status: 'COMPLETED',
+      transactionDate: '2025-06-01',
+    };
+    const headers = { ...auth(token), 'idempotency-key': key };
+
+    const first = await app.inject({ method: 'POST', url: '/api/transactions', headers, payload });
+    expect(first.statusCode, first.body).toBe(201);
+
+    const replay = await app.inject({ method: 'POST', url: '/api/transactions', headers, payload });
+    expect(replay.statusCode, replay.body).toBe(200);
+    expect(replay.json().idempotent).toBe(true);
+
+    const mismatch = await app.inject({
+      method: 'POST',
+      url: '/api/transactions',
+      headers,
+      payload: { ...payload, amount: '251.00' },
+    });
+    expect(mismatch.statusCode, mismatch.body).toBe(409);
+    expect(mismatch.json().error.message).toContain('different payload');
+  });
+
   it('rejects withdrawals larger than the current principal', async () => {
     const token = await login(`superadminid.${suffix}@example.com`);
     const response = await app.inject({

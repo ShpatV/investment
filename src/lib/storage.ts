@@ -17,6 +17,26 @@ export const ALLOWED_MIME_TYPES = new Map<string, string>([
 
 export const CLIENT_ALLOWED_CATEGORIES = ['IDENTIFICATION', 'TAX_DOCUMENT', 'OTHER'] as const;
 
+/**
+ * Content sniffing for the types that have a reliable signature. The declared
+ * MIME type comes from the client, so it must not be trusted on its own.
+ * Text formats have no reliable magic bytes and are intentionally unchecked.
+ */
+const FILE_SIGNATURES: Record<string, (buffer: Buffer) => boolean> = {
+  'application/pdf': (buffer) => buffer.subarray(0, 1024).includes(Buffer.from('%PDF-')),
+  'image/png': (buffer) =>
+    buffer.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])),
+  'image/jpeg': (buffer) =>
+    buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff,
+  'image/webp': (buffer) =>
+    buffer.subarray(0, 4).toString('ascii') === 'RIFF' &&
+    buffer.subarray(8, 12).toString('ascii') === 'WEBP',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': (buffer) =>
+    buffer.subarray(0, 4).equals(Buffer.from([0x50, 0x4b, 0x03, 0x04])),
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': (buffer) =>
+    buffer.subarray(0, 4).equals(Buffer.from([0x50, 0x4b, 0x03, 0x04])),
+};
+
 export interface StoredFile {
   storageKey: string;
   checksum: string;
@@ -41,8 +61,16 @@ export function assertAllowedFile(mimeType: string, fileSize: number): void {
   }
 }
 
+export function assertFileSignature(buffer: Buffer, mimeType: string): void {
+  const matches = FILE_SIGNATURES[mimeType];
+  if (matches && !matches(buffer)) {
+    throw AppError.validation('File content does not match its declared type');
+  }
+}
+
 export async function saveFile(buffer: Buffer, mimeType: string): Promise<StoredFile> {
   assertAllowedFile(mimeType, buffer.byteLength);
+  assertFileSignature(buffer, mimeType);
   await ensureStorageDir();
   const extension = ALLOWED_MIME_TYPES.get(mimeType) ?? '.bin';
   const date = new Date();

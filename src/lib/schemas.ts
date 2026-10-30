@@ -15,8 +15,13 @@ export const uuidSchema = z.string().uuid('A valid identifier is required');
 export const dateOnlySchema = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must use YYYY-MM-DD format')
-  .transform((value) => new Date(`${value}T00:00:00.000Z`))
-  .refine((date) => !Number.isNaN(date.getTime()), 'Invalid date');
+  .refine((value) => {
+    // Round-trip check rejects impossible dates such as 2026-02-31, which
+    // JavaScript would otherwise silently roll over to the next month.
+    const parsed = new Date(`${value}T00:00:00.000Z`);
+    return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+  }, 'Invalid calendar date')
+  .transform((value) => new Date(`${value}T00:00:00.000Z`));
 
 export const isoDateTimeSchema = z
   .string()
@@ -31,12 +36,31 @@ export const pageSchema = {
 };
 
 export const currencySchema = z.literal('USD').default('USD');
+
+/**
+ * Shared decimal input for money and rates. The database stores money as
+ * Decimal(20,2), so this accepts at most 18 integer digits and 4 fractional
+ * digits. Rejecting out-of-range values here turns what would otherwise be a
+ * database overflow (HTTP 500) into a clear validation error.
+ */
 export const decimalStringSchema = z
   .union([z.string(), z.number()])
   .transform((value) => (typeof value === 'number' ? value.toString() : value))
-  .refine((value) => /^-?\d+(\.\d+)?$/.test(value), 'Must be a valid decimal number');
+  .refine(
+    (value) => /^-?\d{1,18}(\.\d{1,4})?$/.test(value),
+    'Must be a valid decimal with at most 18 integer and 4 fractional digits',
+  );
 
-export const positiveAmountSchema = decimalStringSchema.refine((value) => Number(value) > 0, 'Amount must be greater than zero');
+/** Money values are stored with two decimal places; reject sub-cent precision. */
+export const moneyAmountSchema = decimalStringSchema.refine(
+  (value) => /^-?\d{1,18}(\.\d{1,2})?$/.test(value),
+  'Amount must have at most 2 decimal places',
+);
+
+export const positiveAmountSchema = moneyAmountSchema.refine(
+  (value) => Number(value) > 0,
+  'Amount must be greater than zero',
+);
 
 export const trimmedOptional = (max = 200) =>
   z
