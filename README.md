@@ -416,6 +416,14 @@ npm test
 The API tests create uniquely named fixture data and clean up after themselves. They need
 the database from `docker compose up -d db` and a valid `.env`.
 
+### Dependency security
+
+`npm audit` reports zero known vulnerabilities, including dev dependencies. `npm audit
+--omit=dev` is also clean. `package.json` keeps one narrow override:
+`deepmerge-ts@8.0.2` replaces the vulnerable `7.1.5` pinned by `@prisma/config@6.19.3`.
+The override is verified against `prisma validate`/`prisma generate`; upgrade the override
+or drop it when moving to a Prisma release that resolves the advisory itself.
+
 ---
 
 ## 11. Docker deployment

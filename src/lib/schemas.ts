@@ -35,7 +35,13 @@ export const pageSchema = {
   pageSize: z.coerce.number().int().min(1).max(100).default(20),
 };
 
-export const currencySchema = z.literal('USD').default('USD');
+export const currencySchema = z.literal('USD');
+/**
+ * Defaulted variant for create payloads. Keep the default out of
+ * `currencySchema` itself: wrapping a defaulted schema with `.optional()`
+ * still injects the default in Zod 4, which corrupts partial updates.
+ */
+export const currencyInputSchema = currencySchema.default('USD');
 
 /**
  * Shared decimal input for money and rates. The database stores money as

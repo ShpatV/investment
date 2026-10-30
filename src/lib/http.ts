@@ -1,7 +1,7 @@
-import type { ZodType, ZodTypeDef } from 'zod';
+import type { output, ZodType } from 'zod';
 import { AppError } from './errors';
 
-export function parseWith<T>(schema: ZodType<T, ZodTypeDef, unknown>, value: unknown, label = 'request'): T {
+export function parseWith<S extends ZodType>(schema: S, value: unknown, label = 'request'): output<S> {
   const result = schema.safeParse(value);
   if (!result.success) {
     throw AppError.validation(`Invalid ${label}`, {
@@ -15,9 +15,9 @@ export function parseWith<T>(schema: ZodType<T, ZodTypeDef, unknown>, value: unk
   return result.data;
 }
 
-export const parseBody = <T>(schema: ZodType<T, ZodTypeDef, unknown>, body: unknown) =>
+export const parseBody = <S extends ZodType>(schema: S, body: unknown) =>
   parseWith(schema, body, 'payload');
-export const parseQuery = <T>(schema: ZodType<T, ZodTypeDef, unknown>, query: unknown) =>
+export const parseQuery = <S extends ZodType>(schema: S, query: unknown) =>
   parseWith(schema, query, 'query');
 
 export interface PageQuery {

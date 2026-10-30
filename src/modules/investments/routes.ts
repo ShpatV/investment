@@ -5,6 +5,7 @@ import { prisma } from '../../lib/prisma';
 import { AppError } from '../../lib/errors';
 import { paginated, paginationArgs, parseBody, parseQuery, parseWith } from '../../lib/http';
 import {
+  currencyInputSchema,
   currencySchema,
   dateOnlySchema,
   decimalStringSchema,
@@ -34,7 +35,7 @@ const createSchema = z
     institutionId: uuidSchema,
     name: z.string().trim().min(2).max(200),
     principalAmount: moneyAmountSchema.refine((value) => Number(value) > 0, 'Principal must be greater than zero'),
-    currency: currencySchema,
+    currency: currencyInputSchema,
     annualInterestRate: rateSchema,
     compoundingFrequency: z.enum(['SIMPLE', 'MONTHLY', 'QUARTERLY', 'SEMIANNUALLY', 'ANNUALLY']).default('SIMPLE'),
     startDate: dateOnlySchema,

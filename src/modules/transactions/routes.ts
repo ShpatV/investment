@@ -5,6 +5,7 @@ import { prisma } from '../../lib/prisma';
 import { AppError } from '../../lib/errors';
 import { paginated, paginationArgs, parseBody, parseQuery, parseWith } from '../../lib/http';
 import {
+  currencyInputSchema,
   currencySchema,
   dateOnlySchema,
   isoDateTimeSchema,
@@ -28,7 +29,7 @@ const createSchema = z.object({
   investmentId: uuidSchema.optional(),
   type: z.enum(['DEPOSIT', 'WITHDRAWAL', 'INTEREST']),
   amount: positiveAmountSchema,
-  currency: currencySchema,
+  currency: currencyInputSchema,
   description: trimmedOptional(1000),
   status: z.enum(['COMPLETED', 'PENDING', 'FAILED']).default('PENDING'),
   affectsPrincipal: z.boolean().optional(),
@@ -354,9 +355,14 @@ export async function transactionRoutes(app: FastifyInstance): Promise<void> {
         const current = await tx.transaction.findUnique({ where: { id } });
         if (!current) throw AppError.notFound('Transaction not found');
 
-        const attempted = Object.entries(body)
-          .filter(([, value]) => value !== undefined)
-          .map(([key]) => key);
+        // Only count fields the client actually sent. Parsed output can contain
+        // schema defaults for keys that were omitted, which must not be treated
+        // as attempted changes to an immutable completed transaction.
+        const rawBody =
+          request.body && typeof request.body === 'object' && !Array.isArray(request.body)
+            ? (request.body as Record<string, unknown>)
+            : {};
+        const attempted = Object.keys(body).filter((key) => rawBody[key] !== undefined);
 
         if (current.status === 'COMPLETED') {
           const allowedFields = new Set(['description']);
