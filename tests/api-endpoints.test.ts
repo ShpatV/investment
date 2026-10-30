@@ -1289,6 +1289,59 @@ describe('document storage and signed downloads', () => {
     expect(response.json().error.message).toContain('Unsupported file type');
   });
 
+  it('archives a document through the dedicated archive endpoint', async () => {
+    const admin = await login(emailFor('admin'));
+    const body = multipart(
+      { title: `Archive Me ${suffix}`, category: 'STATEMENT', clientId: fx.clientAId },
+      { filename: 'archive.pdf', contentType: 'application/pdf', data: pdfBytes },
+    );
+    const uploaded = await call({
+      method: 'POST',
+      url: '/api/documents',
+      headers: { ...auth(admin.accessToken), ...body.headers },
+      payload: body.payload,
+    });
+    expect(uploaded.statusCode, uploaded.body).toBe(201);
+    const documentId = uploaded.json().data.id as string;
+
+    const client = await login(emailFor('clienta'));
+    const forbidden = await call({
+      method: 'POST',
+      url: `/api/documents/${documentId}/archive`,
+      headers: auth(client.accessToken),
+    });
+    expect(forbidden.statusCode).toBe(403);
+
+    const archived = await call({
+      method: 'POST',
+      url: `/api/documents/${documentId}/archive`,
+      headers: auth(admin.accessToken),
+    });
+    expect(archived.statusCode, archived.body).toBe(204);
+
+    const metadata = await call({
+      method: 'GET',
+      url: `/api/documents/${documentId}`,
+      headers: auth(admin.accessToken),
+    });
+    expect(metadata.statusCode, metadata.body).toBe(200);
+    expect(metadata.json().data.status).toBe('ARCHIVED');
+    expect(metadata.json().data.archivedAt).toBeTruthy();
+
+    const audit = await prisma.auditLog.findFirst({
+      where: { action: 'DOCUMENT_ARCHIVED', entityId: documentId },
+    });
+    expect(audit).not.toBeNull();
+
+    // Archiving is idempotent.
+    const again = await call({
+      method: 'POST',
+      url: `/api/documents/${documentId}/archive`,
+      headers: auth(admin.accessToken),
+    });
+    expect(again.statusCode).toBe(204);
+  });
+
   it('prevents other clients from reading document metadata and archives for administrators', async () => {
     const otherClient = await login(emailFor('clientb'));
     const denied = await call({
