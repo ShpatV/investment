@@ -167,7 +167,7 @@ export function Investments({ clientId, editable = false }: { clientId?: string;
           </tr>
         ))}
       </Table>
-      {isPending && <p className="text-sm text-muted-foreground">Loading investments…</p>}
+      {isPending && <div className="h-4 w-32 animate-pulse rounded bg-secondary/50" />}
       <Pager page={page} pages={totalPages} onPage={setPage} />
 
       {selected && <InvestmentDetail investment={selected} onClose={() => setSelected(null)} />}
@@ -508,7 +508,7 @@ export function Transactions({ clientId, editable = false }: { clientId?: string
           </tr>
         ))}
       </Table>
-      {isPending && <p className="text-sm text-muted-foreground">Loading transactions…</p>}
+      {isPending && <div className="h-4 w-32 animate-pulse rounded bg-secondary/50" />}
       <Pager page={page} pages={totalPages} onPage={setPage} />
 
       {open && clientId && <TransactionForm clientId={clientId} onClose={() => setOpen(false)} />}
@@ -758,7 +758,7 @@ export function Documents({ clientId, editable = false }: { clientId?: string; e
           </tr>
         ))}
       </Table>
-      {isPending && <p className="text-sm text-muted-foreground">Loading documents…</p>}
+      {isPending && <div className="h-4 w-32 animate-pulse rounded bg-secondary/50" />}
       <Pager page={page} pages={totalPages} onPage={setPage} />
 
       {open && (

@@ -71,7 +71,29 @@ export function AdminPrices() {
     }
   };
 
-  if (isPending) return <p className="text-sm text-muted-foreground">Loading published prices…</p>;
+  if (isPending) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="grid gap-4 sm:grid-cols-2">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={i} className="rounded-lg border border-border bg-card p-6 shadow-sm">
+              <div className="h-4 w-24 rounded bg-secondary/60" />
+              <div className="mt-3 h-8 w-32 rounded bg-secondary/60" />
+              <div className="mt-2 h-3 w-40 rounded bg-secondary/40" />
+            </div>
+          ))}
+        </div>
+        <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+          <div className="h-5 w-32 rounded bg-secondary/60" />
+          <div className="mt-4 space-y-3">
+            {Array.from({ length: 3 }).map((_, j) => (
+              <div key={j} className="h-4 w-full rounded bg-secondary/40" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (error || !data) return <p className="text-sm text-destructive">{errorText(error)}</p>;
 
   const canOverride = data.canOverride;
@@ -309,7 +331,7 @@ function PriceHistoryModal({ commodity, onClose }: { commodity: Commodity; onClo
 
   return (
     <Modal open title={`${commodityLabel[commodity]} price history`} onClose={onClose}>
-      {isPending && <p className="text-sm text-muted-foreground">Loading history…</p>}
+      {isPending && <div className="h-4 w-32 animate-pulse rounded bg-secondary/50" />}
       {error && <p className="text-sm text-destructive">{errorText(error)}</p>}
       {data && (
         <div className="space-y-8">
@@ -496,7 +518,7 @@ export function AdminAudit() {
           </tr>
         ))}
       </Table>
-      {audit.isPending && <p className="mt-4 text-sm text-muted-foreground">Loading audit history…</p>}
+      {audit.isPending && <div className="mt-4 h-4 w-32 animate-pulse rounded bg-secondary/50" />}
       <Pager page={page} pages={totalPages} onPage={setPage} />
 
       <Modal open={Boolean(selected)} title="Audit event" onClose={() => setSelected(null)}>

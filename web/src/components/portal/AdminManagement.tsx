@@ -135,7 +135,7 @@ export function AdminAccounts() {
           </tr>
         ))}
       </Table>
-      {admins.isPending && <p className="mt-4 text-sm text-muted-foreground">Loading administrators…</p>}
+      {admins.isPending && <div className="mt-4 h-4 w-32 animate-pulse rounded bg-secondary/50" />}
       <Pager page={page} pages={totalPages} onPage={setPage} />
 
       {createOpen && <AdminForm onClose={() => setCreateOpen(false)} onInvite={setInvite} />}
@@ -412,7 +412,7 @@ export function AdminAssignments() {
           </tr>
         ))}
       </Table>
-      {assignments.isPending && <p className="mt-4 text-sm text-muted-foreground">Loading assignments…</p>}
+      {assignments.isPending && <div className="mt-4 h-4 w-32 animate-pulse rounded bg-secondary/50" />}
       <Pager page={page} pages={totalPages} onPage={setPage} />
 
       {createOpen && <AssignForm onClose={() => setCreateOpen(false)} adminOptions={adminOptions} />}

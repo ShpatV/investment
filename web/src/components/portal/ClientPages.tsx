@@ -224,7 +224,16 @@ export function ClientDashboard() {
 
       <div className="mt-8">
         <Panel title="Market headlines">
-          {news.isPending && <p className="text-sm text-muted-foreground">Loading headlines…</p>}
+          {news.isPending && (
+          <div className="space-y-3 animate-pulse">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="space-y-2">
+                <div className="h-4 w-3/4 rounded bg-secondary/50" />
+                <div className="h-3 w-full rounded bg-secondary/40" />
+              </div>
+            ))}
+          </div>
+        )}
           {news.error && (
             <p className="text-sm text-muted-foreground">Headlines are temporarily unavailable.</p>
           )}
@@ -296,7 +305,18 @@ export function ClientProfile() {
   const [questionOpen, setQuestionOpen] = useState(false);
 
   if (profile.isPending) {
-    return <p className="text-sm text-muted-foreground">Loading your profile…</p>;
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+          <div className="h-5 w-32 rounded bg-secondary/60" />
+          <div className="mt-4 space-y-3">
+            {Array.from({ length: 5 }).map((_, j) => (
+              <div key={j} className="h-4 w-full rounded bg-secondary/40" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
   if (profile.error || !profile.data) {
     return <p className="text-sm text-destructive">{errorText(profile.error)}</p>;

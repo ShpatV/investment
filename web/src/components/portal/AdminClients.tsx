@@ -195,7 +195,7 @@ export function AdminClients() {
           </tr>
         ))}
       </Table>
-      {clients.isPending && <p className="mt-4 text-sm text-muted-foreground">Loading clients…</p>}
+      {clients.isPending && <div className="mt-4 h-4 w-32 animate-pulse rounded bg-secondary/50" />}
       <Pager page={page} pages={totalPages} onPage={setPage} />
 
       <ClientForm open={add} onClose={() => setAdd(false)} />
@@ -269,7 +269,21 @@ export function AdminClientDetail({ clientId }: { clientId: string }) {
   const audit = useAuditLogs({ clientId, pageSize: 20 });
   const removeAssignment = useRemoveAssignment();
 
-  if (client.isPending) return <p className="text-sm text-muted-foreground">Loading client…</p>;
+  if (client.isPending) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="h-8 w-48 rounded bg-secondary/60" />
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="rounded-lg border border-border bg-card p-6 shadow-sm">
+              <div className="h-3 w-24 rounded bg-secondary/60" />
+              <div className="mt-3 h-6 w-20 rounded bg-secondary/60" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
   if (client.error || !client.data) return <p className="text-sm text-destructive">{errorText(client.error)}</p>;
 
   const detail = client.data;
