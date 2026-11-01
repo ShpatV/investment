@@ -1510,6 +1510,23 @@ describe('audit log', () => {
     });
     expect(detail.statusCode, detail.body).toBe(200);
     expect(detail.json().data.id).toBe(log.id);
+
+    const searched = await call({
+      method: 'GET',
+      url: `/api/audit-logs?search=CLIENT_CREATED&actorRole=SUPER_ADMIN&entityId=${fx.apiClientId}&pageSize=100`,
+      headers: auth(accessToken),
+    });
+    expect(searched.statusCode, searched.body).toBe(200);
+    expect(searched.json().data.length).toBeGreaterThanOrEqual(1);
+    expect(searched.json().data[0].actorRole).toBe('SUPER_ADMIN');
+
+    const noMatch = await call({
+      method: 'GET',
+      url: '/api/audit-logs?search=definitely-no-such-audit-event&pageSize=100',
+      headers: auth(accessToken),
+    });
+    expect(noMatch.statusCode, noMatch.body).toBe(200);
+    expect(noMatch.json().data).toHaveLength(0);
   });
 
   it('hides other clients from ordinary administrators and blocks clients', async () => {

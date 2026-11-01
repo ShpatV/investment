@@ -42,8 +42,10 @@ export async function auditRoutes(app: FastifyInstance): Promise<void> {
           entityType: z.string().trim().max(60).optional(),
           entityId: z.string().trim().max(100).optional(),
           actorId: uuidSchema.optional(),
+          actorRole: z.enum(['USER', 'ADMIN', 'SUPER_ADMIN']).optional(),
           clientId: uuidSchema.optional(),
           outcome: z.enum(['SUCCESS', 'FAILURE']).optional(),
+          search: z.string().trim().max(200).optional(),
           from: z.string().trim().optional(),
           to: z.string().trim().optional(),
         }),
@@ -62,8 +64,30 @@ export async function auditRoutes(app: FastifyInstance): Promise<void> {
         ...(query.entityType ? { entityType: query.entityType } : {}),
         ...(query.entityId ? { entityId: query.entityId } : {}),
         ...(query.actorId ? { actorId: query.actorId } : {}),
+        ...(query.actorRole ? { actorRole: query.actorRole } : {}),
         ...(query.clientId ? { clientId: query.clientId } : {}),
         ...(query.outcome ? { outcome: query.outcome } : {}),
+        ...(query.search
+          ? {
+              OR: [
+                { action: { contains: query.search, mode: 'insensitive' as const } },
+                { summary: { contains: query.search, mode: 'insensitive' as const } },
+                { entityType: { contains: query.search, mode: 'insensitive' as const } },
+                { entityId: { contains: query.search, mode: 'insensitive' as const } },
+                {
+                  actor: {
+                    is: {
+                      OR: [
+                        { firstName: { contains: query.search, mode: 'insensitive' as const } },
+                        { lastName: { contains: query.search, mode: 'insensitive' as const } },
+                        { email: { contains: query.search, mode: 'insensitive' as const } },
+                      ],
+                    },
+                  },
+                },
+              ],
+            }
+          : {}),
         ...(from || to
           ? { createdAt: { ...(from ? { gte: from } : {}), ...(to ? { lt: to } : {}) } }
           : {}),

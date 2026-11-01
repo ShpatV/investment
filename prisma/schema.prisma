@@ -402,3 +402,20 @@ model NewsCache {
 
   @@map("news_cache")
 }
+
+/// Public website enquiries. Consent is recorded at the time of submission.
+model ContactMessage {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @db.VarChar(100)
+  email     String   @db.VarChar(255)
+  phone     String?  @db.VarChar(40)
+  topic     String   @db.VarChar(100)
+  message   String   @db.VarChar(2000)
+  consent   Boolean  @default(true)
+  ipAddress String?  @map("ip_address") @db.VarChar(64)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@map("contact_messages")
+}
+

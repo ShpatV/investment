@@ -1,0 +1,1274 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Investment Management Platform API",
+    "description": "Role-based API for the client portal, admin portal and super-admin console. Monetary values in responses are decimal numbers rounded to 2 places; calculations are performed with exact decimals.",
+    "version": "1.0.0"
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {}
+  },
+  "paths": {
+    "/api/auth/login": {
+      "post": {
+        "summary": "Sign in and receive access/refresh tokens (any role)",
+        "tags": [
+          "Auth"
+        ],
+        "description": "Generic sign-in used by single-frontend deployments. When each role runs in its own frontend, prefer POST /auth/login/client, /auth/login/admin or /auth/login/super-admin.",
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/auth/login/client": {
+      "post": {
+        "summary": "Client portal sign-in (client accounts only)",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/auth/login/admin": {
+      "post": {
+        "summary": "Admin portal sign-in (admin and super admin accounts)",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/auth/login/super-admin": {
+      "post": {
+        "summary": "Super admin portal sign-in (super admin accounts only)",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "summary": "Rotate a refresh token",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "summary": "Revoke a refresh token",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "summary": "Current authenticated account",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/auth/change-password": {
+      "post": {
+        "summary": "Change the current account password",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/auth/forgot-password": {
+      "post": {
+        "summary": "Request a password reset link",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/auth/reset-password": {
+      "post": {
+        "summary": "Set a password using an invitation or reset token",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/auth/security-question": {
+      "get": {
+        "summary": "Get the configured security question",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Replace the security question and answer",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/profile": {
+      "get": {
+        "summary": "Get own profile",
+        "tags": [
+          "Profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update own permitted profile fields",
+        "tags": [
+          "Profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/clients": {
+      "get": {
+        "summary": "List clients visible to the current administrator",
+        "tags": [
+          "Clients"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a client account",
+        "tags": [
+          "Clients"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/clients/{id}": {
+      "get": {
+        "summary": "Get a client with portfolio and recent activity",
+        "tags": [
+          "Clients"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update client personal information",
+        "tags": [
+          "Clients"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/clients/{id}/disable": {
+      "post": {
+        "summary": "Disable a client account",
+        "tags": [
+          "Clients"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/clients/{id}/reactivate": {
+      "post": {
+        "summary": "Reactivate a client account",
+        "tags": [
+          "Clients"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/clients/{id}/invite": {
+      "post": {
+        "summary": "Issue a new account invitation link",
+        "tags": [
+          "Clients"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/admins": {
+      "get": {
+        "summary": "List administrator accounts",
+        "tags": [
+          "Admins"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an administrator or user account",
+        "tags": [
+          "Admins"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/admins/{id}": {
+      "get": {
+        "summary": "Get an administrator account",
+        "tags": [
+          "Admins"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update an administrator account",
+        "tags": [
+          "Admins"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/admins/{id}/disable": {
+      "post": {
+        "summary": "Disable an administrator account",
+        "tags": [
+          "Admins"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/admins/{id}/reactivate": {
+      "post": {
+        "summary": "Reactivate an administrator account",
+        "tags": [
+          "Admins"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/admins/{id}/clients": {
+      "get": {
+        "summary": "List clients assigned to an administrator",
+        "tags": [
+          "Admins"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/assignments": {
+      "get": {
+        "summary": "List client assignments",
+        "tags": [
+          "Assignments"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "post": {
+        "summary": "Assign a client to an administrator",
+        "tags": [
+          "Assignments"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/assignments/unassigned": {
+      "get": {
+        "summary": "List clients without an active assignment",
+        "tags": [
+          "Assignments"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/assignments/{id}": {
+      "get": {
+        "summary": "Get an assignment",
+        "tags": [
+          "Assignments"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Reassign or update an assignment",
+        "tags": [
+          "Assignments"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove an assignment (history retained)",
+        "tags": [
+          "Assignments"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/institutions": {
+      "get": {
+        "summary": "List institutions",
+        "tags": [
+          "Institutions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an institution",
+        "tags": [
+          "Institutions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/institutions/{id}": {
+      "patch": {
+        "summary": "Update an institution",
+        "tags": [
+          "Institutions"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Disable an unused institution",
+        "tags": [
+          "Institutions"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/investments": {
+      "get": {
+        "summary": "List investments visible to the current user",
+        "tags": [
+          "Investments"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an investment for a client",
+        "tags": [
+          "Investments"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/investments/{id}": {
+      "get": {
+        "summary": "Get investment details",
+        "tags": [
+          "Investments"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update investment terms",
+        "tags": [
+          "Investments"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/transactions": {
+      "get": {
+        "summary": "List transactions",
+        "tags": [
+          "Transactions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "post": {
+        "summary": "Record a transaction for a client",
+        "tags": [
+          "Transactions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/transactions/{id}": {
+      "get": {
+        "summary": "Get a transaction",
+        "tags": [
+          "Transactions"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a pending transaction",
+        "tags": [
+          "Transactions"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/documents": {
+      "get": {
+        "summary": "List documents",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "post": {
+        "summary": "Upload a document (multipart/form-data)",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/documents/{id}": {
+      "get": {
+        "summary": "Get document metadata",
+        "tags": [
+          "Documents"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Archive a document (soft delete)",
+        "tags": [
+          "Documents"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/documents/{id}/download": {
+      "get": {
+        "summary": "Download an authorized document",
+        "tags": [
+          "Documents"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/documents/{id}/signed-url": {
+      "post": {
+        "summary": "Create a short-lived download URL",
+        "tags": [
+          "Documents"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/documents/download/{id}": {
+      "get": {
+        "summary": "Download via signed URL",
+        "tags": [
+          "Documents"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/documents/{id}/archive": {
+      "post": {
+        "summary": "Archive a document",
+        "tags": [
+          "Documents"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/prices": {
+      "get": {
+        "summary": "Get published gold and oil prices",
+        "tags": [
+          "Prices"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/prices/refresh": {
+      "post": {
+        "summary": "Refresh prices from the configured provider",
+        "tags": [
+          "Prices"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/prices/{commodity}/override": {
+      "post": {
+        "summary": "Create or replace a manual price override",
+        "tags": [
+          "Prices"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "commodity",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Clear a manual price override",
+        "tags": [
+          "Prices"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "commodity",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/prices/{commodity}": {
+      "get": {
+        "summary": "Get one commodity price",
+        "tags": [
+          "Prices"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "commodity",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/prices/{commodity}/history": {
+      "get": {
+        "summary": "Get price override and provider history",
+        "tags": [
+          "Prices"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "commodity",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/news": {
+      "get": {
+        "summary": "Get cached gold/oil market headlines",
+        "tags": [
+          "News"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/dashboard/client": {
+      "get": {
+        "summary": "Client dashboard metrics and portfolio",
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/dashboard/admin": {
+      "get": {
+        "summary": "Administrative overview metrics and recent activity",
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/audit-logs": {
+      "get": {
+        "summary": "Search the append-only audit log",
+        "tags": [
+          "Audit"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/audit-logs/{id}": {
+      "get": {
+        "summary": "Get one audit event",
+        "tags": [
+          "Audit"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/notifications": {
+      "get": {
+        "summary": "List own notifications",
+        "tags": [
+          "Notifications"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/notifications/{id}/read": {
+      "patch": {
+        "summary": "Mark a notification as read",
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/notifications/read-all": {
+      "post": {
+        "summary": "Mark all notifications as read",
+        "tags": [
+          "Notifications"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/settings": {
+      "get": {
+        "summary": "Get all system settings",
+        "tags": [
+          "Settings"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update system settings",
+        "tags": [
+          "Settings"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/settings/effective": {
+      "get": {
+        "summary": "Get permissions that affect the current admin UI",
+        "tags": [
+          "Settings"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "description": "API server"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "Profile"
+    },
+    {
+      "name": "Clients"
+    },
+    {
+      "name": "Admins"
+    },
+    {
+      "name": "Assignments"
+    },
+    {
+      "name": "Institutions"
+    },
+    {
+      "name": "Investments"
+    },
+    {
+      "name": "Transactions"
+    },
+    {
+      "name": "Documents"
+    },
+    {
+      "name": "Prices"
+    },
+    {
+      "name": "News"
+    },
+    {
+      "name": "Dashboard"
+    },
+    {
+      "name": "Audit"
+    },
+    {
+      "name": "Notifications"
+    },
+    {
+      "name": "Settings"
+    }
+  ]
+}
