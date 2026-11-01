@@ -1,4 +1,4 @@
-@import "tailwindcss" source(none);
+﻿@import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
 
@@ -42,7 +42,7 @@
 
 :root {
   --radius: 2px;
-  --background: oklch(0.985 0.004 85);
+  --background: oklch(1 0 0);
   --foreground: oklch(0.2 0.035 260);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.2 0.035 260);
@@ -155,3 +155,4 @@
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
   .reveal { opacity: 1; transform: none; }
 }
+

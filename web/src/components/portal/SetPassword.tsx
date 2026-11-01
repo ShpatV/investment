@@ -120,7 +120,7 @@ export function SetPasswordForm({
             const ok = rule.test(password);
             return (
               <li key={rule.label} className={ok ? "text-positive" : "text-muted-foreground"}>
-                {ok ? "âœ“" : "Â·"} {rule.label}
+                {ok ? "✓" : "·"} {rule.label}
               </li>
             );
           })}
@@ -131,12 +131,12 @@ export function SetPasswordForm({
           </p>
         )}
         <Button className={`${buttonCls("navy")} mt-8 w-full`} disabled={submitting}>
-          {submitting ? "Savingâ€¦" : "Set password"}
+          {submitting ? "Saving…" : "Set password"}
         </Button>
         <button
           type="button"
           onClick={() => void navigate({ to: "/login" })}
-          className="mt-4 w-full text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground"
+          className="mt-4 w-full text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground cursor-pointer"
         >
           Back to sign in
         </button>

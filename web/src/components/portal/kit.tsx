@@ -148,7 +148,7 @@ export function FilterBar({
   return (
     <div
       className={cn(
-        "flex flex-col sm:flex-row sm:items-end gap-3 mb-6",
+        "flex flex-wrap items-end gap-2 sm:gap-3 mb-6",
         className,
       )}
     >
@@ -167,8 +167,8 @@ export function FilterField({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col gap-1.5 min-w-[150px]", className)}>
-      <label className="text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">{label}</label>
+    <div className={cn("flex flex-col gap-1 min-w-0 flex-1 sm:flex-none sm:min-w-[140px]", className)}>
+      <label className="text-[0.65rem] uppercase tracking-[0.1em] text-muted-foreground">{label}</label>
       <div className="flex items-end gap-2">{children}</div>
     </div>
   );
@@ -188,7 +188,7 @@ export function FilterInput({
   return (
     <input
       type="text"
-      className={cn(input, "w-auto max-w-xs sm:max-w-md", className)}
+      className={cn("border border-input bg-card px-2.5 py-1.5 text-sm outline-none transition-colors focus:border-gold cursor-text w-full sm:w-auto sm:min-w-[160px] sm:max-w-[220px]", className)}
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
@@ -211,7 +211,7 @@ export function FilterSelect({
 }) {
   return (
     <select
-      className={cn(input, "w-auto max-w-xs sm:max-w-md", className)}
+      className={cn("border border-input bg-card px-2.5 py-1.5 text-sm outline-none transition-colors focus:border-gold cursor-pointer w-full sm:w-auto sm:min-w-[140px] sm:max-w-[200px]", className)}
       value={value}
       onChange={(e) => onChange(e.target.value)}
     >
@@ -239,18 +239,18 @@ export function DateRange({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col gap-1.5 min-w-[170px]", className)}>
-      <label className="text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">Date range</label>
+    <div className={cn("flex flex-col gap-1 min-w-0 flex-1 sm:flex-none sm:min-w-[200px]", className)}>
+      <label className="text-[0.65rem] uppercase tracking-[0.1em] text-muted-foreground">Date range</label>
       <div className="flex gap-2">
         <input
           type="date"
-          className={cn(input, "w-auto max-w-xs sm:max-w-md", className)}
+          className={cn("border border-input bg-card px-2 py-1.5 text-sm outline-none transition-colors focus:border-gold cursor-pointer w-full sm:w-auto", className)}
           value={from}
           onChange={(e) => onFromChange(e.target.value)}
         />
         <input
           type="date"
-          className={cn(input, "w-auto max-w-xs sm:max-w-md", className)}
+          className={cn("border border-input bg-card px-2 py-1.5 text-sm outline-none transition-colors focus:border-gold cursor-pointer w-full sm:w-auto", className)}
           value={to}
           onChange={(e) => onToChange(e.target.value)}
         />
@@ -273,7 +273,7 @@ export function DatePicker({
   return (
     <input
       type="date"
-      className={cn(input, "w-auto max-w-xs sm:max-w-md", className)}
+      className={cn("border border-input bg-card px-2.5 py-1.5 text-sm outline-none transition-colors focus:border-gold cursor-pointer w-full sm:w-auto", className)}
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}

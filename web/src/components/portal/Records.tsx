@@ -480,12 +480,6 @@ export function Transactions({ clientId, editable = false }: { clientId?: string
             onToChange={(value) => reset(() => setTo(value))}
           />
         </FilterField>
-        {editable && (
-          <Button onClick={() => setOpen(true)} disabled={!clientId}>
-            <Plus />
-            Add transaction
-          </Button>
-        )}
       </FilterBar>
 
       {error && <p className="text-sm text-destructive">{errorText(error)}</p>}

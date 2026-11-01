@@ -26,6 +26,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<null | "products" | "markets">(null);
+  const [closeTimer, setCloseTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
   const overHero = pathname === "/" && !scrolled;
 
   useEffect(() => {
@@ -53,22 +54,22 @@ export function Header() {
       <div className="container-x flex h-20 items-center justify-between">
         <Link to="/" aria-label="Avencrestcorp home"><Logo /></Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-9 lg:flex" onMouseLeave={() => setMenu(null)}>
-          <div className="relative" onMouseEnter={() => setMenu("products")}>
-            <button className={cn(navCls, "flex items-center gap-1 hover:text-gold")} aria-expanded={menu === "products"} onClick={() => setMenu(menu === "products" ? null : "products")}>
+        <nav aria-label="Main" className="hidden items-center gap-9 lg:flex" onMouseLeave={() => { const t = setTimeout(() => setMenu(null), 500); setCloseTimer(t); }}>
+          <div className="relative" onMouseEnter={() => { if (closeTimer) { clearTimeout(closeTimer); setCloseTimer(null); } setMenu("products"); }}>
+            <button className={cn(navCls, "flex items-center gap-1 hover:text-gold cursor-pointer")} aria-expanded={menu === "products"} onClick={() => setMenu(menu === "products" ? null : "products")}>
               Products <ChevronDown className="size-3.5" />
             </button>
           </div>
-          <div className="relative" onMouseEnter={() => setMenu("markets")}>
-            <button className={cn(navCls, "flex items-center gap-1 hover:text-gold")} aria-expanded={menu === "markets"} onClick={() => setMenu(menu === "markets" ? null : "markets")}>
+          <div className="relative" onMouseEnter={() => { if (closeTimer) { clearTimeout(closeTimer); setCloseTimer(null); } setMenu("markets"); }}>
+            <button className={cn(navCls, "flex items-center gap-1 hover:text-gold cursor-pointer")} aria-expanded={menu === "markets"} onClick={() => setMenu(menu === "markets" ? null : "markets")}>
               Markets <ChevronDown className="size-3.5" />
             </button>
           </div>
-          <Link to="/products" className={cn(navCls, "hover:text-gold")} onMouseEnter={() => setMenu(null)}>Overview</Link>
-          <Link to="/kontakt" className={cn(navCls, "hover:text-gold")} onMouseEnter={() => setMenu(null)}>Contact</Link>
+          <Link to="/products" className={cn(navCls, "hover:text-gold")} onMouseEnter={() => { if (closeTimer) { clearTimeout(closeTimer); setCloseTimer(null); } setMenu(null); }}>Overview</Link>
+          <Link to="/kontakt" className={cn(navCls, "hover:text-gold")} onMouseEnter={() => { if (closeTimer) { clearTimeout(closeTimer); setCloseTimer(null); } setMenu(null); }}>Contact</Link>
 
           {menu && (
-            <div className="absolute inset-x-0 top-20 border-y border-border bg-background text-foreground shadow-card animate-in fade-in slide-in-from-top-2 duration-300">
+            <div onMouseEnter={() => { if (closeTimer) { clearTimeout(closeTimer); setCloseTimer(null); } }} className="absolute inset-x-0 top-20 border-y border-border bg-background text-foreground shadow-card animate-in fade-in slide-in-from-top-2 duration-300">
               <div className="container-x grid gap-10 py-10 md:grid-cols-4">
                 {menu === "products" ? (
                   <>
@@ -85,8 +86,8 @@ export function Header() {
                       </div>
                     ))}
                     <div className="border-l border-border pl-8">
-                      <p className="text-sm text-muted-foreground">Compare every category side by side â€” terms, horizon and risk.</p>
-                      <Link to="/products" className="mt-4 inline-block text-sm font-semibold link-underline">All products â†’</Link>
+                      <p className="text-sm text-muted-foreground">Compare every category side by side — terms, horizon and risk.</p>
+                      <Link to="/products" className="mt-4 inline-block text-sm font-semibold link-underline">All products →</Link>
                     </div>
                   </>
                 ) : (
@@ -101,7 +102,7 @@ export function Header() {
                     </div>
                     <div className="border-l border-border pl-8">
                       <p className="text-sm text-muted-foreground">Reference prices with visible sources and observation times.</p>
-                      <Link to="/markets" className="mt-4 inline-block text-sm font-semibold link-underline">Market overview â†’</Link>
+                      <Link to="/markets" className="mt-4 inline-block text-sm font-semibold link-underline">Market overview →</Link>
                     </div>
                   </>
                 )}
@@ -117,7 +118,7 @@ export function Header() {
           </Link>
         </div>
 
-        <button className="lg:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen(!open)}>
+        <button className="lg:hidden cursor-pointer" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen(!open)}>
           {open ? <X className="size-6" /> : <Menu className="size-6" />}
         </button>
       </div>

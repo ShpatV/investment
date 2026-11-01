@@ -31,12 +31,12 @@ export const Route = createFileRoute("/login")({
   },
   head: () => ({
     meta: [
-      { title: "Sign in â€” Avencrestcorp" },
+      { title: "Sign in — Avencrestcorp" },
       {
         name: "description",
         content: "Sign in to keep your documents, activity and portfolio in one place.",
       },
-      { property: "og:title", content: "Sign in â€” Avencrestcorp" },
+      { property: "og:title", content: "Sign in — Avencrestcorp" },
       { property: "og:description", content: "A familiar place to return to." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -56,12 +56,19 @@ function Login() {
   const [forgot, setForgot] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
 
-  // Already signed in: skip the form.
+  // Already signed in: skip the form, but only when the current user's role
+  // matches the selected portal mode. Otherwise the user may be trying to
+  // sign in as a different account/role.
   useEffect(() => {
     if (status !== "authenticated" || !user) return;
+    const roleMatchesPortal =
+      (mode === "Client" && user.role === "USER") ||
+      (mode === "Admin" && (user.role === "ADMIN" || user.role === "SUPER_ADMIN")) ||
+      (mode === "Super admin" && user.role === "SUPER_ADMIN");
+    if (!roleMatchesPortal) return;
     const target = search.next ?? (user.role === "USER" ? "/portal" : "/admin");
     void navigate({ to: target, replace: true });
-  }, [status, user, navigate, search.next]);
+  }, [status, user, navigate, search.next, mode]);
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -121,9 +128,9 @@ function Login() {
           <p className="eyebrow">Secure area</p>
           <h1 className="mt-4 max-w-md text-5xl">A familiar place to return to.</h1>
           <ul className="mt-8 space-y-3 text-sm text-navy-muted">
-            <li>â€” Documents, without the search</li>
-            <li>â€” Activity with context</li>
-            <li>â€” Your advisor, one message away</li>
+            <li>— Documents, without the search</li>
+            <li>— Activity with context</li>
+            <li>— Your advisor, one message away</li>
           </ul>
         </div>
       </div>
@@ -162,7 +169,7 @@ function Login() {
                   setForgot(false);
                   setError("");
                 }}
-                className="mt-4 w-full text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground"
+                className="mt-4 w-full text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground cursor-pointer"
               >
                 Back to sign in
               </button>
@@ -214,7 +221,7 @@ function Login() {
                 </p>
               )}
               <Button className={`${buttonCls("navy")} mt-8 w-full`} disabled={submitting}>
-                {submitting ? "Signing inâ€¦" : "Sign in"}
+                {submitting ? "Signing in…" : "Sign in"}
                 {!submitting && <ArrowRight />}
               </Button>
               <button
@@ -223,14 +230,14 @@ function Login() {
                   setForgot(true);
                   setError("");
                 }}
-                className="mt-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground"
+                className="mt-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground cursor-pointer"
               >
                 <Mail className="size-3.5" />
                 Forgot password
               </button>
               {import.meta.env.DEV && (
                 <p className="mt-8 border-t border-border pt-4 text-[11px] leading-relaxed text-muted-foreground">
-                  Development shortcuts: client@example.com Â· admin@example.com Â· superadmin@example.com.
+                  Development shortcuts: client@example.com · admin@example.com · superadmin@example.com.
                   Passwords come from the backend seed.
                 </p>
               )}

@@ -10,9 +10,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/products")({
   head: () => ({
     meta: [
-      { title: "Products â€” Avencrestcorp" },
+      { title: "Products — Avencrestcorp" },
       { name: "description", content: "Compare savings, fixed and flex deposits, bonds, stocks, IPOs, gold and crude oil side by side." },
-      { property: "og:title", content: "Products â€” Avencrestcorp" },
+      { property: "og:title", content: "Products — Avencrestcorp" },
       { property: "og:description", content: "Every category, its terms and its risks, in one overview." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -34,7 +34,7 @@ function Products() {
           <div role="tablist" aria-label="Filter by category" className="flex flex-wrap gap-2">
             {filters.map((x) => (
               <button key={x} role="tab" aria-selected={f === x} onClick={() => setF(x)}
-                className={cn("border px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.16em] transition-colors", f === x ? "border-primary bg-primary text-primary-foreground" : "border-border hover:border-foreground")}>
+                className={cn("border px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.16em] transition-colors cursor-pointer", f === x ? "border-primary bg-primary text-primary-foreground" : "border-border hover:border-foreground")}>
                 {x}
               </button>
             ))}
@@ -49,8 +49,8 @@ function Products() {
                   <tr key={p.slug} className="group border-b border-border last:border-0 transition-colors hover:bg-secondary">
                     <td className="p-5"><span className="font-display text-2xl">{p.name}</span><p className="text-xs text-muted-foreground">{p.eyebrow}</p></td>
                     <td className="p-5 text-muted-foreground">{p.category}</td>
-                    <td className="p-5">{p.facts[0]?.value} Â· {p.facts[1]?.value}</td>
-                    <td className="p-5 font-display text-2xl tabular-nums">{p.rate ? `${p.rate.toFixed(2)}%` : "â€”"}</td>
+                    <td className="p-5">{p.facts[0]?.value} · {p.facts[1]?.value}</td>
+                    <td className="p-5 font-display text-2xl tabular-nums">{p.rate ? `${p.rate.toFixed(2)}%` : "—"}</td>
                     <td className="p-5 text-right">
                       <Link to="/$product" params={{ product: p.slug }} className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] hover:text-gold">Details <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" /></Link>
                     </td>

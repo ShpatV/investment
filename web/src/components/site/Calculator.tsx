@@ -24,7 +24,7 @@ export function Calculator({ dark = false, defaultSlug = "festgeld" }: { dark?: 
           <div role="radiogroup" aria-label="Product" className="flex flex-wrap gap-2">
             {rated.map((p) => (
               <button key={p.slug} role="radio" aria-checked={slug === p.slug} onClick={() => choose(p.slug)}
-                className={cn("border px-4 py-2 text-xs font-semibold tracking-wide transition-colors",
+                className={cn("border px-4 py-2 text-xs font-semibold tracking-wide transition-colors cursor-pointer",
                   slug === p.slug ? "border-gold bg-gold text-navy-deep" : dark ? "border-navy-border hover:border-gold" : "border-border hover:border-foreground")}>
                 {p.name}
               </button>

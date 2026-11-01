@@ -1,4 +1,4 @@
-﻿import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { AlertTriangle, ArrowRight, Check } from "lucide-react";
 import office from "@/assets/office.jpg";
 import { Calculator } from "@/components/site/Calculator";
@@ -13,12 +13,12 @@ export const Route = createFileRoute("/$product")({
   },
   head: ({ loaderData }) => {
     const p = loaderData?.product;
-    if (!p) return { meta: [{ title: "Unavailable â€” Avencrestcorp" }, { name: "robots", content: "noindex" }] };
+    if (!p) return { meta: [{ title: "Unavailable — Avencrestcorp" }, { name: "robots", content: "noindex" }] };
     return {
       meta: [
-        { title: `${p.name} â€” Avencrestcorp` },
+        { title: `${p.name} — Avencrestcorp` },
         { name: "description", content: p.summary },
-        { property: "og:title", content: `${p.name} â€” Avencrestcorp` },
+        { property: "og:title", content: `${p.name} — Avencrestcorp` },
         { property: "og:description", content: p.summary },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
@@ -93,7 +93,7 @@ function ProductPage() {
       <section className="py-24">
         <div className="container-x">
           <p className="eyebrow">Continue exploring</p>
-          <div className="mt-8 grid gap-px border border-border bg-border md:grid-cols-3">
+          <div className="mt-8 grid gap-px border border-border bg-white md:grid-cols-3">
             {others.map((o) => (
               <Link key={o.slug} to="/$product" params={{ product: o.slug }} className="group bg-card p-8 transition-colors hover:bg-secondary">
                 <span className="text-xs text-muted-foreground">{o.category}</span>

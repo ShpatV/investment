@@ -38,7 +38,7 @@ const btn = {
   outlineLight: "border border-navy-foreground/40 text-navy-foreground hover:border-gold hover:text-gold",
 };
 export const buttonCls = (v: keyof typeof btn = "navy") =>
-  cn("inline-flex items-center justify-center gap-3 px-7 py-4 text-[0.72rem] font-semibold uppercase tracking-[0.18em] transition-all duration-300 disabled:opacity-50", btn[v]);
+  cn("inline-flex items-center justify-center gap-3 px-7 py-4 text-[0.72rem] font-semibold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed", btn[v]);
 
 export function PageHero({ eyebrow, title, intro, image, children }: { eyebrow: string; title: ReactNode; intro?: ReactNode; image?: string; children?: ReactNode }) {
   return (

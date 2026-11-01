@@ -32,8 +32,8 @@ export function Footer({ onCookies }: { onCookies: () => void }) {
             Figures and calculations are for information only and are not a promise of future returns. Investments carry risk, including the loss of capital. Review current product documents before making a commitment.
           </p>
           <div className="flex shrink-0 gap-6">
-            <button onClick={onCookies} className="link-underline hover:text-navy-foreground">Cookie settings</button>
-            <span>Â© {new Date().getFullYear()} Avencrestcorp</span>
+            <button onClick={onCookies} className="link-underline hover:text-navy-foreground cursor-pointer">Cookie settings</button>
+            <span>© {new Date().getFullYear()} Avencrestcorp</span>
           </div>
         </div>
       </div>
