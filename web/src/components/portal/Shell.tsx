@@ -16,7 +16,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/site/Header";
 import { Button } from "@/components/ui/button";
 import { useAuth, roleCanAccessPortal, portalForRole } from "@/lib/auth";
@@ -45,7 +45,13 @@ export function PortalShell({ area }: { area: "client" | "admin" }) {
   const navigate = useNavigate();
   const path = useRouterState({ select: (x) => x.location.pathname });
   const [open, setOpen] = useState(false);
-  useEffect(() => setOpen(false), [path]);
+  const prevPath = useRef(path);
+  useEffect(() => {
+    if (prevPath.current !== path) {
+      prevPath.current = path;
+      setOpen(false);
+    }
+  }, [path]);
 
   const allowed = status === "authenticated" && user ? roleCanAccessPortal(user.role, area === "client" ? "client" : "admin") : false;
 
@@ -58,9 +64,12 @@ export function PortalShell({ area }: { area: "client" | "admin" }) {
 
   if (status === "loading" || !allowed || !user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background">
+        {status === "loading" && (
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-gold" />
+        )}
         <p className="text-sm text-muted-foreground">
-          {status === "loading" ? "Restoring your session…" : "Redirecting to sign in…"}
+          {status === "loading" ? "Loading…" : "Redirecting to sign in…"}
         </p>
       </div>
     );

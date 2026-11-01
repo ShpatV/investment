@@ -154,6 +154,7 @@ export function AdminClients() {
       <Table
         head={["Client", "Status", "Administrator", "Active principal", "Investments", "Last activity", "Actions"]}
         empty={!clients.isPending && rows.length === 0}
+      loading={clients.isPending}
       >
         {rows.map((client) => (
           <tr key={client.id}>
@@ -409,7 +410,7 @@ export function AdminClientDetail({ clientId }: { clientId: string }) {
         {tab === "Documents" && <Documents clientId={clientId} editable />}
 
         {tab === "Assignments" && (
-          <Table head={["Administrator", "Status", "Assigned", "Ended", "Notes", ""]} empty={!assignments.isPending && (assignments.data?.data.length ?? 0) === 0}>
+          <Table head={["Administrator", "Status", "Assigned", "Ended", "Notes", ""]} empty={!assignments.isPending && (assignments.data?.data.length ?? 0) === 0} loading={assignments.isPending}>
             {(assignments.data?.data ?? []).map((assignment) => (
               <tr key={assignment.id}>
                 <td className="font-semibold">{assignment.admin?.fullName ?? "—"}</td>
@@ -437,7 +438,7 @@ export function AdminClientDetail({ clientId }: { clientId: string }) {
 
         {tab === "Activity" && (
           <>
-            <Table head={["When", "Actor", "Action", "Summary", "Outcome"]} empty={!audit.isPending && (audit.data?.data.length ?? 0) === 0}>
+            <Table head={["When", "Actor", "Action", "Summary", "Outcome"]} empty={!audit.isPending && (audit.data?.data.length ?? 0) === 0} loading={audit.isPending}>
               {(audit.data?.data ?? []).map((entry) => (
                 <tr key={entry.id}>
                   <td>{fmtDateTime(entry.timestamp)}</td>

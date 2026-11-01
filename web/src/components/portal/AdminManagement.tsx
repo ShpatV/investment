@@ -104,6 +104,7 @@ export function AdminAccounts() {
       <Table
         head={["Administrator", "Role", "Status", "Assigned clients", "Last sign-in", "Actions"]}
         empty={!admins.isPending && rows.length === 0}
+      loading={admins.isPending}
       >
         {rows.map((admin) => (
           <tr key={admin.id}>
@@ -368,6 +369,7 @@ export function AdminAssignments() {
       <Table
         head={["Client", "Administrator", "Status", "Assigned", "Ended", "Notes", "Actions"]}
         empty={!assignments.isPending && rows.length === 0}
+      loading={assignments.isPending}
       >
         {rows.map((assignment) => (
           <tr key={assignment.id}>

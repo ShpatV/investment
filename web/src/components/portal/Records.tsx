@@ -134,6 +134,7 @@ export function Investments({ clientId, editable = false }: { clientId?: string;
       <Table
         head={["Investment", "Principal", "Annual rate", "Maturity", "Projected balance", "Status", ""]}
         empty={!isPending && rows.length === 0}
+      loading={isPending}
       >
         {rows.map((investment) => (
           <tr key={investment.id}>

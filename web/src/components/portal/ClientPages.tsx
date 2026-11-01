@@ -35,7 +35,31 @@ export function ClientDashboard() {
   const { user } = useAuth();
 
   if (dashboard.isPending) {
-    return <p className="text-sm text-muted-foreground">Loading your portfolio…</p>;
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="rounded-lg border border-border bg-card p-6 shadow-sm">
+              <div className="h-3 w-24 rounded bg-secondary/60" />
+              <div className="mt-3 h-8 w-24 rounded bg-secondary/60" />
+              <div className="mt-2 h-3 w-32 rounded bg-secondary/40" />
+            </div>
+          ))}
+        </div>
+        <div className="grid gap-6 lg:grid-cols-2">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={i} className="rounded-lg border border-border bg-card p-6 shadow-sm">
+              <div className="h-5 w-32 rounded bg-secondary/60" />
+              <div className="mt-4 space-y-3">
+                {Array.from({ length: 4 }).map((_, j) => (
+                  <div key={j} className="h-4 w-full rounded bg-secondary/40" />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
   if (dashboard.error || !dashboard.data) {
     return <p className="text-sm text-destructive">{errorText(dashboard.error)}</p>;

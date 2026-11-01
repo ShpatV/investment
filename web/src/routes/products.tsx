@@ -41,8 +41,8 @@ function Products() {
           </div>
           <div className="mt-12 overflow-x-auto border border-border bg-card shadow-card">
             <table className="w-full min-w-[720px] text-left text-sm">
-              <thead className="border-b border-border text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                <tr><th className="p-5 font-semibold">Product</th><th className="p-5 font-semibold">Category</th><th className="p-5 font-semibold">Key traits</th><th className="p-5 font-semibold">Indicative rate</th><th className="p-5" /></tr>
+              <thead className="border-b border-navy-border bg-navy text-xs uppercase tracking-[0.16em] text-navy-foreground/90">
+                <tr><th className="p-5 font-semibold text-navy-foreground/90">Product</th><th className="p-5 font-semibold text-navy-foreground/90">Category</th><th className="p-5 font-semibold">Key traits</th><th className="p-5 font-semibold">Indicative rate</th><th className="p-5" /></tr>
               </thead>
               <tbody>
                 {list.map((p) => (

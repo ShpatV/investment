@@ -1,6 +1,6 @@
 ﻿import { Link, useRouterState } from "@tanstack/react-router";
 import { ChevronDown, Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { products, markets } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -35,7 +35,14 @@ export function Header() {
     window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
   }, []);
-  useEffect(() => { setOpen(false); setMenu(null); }, [pathname]);
+  const prevPathname = useRef(pathname);
+  useEffect(() => {
+    if (prevPathname.current !== pathname) {
+      prevPathname.current = pathname;
+      setOpen(false);
+      setMenu(null);
+    }
+  }, [pathname]);
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     const k = (e: KeyboardEvent) => e.key === "Escape" && (setOpen(false), setMenu(null));
@@ -112,7 +119,7 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-6 lg:flex">
-          <Link to="/login" className={cn(navCls, "hover:text-gold")}>Client login</Link>
+          <Link to="/login" className={cn(navCls, "hover:text-gold")}>Sign in</Link>
           <Link to="/kontakt" className={cn("border px-5 py-2.5 text-[0.75rem] font-semibold uppercase tracking-[0.16em] transition-colors", overHero ? "border-gold text-gold hover:bg-gold hover:text-navy-deep" : "border-primary bg-primary text-primary-foreground hover:bg-navy-deep")}>
             Speak with us
           </Link>
@@ -124,7 +131,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="fixed inset-x-0 bottom-0 top-20 overflow-y-auto bg-navy-deep text-navy-foreground animate-in fade-in duration-300 lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 top-20 z-40 overflow-y-auto bg-navy-deep text-navy-foreground animate-in fade-in duration-300 lg:hidden">
           <nav aria-label="Mobile" className="container-x py-8">
             {groups.map((g) => (
               <div key={g} className="mb-8">

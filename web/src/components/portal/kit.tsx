@@ -1,7 +1,11 @@
+import * as React from "react";
 import { useId, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
 
 export const input = "w-full border border-input bg-card px-3 py-2.5 text-sm outline-none transition-colors focus:border-gold";
 export const pbtn = {
@@ -13,7 +17,7 @@ export const pbtn = {
 
 export function PageHeader({ eyebrow, title, actions, children }: { eyebrow?: string; title: string; actions?: ReactNode; children?: ReactNode }) {
   return (
-    <div className="mb-8 flex flex-col gap-4 border-b border-border pb-6 md:flex-row md:items-end md:justify-between">
+    <div className="mb-8 flex flex-col gap-4 border-b border-border pb-6 md:flex-row md:items-end md:justify-between animate-in fade-in slide-in-from-top-1 duration-300">
       <div>
         {eyebrow && <p className="eyebrow">{eyebrow}</p>}
         <h1 className="mt-2 text-4xl md:text-5xl">{title}</h1>
@@ -26,7 +30,7 @@ export function PageHeader({ eyebrow, title, actions, children }: { eyebrow?: st
 
 export function Stat({ label, value, hint }: { label: string; value: ReactNode; hint?: ReactNode }) {
   return (
-    <div className="border border-border bg-card p-6 shadow-card">
+    <div className="rounded-lg border border-border bg-card p-6 shadow-sm transition-all duration-200 hover:shadow-md animate-in fade-in slide-in-from-bottom-1">
       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
       <p className="mt-3 font-display text-3xl tabular-nums md:text-4xl">{value}</p>
       {hint && <p className="mt-2 text-xs text-muted-foreground">{hint}</p>}
@@ -36,9 +40,9 @@ export function Stat({ label, value, hint }: { label: string; value: ReactNode; 
 
 export function Panel({ title, action, children, className }: { title: string; action?: ReactNode; children: ReactNode; className?: string }) {
   return (
-    <section className={cn("min-w-0", className)}>
-      <header className="flex items-center justify-between border-b border-border px-6 py-4">
-        <h2 className="text-2xl">{title}</h2>
+    <section className={cn("min-w-0 rounded-lg border border-border bg-card shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300", className)}>
+      <header className="flex items-center justify-between border-b border-navy-border bg-navy px-6 py-4 text-navy-foreground">
+        <h2 className="text-2xl text-navy-foreground">{title}</h2>
         {action}
       </header>
       <div className="p-6">{children}</div>
@@ -90,25 +94,41 @@ export function Badge({ children }: { children: string }) {
   return (
     <span
       className={cn(
-        "inline-flex whitespace-nowrap px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-wider",
+        "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-wider transition-all duration-200",
         tones[children] ?? "bg-secondary",
       )}
     >
+      <span className="size-1.5 rounded-full bg-current opacity-60" />
       {children.replace(/_/g, " ")}
     </span>
   );
 }
 
-export function Table({ head, children, empty }: { head: ReactNode[]; children: ReactNode; empty?: boolean }) {
+export function Table({ head, children, empty, loading }: { head: ReactNode[]; children: ReactNode; empty?: boolean; loading?: boolean }) {
   return (
-    <div className="overflow-x-auto border border-border bg-card">
+    <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
       <table className="w-full min-w-[640px] text-left text-sm">
-        <thead className="border-b border-border bg-secondary/60 text-[0.68rem] uppercase tracking-[0.14em] text-muted-foreground">
-          <tr>{head.map((h, i) => <th key={i} className="whitespace-nowrap px-4 py-3 font-semibold">{h}</th>)}</tr>
+        <thead className="sticky top-0 z-10 border-b border-navy-border bg-navy text-[0.68rem] uppercase tracking-[0.14em] text-navy-foreground/90">
+          <tr>{head.map((h, i) => <th key={i} className="whitespace-nowrap px-4 py-3.5 font-semibold text-navy-foreground/90">{h}</th>)}</tr>
         </thead>
-        <tbody className="[&_td]:px-4 [&_td]:py-3.5 [&_tr]:border-b [&_tr]:border-border [&_tr:last-child]:border-0">{children}</tbody>
+        <tbody className="[&_td]:px-4 [&_td]:py-3.5 [&_tr]:border-b [&_tr]:border-border/40 [&_tr:last-child]:border-0 [&_tr]:transition-all [&_tr]:duration-200 [&_tr]:animate-in [&_tr]:fade-in [&_tr]:slide-in-from-bottom-1 [&_tr:hover]:bg-secondary/20">
+          {loading ? (
+            Array.from({ length: 5 }).map((_, i) => (
+              <tr key={i} className="animate-pulse">
+                {head.map((_, j) => (
+                  <td key={j}>
+                    <div
+                      className="h-4 rounded bg-secondary/50"
+                      style={{ width: j === 0 ? "60%" : j === head.length - 1 ? "40%" : "70%" }}
+                    />
+                  </td>
+                ))}
+              </tr>
+            ))
+          ) : children}
+        </tbody>
       </table>
-      {empty && <p className="p-10 text-center text-sm text-muted-foreground">Nothing matches these filters.</p>}
+      {empty && !loading && <p className="p-10 text-center text-sm text-muted-foreground">Nothing matches these filters.</p>}
     </div>
   );
 }
@@ -116,10 +136,12 @@ export function Table({ head, children, empty }: { head: ReactNode[]; children: 
 export function Pager({ page, pages, onPage }: { page: number; pages: number; onPage: (p: number) => void }) {
   if (pages <= 1) return null;
   return (
-    <div className="mt-4 flex items-center justify-end gap-2 text-xs">
-      <Button variant="outline" disabled={page === 1} onClick={() => onPage(page - 1)}>Prev</Button>
-      <span className="px-2 tabular-nums text-muted-foreground">Page {page} / {pages}</span>
-      <Button variant="outline" disabled={page === pages} onClick={() => onPage(page + 1)}>Next</Button>
+    <div className="mt-4 flex items-center justify-between gap-2 text-xs animate-in fade-in duration-300">
+      <span className="tabular-nums text-muted-foreground">Page {page} of {pages}</span>
+      <div className="flex gap-1">
+        <Button variant="outline" size="sm" disabled={page === 1} onClick={() => onPage(page - 1)}>Prev</Button>
+        <Button variant="outline" size="sm" disabled={page === pages} onClick={() => onPage(page + 1)}>Next</Button>
+      </div>
     </div>
   );
 }
@@ -129,7 +151,7 @@ export function Tabs<T extends string>({ value, options, onChange }: { value: T;
   return (
     <div role="tablist" className="flex flex-wrap border-b border-border">
       {options.map((o) => (
-        <Button variant="ghost" key={o} role="tab" aria-selected={value === o} onClick={() => onChange(o)}
+        <Button variant="ghost" key={o} type="button" role="tab" aria-selected={value === o} onClick={() => onChange(o)}
           className={cn("-mb-px border-b-2 px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] transition-colors", value === o ? "border-gold text-foreground" : "border-transparent text-muted-foreground hover:text-foreground")}>
           {o}
         </Button>
@@ -148,7 +170,7 @@ export function FilterBar({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-end gap-2 sm:gap-3 mb-6",
+        "flex flex-wrap items-end gap-2 sm:gap-3 mb-6 p-4 rounded-lg border border-border/50 bg-secondary/20 animate-in fade-in slide-in-from-top-1 duration-200",
         className,
       )}
     >
@@ -167,8 +189,8 @@ export function FilterField({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col gap-1 min-w-0 flex-1 sm:flex-none sm:min-w-[140px]", className)}>
-      <label className="text-[0.65rem] uppercase tracking-[0.1em] text-muted-foreground">{label}</label>
+    <div className={cn("flex flex-col gap-0.5 min-w-0 flex-1 sm:flex-none sm:min-w-[120px]", className)}>
+      <label className="text-[0.6rem] uppercase tracking-[0.1em] text-muted-foreground mb-0.5">{label}</label>
       <div className="flex items-end gap-2">{children}</div>
     </div>
   );
@@ -188,7 +210,7 @@ export function FilterInput({
   return (
     <input
       type="text"
-      className={cn("border border-input bg-card px-2.5 py-1.5 text-sm outline-none transition-colors focus:border-gold cursor-text w-full sm:w-auto sm:min-w-[160px] sm:max-w-[220px]", className)}
+      className={cn("rounded-md border border-input bg-card px-2.5 py-1.5 text-xs outline-none transition-all focus:border-gold focus:ring-1 focus:ring-gold/20 cursor-text w-full sm:w-auto sm:min-w-[140px] sm:max-w-[180px]", className)}
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
@@ -211,7 +233,7 @@ export function FilterSelect({
 }) {
   return (
     <select
-      className={cn("border border-input bg-card px-2.5 py-1.5 text-sm outline-none transition-colors focus:border-gold cursor-pointer w-full sm:w-auto sm:min-w-[140px] sm:max-w-[200px]", className)}
+      className={cn("rounded-md border border-input bg-card px-2.5 py-1.5 text-xs outline-none transition-all focus:border-gold focus:ring-1 focus:ring-gold/20 cursor-pointer w-full sm:w-auto sm:min-w-[120px] sm:max-w-[160px]", className)}
       value={value}
       onChange={(e) => onChange(e.target.value)}
     >
@@ -239,21 +261,12 @@ export function DateRange({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col gap-1 min-w-0 flex-1 sm:flex-none sm:min-w-[200px]", className)}>
-      <label className="text-[0.65rem] uppercase tracking-[0.1em] text-muted-foreground">Date range</label>
-      <div className="flex gap-2">
-        <input
-          type="date"
-          className={cn("border border-input bg-card px-2 py-1.5 text-sm outline-none transition-colors focus:border-gold cursor-pointer w-full sm:w-auto", className)}
-          value={from}
-          onChange={(e) => onFromChange(e.target.value)}
-        />
-        <input
-          type="date"
-          className={cn("border border-input bg-card px-2 py-1.5 text-sm outline-none transition-colors focus:border-gold cursor-pointer w-full sm:w-auto", className)}
-          value={to}
-          onChange={(e) => onToChange(e.target.value)}
-        />
+    <div className={cn("flex flex-col gap-0.5 min-w-0 flex-1 sm:flex-none sm:min-w-[240px]", className)}>
+      <div className="flex items-center gap-1.5">
+        <span className="text-[0.65rem] text-muted-foreground shrink-0">From</span>
+        <DatePicker value={from} onChange={onFromChange} placeholder="Start" />
+        <span className="text-[0.65rem] text-muted-foreground shrink-0">To</span>
+        <DatePicker value={to} onChange={onToChange} placeholder="End" />
       </div>
     </div>
   );
@@ -262,7 +275,7 @@ export function DateRange({
 export function DatePicker({
   value,
   onChange,
-  placeholder,
+  placeholder = "Pick a date",
   className,
 }: {
   value: string;
@@ -270,14 +283,35 @@ export function DatePicker({
   placeholder?: string;
   className?: string;
 }) {
+  const [open, setOpen] = React.useState(false);
+  const selected = value ? new Date(value + "T00:00:00") : undefined;
   return (
-    <input
-      type="date"
-      className={cn("border border-input bg-card px-2.5 py-1.5 text-sm outline-none transition-colors focus:border-gold cursor-pointer w-full sm:w-auto", className)}
-      placeholder={placeholder}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className={cn("rounded-md border border-input bg-card px-2.5 py-1.5 text-xs outline-none transition-all focus:border-gold focus:ring-1 focus:ring-gold/20 cursor-pointer w-full sm:w-auto text-left", className)}
+        >
+          {selected ? format(selected, "MMM d, yyyy") : placeholder}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={selected}
+          onSelect={(date) => {
+            if (date) {
+              const y = date.getFullYear();
+              const m = String(date.getMonth() + 1).padStart(2, "0");
+              const d = String(date.getDate()).padStart(2, "0");
+              onChange(y + "-" + m + "-" + d);
+            }
+            setOpen(false);
+          }}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
   );
 }
 

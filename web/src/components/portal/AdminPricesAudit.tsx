@@ -467,6 +467,7 @@ export function AdminAudit() {
       <Table
         head={["Event / time", "Actor", "Action", "Entity", "Summary", "Outcome", ""]}
         empty={!audit.isPending && rows.length === 0}
+      loading={audit.isPending}
       >
         {rows.map((entry) => (
           <tr key={entry.id}>

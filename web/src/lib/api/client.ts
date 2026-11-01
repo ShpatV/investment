@@ -74,10 +74,24 @@ export function subscribeToAuth(listener: () => void): () => void {
 
 function hydrate(): void {
   if (hydrated) return;
-  hydrated = true;
   const store = storage();
-  if (!store) return;
-  refreshToken = store.getItem(REFRESH_STORAGE_KEY);
+  if (!store) return; // SSR: don't mark as hydrated, retry on client
+  hydrated = true;
+  // Check both old and new keys
+  let token = store.getItem(REFRESH_STORAGE_KEY);
+  if (!token) {
+    token = store.getItem("corestone.auth.refreshToken");
+    if (token) {
+      store.setItem(REFRESH_STORAGE_KEY, token);
+      store.removeItem("corestone.auth.refreshToken");
+      const oldPortal = store.getItem("corestone.auth.portal");
+      if (oldPortal) {
+        store.setItem(PORTAL_STORAGE_KEY, oldPortal);
+        store.removeItem("corestone.auth.portal");
+      }
+    }
+  }
+  refreshToken = token;
   const storedPortal = store.getItem(PORTAL_STORAGE_KEY);
   portal = storedPortal === "client" || storedPortal === "admin" || storedPortal === "super-admin" ? storedPortal : null;
 }

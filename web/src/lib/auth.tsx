@@ -51,8 +51,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [portal, setPortal] = useState<PortalName | null>(null);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
-  const bootstrapped = useRef(false);
-
   const reloadUser = useCallback(async (): Promise<AuthUser | null> => {
     try {
       const me = await authApi.me();
@@ -72,26 +70,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Restore the session once on mount. Access tokens are never persisted, so a
   // reload always starts with a refresh-token rotation.
   useEffect(() => {
-    if (bootstrapped.current) return;
-    bootstrapped.current = true;
     let cancelled = false;
 
-    (async () => {
-      if (!hasStoredSession()) {
-        if (!cancelled) setStatus("anonymous");
-        return;
-      }
-      const refreshed = await refreshSession();
-      if (cancelled) return;
-      if (!refreshed) {
+    // Safety timeout: if session restoration takes too long, redirect to login.
+    const safetyTimer = setTimeout(() => {
+      if (!cancelled) {
         setStatus("anonymous");
-        return;
       }
-      await reloadUser();
+    }, 10000);
+
+    (async () => {
+      try {
+        if (!hasStoredSession()) {
+          if (!cancelled) setStatus("anonymous");
+          clearTimeout(safetyTimer);
+          return;
+        }
+        const refreshed = await refreshSession();
+        if (cancelled) return;
+        if (!refreshed) {
+          setStatus("anonymous");
+          clearTimeout(safetyTimer);
+          return;
+        }
+        await reloadUser();
+        clearTimeout(safetyTimer);
+      } catch (err) {
+        console.error("Session restoration failed:", err);
+        if (!cancelled) setStatus("anonymous");
+        clearTimeout(safetyTimer);
+      }
     })();
 
     return () => {
       cancelled = true;
+      clearTimeout(safetyTimer);
     };
   }, [reloadUser]);
 

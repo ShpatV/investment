@@ -18,7 +18,7 @@ export function Footer({ onCookies }: { onCookies: () => void }) {
           title="Company"
           items={[
             { label: "Contact", to: "/kontakt" },
-            { label: "Client login", to: "/login" },
+            { label: "Sign in", to: "/login" },
             { label: "Legal notice", to: "/legal/$doc", params: { doc: "imprint" } },
             { label: "Privacy policy", to: "/legal/$doc", params: { doc: "privacy" } },
             { label: "Terms of use", to: "/legal/$doc", params: { doc: "terms" } },

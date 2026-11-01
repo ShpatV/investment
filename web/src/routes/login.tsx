@@ -1,6 +1,6 @@
 ﻿import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import hero from "@/assets/hero.jpg";
 import { buttonCls } from "@/components/site/ui";
@@ -24,9 +24,9 @@ const field = "mt-2 w-full border border-input bg-card px-4 py-3.5 outline-none 
 
 export const Route = createFileRoute("/login")({
   validateSearch: (search: Record<string, unknown>) => {
-    const result: { next?: string; portal?: "client" | "admin" } = {};
+    const result: { next?: string; portal?: "client" | "admin" | "super-admin" } = {};
     if (typeof search["next"] === "string" && search["next"].startsWith("/")) result.next = search["next"];
-    if (search["portal"] === "client" || search["portal"] === "admin") result.portal = search["portal"];
+    if (search["portal"] === "client" || search["portal"] === "admin" || search["portal"] === "super-admin") result.portal = search["portal"];
     return result;
   },
   head: () => ({
@@ -49,32 +49,27 @@ function Login() {
   const { login, status, user } = useAuth();
   const navigate = useNavigate();
   const search = Route.useSearch();
-  const [mode, setMode] = useState<Mode>(search.portal === "admin" ? "Admin" : "Client");
+  const [mode, setMode] = useState<Mode>(search.portal === 'super-admin' ? 'Super admin' : search.portal === 'admin' ? 'Admin' : 'Client');
   const [show, setShow] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [forgot, setForgot] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
 
-  // Already signed in: skip the form, but only when the current user's role
-  // matches the selected portal mode. Otherwise the user may be trying to
-  // sign in as a different account/role.
-  useEffect(() => {
-    if (status !== "authenticated" || !user) return;
-    const roleMatchesPortal =
-      (mode === "Client" && user.role === "USER") ||
-      (mode === "Admin" && (user.role === "ADMIN" || user.role === "SUPER_ADMIN")) ||
-      (mode === "Super admin" && user.role === "SUPER_ADMIN");
-    if (!roleMatchesPortal) return;
-    const target = search.next ?? (user.role === "USER" ? "/portal" : "/admin");
-    void navigate({ to: target, replace: true });
-  }, [status, user, navigate, search.next, mode]);
+  // Never auto-redirect from the login page. The user must explicitly
+  // submit the form. This prevents "Welcome back" toasts from appearing
+  // when switching tabs without entering credentials.
+  // (No auto-redirect logic here.)
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = String(data.get("email") ?? "").trim();
     const password = String(data.get("password") ?? "");
+    if (!email || !password) {
+      // Silently ignore empty submissions (e.g. from browser autofill)
+      return;
+    }
     if (!/^\S+@\S+\.\S+$/.test(email) || password.length < 1) {
       setError("Enter your email address and password.");
       return;
@@ -84,7 +79,7 @@ function Login() {
     try {
       const signedIn = await login(MODE_PORTAL[mode], email, password);
       toast.success(`Welcome back, ${signedIn.firstName}.`);
-      const target = search.next ?? (signedIn.role === "USER" ? "/portal" : "/admin");
+      const target = mode === "Client" ? "/portal" : "/admin";
       await navigate({ to: target, replace: true });
     } catch (caught) {
       setError(errorMessage(caught, "Sign in failed. Check your details and try again."));
@@ -152,7 +147,7 @@ function Login() {
               <input
                 id="reset-email"
                 type="email"
-                autoComplete="email"
+                autoComplete="off"
                 className={field}
                 value={forgotEmail}
                 onChange={(event) => setForgotEmail(event.target.value)}
@@ -175,9 +170,9 @@ function Login() {
               </button>
             </form>
           ) : (
-            <form onSubmit={submit} noValidate>
+            <form onSubmit={submit} noValidate autoComplete="off">
               <div className="mt-8">
-                <Tabs value={mode} options={MODES} onChange={(value) => setMode(value as Mode)} />
+                <Tabs value={mode} options={MODES} onChange={(value) => { setMode(value as Mode); setError(""); }} />
               </div>
               <label className="mt-8 block text-sm font-medium" htmlFor="email">
                 Email
@@ -186,9 +181,9 @@ function Login() {
                 id="email"
                 name="email"
                 type="email"
-                autoComplete="email"
+                autoComplete="off"
                 className={field}
-                defaultValue={import.meta.env.DEV ? defaultEmailForMode(mode) : ""}
+                defaultValue=""
                 key={`email-${mode}`}
               />
               <label className="mt-6 block text-sm font-medium" htmlFor="password">
@@ -199,9 +194,9 @@ function Login() {
                   id="password"
                   name="password"
                   type={show ? "text" : "password"}
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   className={field}
-                  defaultValue={import.meta.env.DEV ? defaultPasswordForMode(mode) : ""}
+                  defaultValue=""
                   key={`password-${mode}`}
                 />
                 <Button
