@@ -20,7 +20,9 @@ import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/site/Header";
 import { Button } from "@/components/ui/button";
 import { useAuth, roleCanAccessPortal, portalForRole } from "@/lib/auth";
+import { useTranslation } from "react-i18next";
 import { clientName } from "@/lib/format";
+import { setLanguage, getCurrentLanguage } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const clientNav = [
@@ -41,6 +43,7 @@ const adminNav = [
 ] as const;
 
 export function PortalShell({ area }: { area: "client" | "admin" }) {
+  const { t } = useTranslation();
   const { status, user, portal, logout, unreadNotifications } = useAuth();
   const navigate = useNavigate();
   const path = useRouterState({ select: (x) => x.location.pathname });
@@ -120,7 +123,24 @@ export function PortalShell({ area }: { area: "client" | "admin" }) {
         >
           {area === "client" ? "Administration" : "Client portal"}
         </Link>
-        <Button
+        <div className="mb-4 flex gap-1">
+        {["en", "sv", "de"].map((lang) => (
+          <button
+            key={lang}
+            type="button"
+            onClick={() => setLanguage(lang)}
+            className={cn(
+              "px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-wider border transition-colors",
+              getCurrentLanguage() === lang
+                ? "border-gold text-gold"
+                : "border-navy-border text-navy-muted hover:border-gold hover:text-gold",
+            )}
+          >
+            {lang.toUpperCase()}
+          </button>
+        ))}
+      </div>
+      <Button
           variant="ghost"
           onClick={() => {
             void logout().then(() => navigate({ to: "/login", replace: true }));
@@ -149,6 +169,23 @@ export function PortalShell({ area }: { area: "client" | "admin" }) {
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-navy-deep/60" onClick={() => setOpen(false)} />
           <div className="absolute inset-y-0 left-0 w-72 animate-in slide-in-from-left duration-300">
+            <div className="mb-4 flex gap-1 px-6">
+              {["en", "sv", "de"].map((lang) => (
+                <button
+                  key={lang}
+                  type="button"
+                  onClick={() => setLanguage(lang)}
+                  className={cn(
+                    "px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-wider border transition-colors",
+                    getCurrentLanguage() === lang
+                      ? "border-gold text-gold"
+                      : "border-navy-border text-navy-muted hover:border-gold hover:text-gold",
+                  )}
+                >
+                  {lang.toUpperCase()}
+                </button>
+              ))}
+            </div>
             <Button
               variant="ghost"
               size="icon"

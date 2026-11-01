@@ -1,0 +1,615 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "markets": "Markets",
+    "overview": "Overview",
+    "contact": "Contact",
+    "signIn": "Sign in",
+    "speakWithUs": "Speak with us"
+  },
+  "portal": {
+    "client": "Client portal",
+    "admin": "Administration",
+    "dashboard": "Dashboard",
+    "investments": "Investments",
+    "transactions": "Transactions",
+    "documents": "Documents",
+    "profile": "Profile",
+    "overview": "Overview",
+    "clients": "Clients",
+    "admins": "Admins",
+    "assignments": "Assignments",
+    "publishedPrices": "Published prices",
+    "auditLog": "Audit log"
+  },
+  "common": {
+    "loading": "Loading…",
+    "saving": "Sending…",
+    "uploading": "Uploading…",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "allStatuses": "All statuses",
+    "prev": "Prev",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saveChanges": "Save changes",
+    "add": "Add",
+    "upload": "Upload",
+    "download": "Download",
+    "archive": "Archive",
+    "close": "Close",
+    "confirm": "Confirm",
+    "signOut": "Sign out",
+    "signedInAs": "Signed in as",
+    "noUnread": "No unread notifications",
+    "unread": "unread",
+    "nothingMatches": "Nothing matches these filters.",
+    "welcomeBack": "Welcome back"
+  },
+  "status": {
+    "active": "Active",
+    "disabled": "Disabled",
+    "pending": "Pending",
+    "completed": "Completed",
+    "failed": "Failed",
+    "matured": "Matured",
+    "closed": "Closed",
+    "archived": "Archived",
+    "stale": "Stale",
+    "unavailable": "Unavailable",
+    "live": "Live",
+    "manualOverride": "Manual override"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password",
+    "resetPassword": "Reset password",
+    "changePassword": "Change password",
+    "securityQuestion": "Security question",
+    "securityAnswer": "Security answer",
+    "enterEmailPassword": "Enter your email address and password.",
+    "signInFailed": "Sign in failed. Check your details and try again.",
+    "welcomeBack": "Welcome back, {{name}}.",
+    "secureArea": "Secure area",
+    "familiarPlace": "A familiar place to return to."
+  },
+  "dashboard": {
+    "projectedMaturityBalance": "Projected maturity balance",
+    "totalInvested": "Total invested",
+    "projectedReturn": "Projected return",
+    "averageAnnualRate": "Average annual rate",
+    "yourHoldings": "Your holdings",
+    "allocationByInstitution": "Allocation by institution",
+    "recentActivity": "Recent activity",
+    "planning": "Planning",
+    "marketNews": "Market news",
+    "viewAll": "View all",
+    "allTransactions": "All transactions"
+  },
+  "investments": {
+    "investment": "Investment",
+    "principal": "Principal",
+    "annualRate": "Annual rate",
+    "maturity": "Maturity",
+    "projectedBalance": "Projected balance",
+    "status": "Status",
+    "addInvestment": "Add investment",
+    "saveInvestment": "Save investment",
+    "investmentCreated": "Investment created.",
+    "name": "Name",
+    "institution": "Institution",
+    "principalAmount": "Principal amount",
+    "annualInterestRate": "Annual interest rate",
+    "startDate": "Start date",
+    "maturityDate": "Maturity date",
+    "compoundingFrequency": "Compounding frequency",
+    "notes": "Notes"
+  },
+  "transactions": {
+    "transaction": "Transaction",
+    "date": "Date",
+    "type": "Type",
+    "amount": "Amount",
+    "description": "Description",
+    "addTransaction": "Add transaction",
+    "saveTransaction": "Save transaction",
+    "transactionRecorded": "Transaction recorded.",
+    "deposit": "Deposit",
+    "withdrawal": "Withdrawal",
+    "interest": "Interest",
+    "all": "All",
+    "deposits": "Deposits",
+    "withdrawals": "Withdrawals"
+  },
+  "documents": {
+    "document": "Document",
+    "title": "Title",
+    "category": "Category",
+    "uploadDocument": "Upload document",
+    "documentUploaded": "Document uploaded.",
+    "download": "Download",
+    "archive": "Archive",
+    "file": "File",
+    "identification": "Identification",
+    "investmentAgreement": "Investment agreement",
+    "statement": "Statement",
+    "taxDocument": "Tax document",
+    "other": "Other"
+  },
+  "profile": {
+    "yourProfile": "Your profile",
+    "personalInformation": "Personal information",
+    "accountSecurity": "Account security",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "dateOfBirth": "Date of birth",
+    "assignedAdvisor": "Assigned advisor",
+    "profileSaved": "Profile saved.",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password"
+  },
+  "admin": {
+    "administrationOverview": "Administration overview",
+    "totalClients": "Total clients",
+    "activeClients": "Active clients",
+    "investments": "Investments",
+    "assetsUnderManagement": "Assets under management",
+    "administrators": "Administrators",
+    "clientAssignments": "Client assignments",
+    "publishedPrices": "Published prices",
+    "auditLog": "Audit log",
+    "addClient": "Add client",
+    "addAdministrator": "Add administrator",
+    "newAssignment": "New assignment",
+    "refreshFromProvider": "Refresh from provider",
+    "clientCreated": "Client created",
+    "administratorCreated": "Administrator created",
+    "clientDisabled": "Client disabled.",
+    "clientEnabled": "Client enabled.",
+    "searchClients": "Search name or email",
+    "searchAdministrators": "Search administrators",
+    "searchAudit": "Search audit log",
+    "filterByAdmin": "Filter by administrator",
+    "allAdministrators": "All administrators",
+    "active": "Active",
+    "disabled": "Disabled"
+  },
+  "prices": {
+    "gold": "Gold",
+    "oil": "Oil",
+    "pricePerTroyOunce": "Price per troy ounce",
+    "pricePerBarrel": "Price per barrel",
+    "currentMarketPrice": "Current market price",
+    "currency": "Currency",
+    "unit": "Unit",
+    "source": "Source",
+    "lastFetched": "Last fetched",
+    "lastPublished": "Last published",
+    "priceStatus": "Price status",
+    "live": "Live",
+    "stale": "Stale",
+    "manualOverride": "Manual override",
+    "unavailable": "Unavailable",
+    "editPrice": "Edit price",
+    "saveOverride": "Save override",
+    "clearOverride": "Clear override",
+    "returnToProvider": "Return to provider price",
+    "reasonForOverride": "Reason for override",
+    "effectiveDate": "Effective date/time",
+    "overrideExpiration": "Override expiration"
+  },
+  "language": {
+    "select": "Language",
+    "en": "English",
+    "sv": "Svenska",
+    "de": "Deutsch"
+  },
+  "index": {
+    "heroEyebrow": "A little clarity goes a long way.",
+    "exploreEyebrow": "Explore the possibilities",
+    "exploreTitle": "There is more than one way to begin.",
+    "exploreIntro": "Browse the categories. Then find the product that fits.",
+    "approachEyebrow": "Our approach",
+    "approachTitle": "Purpose first. Details next. Decisions in your own time.",
+    "calculatorEyebrow": "Calculator",
+    "calculatorTitle": "Try a few numbers.",
+    "calculatorIntro": "Change the inputs to compare scenarios. Keep in mind that actual terms depend on the product and your circumstances.",
+    "marketEyebrow": "Market view",
+    "marketTitle": "A look at reference prices.",
+    "marketIntro": "Indicative references with source and observation time. Not a trading signal.",
+    "questionsEyebrow": "Questions",
+    "questionsTitle": "The questions you might already have.",
+    "conversationEyebrow": "Start a conversation",
+    "conversationTitle": "Tell us what is on your mind.",
+    "heroPrefix": "Let's start with",
+    "heroHighlight": "what matters",
+    "heroSuffix": "to you.",
+    "heroDescription": "Whether you are setting money aside or weighing an investment, there is room to take your time. Look around, try the planning tools, and bring the questions that come up.",
+    "takeALook": "Take a look around",
+    "workOutScenario": "Work out a scenario",
+    "compareAllProducts": "Compare all products",
+    "fromRate": "from",
+    "perAnnum": "p.a.",
+    "learnMore": "Learn more",
+    "approachStep1Title": "Understand",
+    "approachStep1Desc": "We begin with your goal and horizon, not with a product.",
+    "approachStep2Title": "Compare",
+    "approachStep2Desc": "Terms, risks and costs are set out side by side, in plain language.",
+    "approachStep3Title": "Decide",
+    "approachStep3Desc": "When you are ready — and only then — we prepare the documents.",
+    "fullMarketOverview": "Full market overview",
+    "statsCategories": "Product categories",
+    "statsMarkets": "Reference markets",
+    "statsRefresh": "Data refresh interval",
+    "contactUs": "Contact us"
+  },
+  "highlights": {
+    "termsTitle": "Terms stated up front",
+    "termsDesc": "Every product page sets out conditions and risks before any next step is asked of you.",
+    "marketTitle": "Market view",
+    "marketDesc": "Reference prices published with their source and observation time — never without context.",
+    "riskTitle": "Risk and tax notes in writing",
+    "riskDesc": "Risk warnings and tax notes sit on the page itself, not in a document you must request."
+  },
+  "data": {
+    "products": {
+      "tagesgeld": {
+        "name": "Savings",
+        "category": "Deposits",
+        "eyebrow": "Daily access, variable rate",
+        "summary": "A home for reserves you may need at short notice, with interest that follows the market.",
+        "detail": "Savings accounts suit liquidity you want to keep available. Rates are variable and can change at any time; compare the stated rate with its validity period.",
+        "risk": "Variable rates may fall. Deposit protection depends on the partner bank and its national scheme.",
+        "facts": [
+          {
+            "label": "Access",
+            "value": "Daily"
+          },
+          {
+            "label": "Rate type",
+            "value": "Variable"
+          },
+          {
+            "label": "Minimum",
+            "value": "€1"
+          },
+          {
+            "label": "Term",
+            "value": "Open-ended"
+          }
+        ],
+        "considerations": [
+          "Which bank holds the deposit?",
+          "How long is the promotional rate valid?",
+          "Which deposit protection scheme applies?"
+        ]
+      },
+      "festgeld": {
+        "name": "Fixed deposits",
+        "category": "Deposits",
+        "eyebrow": "Planned rate, planned term",
+        "summary": "Commit capital for an agreed period at an agreed rate — clarity in exchange for flexibility.",
+        "detail": "Fixed deposits pay a rate set at the outset for the full term. Early access is usually not possible, so match the term to when you will need the money.",
+        "risk": "Funds are generally locked until maturity. Inflation can erode real returns.",
+        "facts": [
+          {
+            "label": "Access",
+            "value": "At maturity"
+          },
+          {
+            "label": "Rate type",
+            "value": "Fixed"
+          },
+          {
+            "label": "Minimum",
+            "value": "€5,000"
+          },
+          {
+            "label": "Terms",
+            "value": "6–60 months"
+          }
+        ],
+        "considerations": [
+          "When will you need the funds?",
+          "Is interest paid annually or at maturity?",
+          "What happens at the end of the term?"
+        ]
+      },
+      "flexgeld": {
+        "name": "Flex deposits",
+        "category": "Deposits",
+        "eyebrow": "Between savings and fixed terms",
+        "summary": "A middle path: a fixed horizon with defined notice periods that let you step out if plans change.",
+        "detail": "Flex deposits combine a planned rate with notice-based access. Read the notice period and any rate adjustment on early withdrawal carefully.",
+        "risk": "Early withdrawal can reduce the interest earned. Notice periods delay access.",
+        "facts": [
+          {
+            "label": "Access",
+            "value": "With notice"
+          },
+          {
+            "label": "Rate type",
+            "value": "Fixed / adjusted"
+          },
+          {
+            "label": "Minimum",
+            "value": "€2,500"
+          },
+          {
+            "label": "Notice",
+            "value": "31 days"
+          }
+        ],
+        "considerations": [
+          "How long is the notice period?",
+          "How is the rate adjusted if you exit early?",
+          "Is the term renewed automatically?"
+        ]
+      },
+      "anleihen": {
+        "name": "Bonds",
+        "category": "Capital markets",
+        "eyebrow": "Income within a defined framework",
+        "summary": "Lend capital to an issuer in return for scheduled interest — understand who pays, and on what terms.",
+        "detail": "Assess the issuer's credit quality, sensitivity to interest-rate moves, maturity and secondary-market liquidity together. A scheduled coupon is not a guarantee.",
+        "risk": "Payments depend on the issuer. Selling before maturity may return less than invested.",
+        "facts": [
+          {
+            "label": "Income",
+            "value": "Coupon"
+          },
+          {
+            "label": "Key driver",
+            "value": "Credit & rates"
+          },
+          {
+            "label": "Liquidity",
+            "value": "Exchange / OTC"
+          },
+          {
+            "label": "Maturity",
+            "value": "Defined"
+          }
+        ],
+        "considerations": [
+          "Who is the issuer and how is it rated?",
+          "How does a rate change affect the price?",
+          "Can you sell before maturity?"
+        ]
+      },
+      "aktien": {
+        "name": "Stocks",
+        "category": "Capital markets",
+        "eyebrow": "Ownership in companies",
+        "summary": "Participate in the growth of businesses — with the price movement that ownership brings.",
+        "detail": "Equities can grow with company earnings over long horizons but fluctuate considerably. Diversification and time horizon matter more than timing.",
+        "risk": "Share prices can fall sharply. Dividends are not guaranteed. Total loss is possible.",
+        "facts": [
+          {
+            "label": "Return",
+            "value": "Price & dividend"
+          },
+          {
+            "label": "Volatility",
+            "value": "High"
+          },
+          {
+            "label": "Horizon",
+            "value": "5+ years"
+          },
+          {
+            "label": "Liquidity",
+            "value": "Exchange"
+          }
+        ],
+        "considerations": [
+          "How concentrated is your exposure?",
+          "Could you hold through a 30% drawdown?",
+          "What are the full costs of trading?"
+        ]
+      },
+      "ipo": {
+        "name": "IPO access",
+        "category": "Capital markets",
+        "eyebrow": "Early access to new listings",
+        "summary": "Subscribe to companies entering the public market — read the prospectus before the headlines.",
+        "detail": "New listings have limited trading history. Allocation is not guaranteed, and first-day prices can move in either direction.",
+        "risk": "Limited track record, potential lock-ups and pronounced volatility after listing.",
+        "facts": [
+          {
+            "label": "Document",
+            "value": "Prospectus"
+          },
+          {
+            "label": "Allocation",
+            "value": "Not guaranteed"
+          },
+          {
+            "label": "Volatility",
+            "value": "Very high"
+          },
+          {
+            "label": "Horizon",
+            "value": "Long term"
+          }
+        ],
+        "considerations": [
+          "Have you read the approved prospectus?",
+          "How is the offer price determined?",
+          "Are there lock-up periods?"
+        ]
+      },
+      "gold": {
+        "name": "Gold",
+        "category": "Commodities",
+        "eyebrow": "A store of value with a long memory",
+        "summary": "Physical or securitised gold as a diversifier — no interest, but a long role in preserving wealth.",
+        "detail": "Gold pays no income and its price is set in US dollars, so currency moves matter. Storage, insurance and spreads add to the cost of ownership.",
+        "risk": "Prices can fall for extended periods. Currency effects apply for euro investors.",
+        "facts": [
+          {
+            "label": "Income",
+            "value": "None"
+          },
+          {
+            "label": "Currency",
+            "value": "USD-priced"
+          },
+          {
+            "label": "Form",
+            "value": "Physical / ETC"
+          },
+          {
+            "label": "Role",
+            "value": "Diversifier"
+          }
+        ],
+        "considerations": [
+          "Physical bars or a securitised product?",
+          "Where and how is it stored?",
+          "What is the buy/sell spread?"
+        ]
+      },
+      "rohoel": {
+        "name": "Crude oil",
+        "category": "Commodities",
+        "eyebrow": "Exposure to the energy cycle",
+        "summary": "Oil exposure via futures-based products — driven by supply, demand and geopolitics.",
+        "detail": "Most retail oil products track futures, not the spot price. Rolling contracts can create returns that differ markedly from the headline price.",
+        "risk": "High volatility and roll costs. Not suitable as a core holding for most investors.",
+        "facts": [
+          {
+            "label": "Underlying",
+            "value": "Brent / WTI"
+          },
+          {
+            "label": "Structure",
+            "value": "Futures-based"
+          },
+          {
+            "label": "Volatility",
+            "value": "Very high"
+          },
+          {
+            "label": "Horizon",
+            "value": "Tactical"
+          }
+        ],
+        "considerations": [
+          "Does the product track spot or futures?",
+          "What are the roll costs?",
+          "How large a position makes sense?"
+        ]
+      }
+    },
+    "markets": {
+      "gold": {
+        "name": "Gold",
+        "unit": "USD / oz",
+        "source": "LBMA reference",
+        "description": "The most widely held precious metal, traditionally used as a store of value and portfolio diversifier."
+      },
+      "silver": {
+        "name": "Silver",
+        "unit": "USD / oz",
+        "source": "LBMA reference",
+        "description": "A precious and industrial metal; demand from solar and electronics makes it more cyclical than gold."
+      },
+      "platinum": {
+        "name": "Platinum",
+        "unit": "USD / oz",
+        "source": "LPPM reference",
+        "description": "Used in catalytic converters and jewellery; supply is concentrated in a few producing regions."
+      },
+      "palladium": {
+        "name": "Palladium",
+        "unit": "USD / oz",
+        "source": "LPPM reference",
+        "description": "A key input for petrol-engine catalysts, with prices sensitive to automotive demand."
+      },
+      "bitcoin": {
+        "name": "Bitcoin",
+        "unit": "USD",
+        "source": "Aggregated exchanges",
+        "description": "The first and largest crypto-asset by market value. Highly volatile and not deposit-protected."
+      },
+      "ethereum": {
+        "name": "Ethereum",
+        "unit": "USD",
+        "source": "Aggregated exchanges",
+        "description": "A programmable blockchain network whose native asset powers smart contracts. Highly volatile."
+      }
+    }
+  },
+  "faqs": [
+    {
+      "q": "Do I need an account to explore?",
+      "a": "No. Every product page, the market overview and the calculator are open to everyone. An account is only needed once you want to keep documents and conversations in one place."
+    },
+    {
+      "q": "What does the calculator actually show?",
+      "a": "A simple projection based on the figures you enter. It is an estimate for orientation, not an offer, and it does not account for taxes, fees or rate changes."
+    },
+    {
+      "q": "Are reference prices trading quotes?",
+      "a": "No. Market references are indicative and shown with their source and observation time. They are not executable prices."
+    },
+    {
+      "q": "What is useful to include in a first message?",
+      "a": "Your goal, an approximate amount and time horizon, and anything you already know you want to avoid. That is enough to begin a sensible conversation."
+    }
+  ],
+  "products": {
+    "pageTitle": "Understand first. Decide with perspective.",
+    "pageIntro": "Eight categories, each with its terms, horizon and risks stated on the page.",
+    "calculatorTitle": "Run a scenario before you commit."
+  },
+  "markets": {
+    "pointInRange": "Point in range",
+    "referencePrice": "Reference price",
+    "areReferencePrices": "Are reference prices trading quotes?",
+    "otherMarkets": "Other markets",
+    "illustrativeData": "Illustrative data. Reference prices are not executable quotes.",
+    "askQuestion": "Ask a specific question"
+  },
+  "kontakt": {
+    "heroEyebrow": "Contact",
+    "heroTitle": "Tell us what is on your mind.",
+    "heroIntro": "There is no need to have everything figured out. A few lines about your situation and what you are trying to solve is enough to start.",
+    "conversationTitle": "A conversation you can return to",
+    "messageReceived": "Message received",
+    "thankYou": "Thank you. We'll be in touch.",
+    "beforeYouWrite": "Before you write.",
+    "connectedAccount": "With a client login, your messages and documents stay connected to your account.",
+    "replyTime": "A member of our team will reply by email within two business days.",
+    "sendMessage": "Send message"
+  },
+  "productPage": {
+    "askAbout": "Ask about",
+    "calculateScenario": "Calculate a scenario",
+    "startWithDocuments": "Start with the documents",
+    "whatYouShouldKnow": "What you should know.",
+    "usefulChecks": "A few useful checks along the way",
+    "keepRiskInView": "Keep risk in view",
+    "calculatorTitle": "Try a few numbers for",
+    "continueExploring": "Continue exploring",
+    "fromRate": "from",
+    "perAnnum": "p.a."
+  }
+}

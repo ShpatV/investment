@@ -1,0 +1,23 @@
+﻿import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  Outlet,
+  Link,
+  createRootRouteWithContext,
+  useRouter,
+  HeadContent,
+  Scripts,
+  useRouterState,
+  type ErrorComponentProps,
+} from "@tanstack/react-router";
+import { type ReactNode } from "react";
+import { Toaster } from "sonner";
+
+import appCss from "../styles.css?url";
+import { Header } from "@/components/site/Header";
+import { Footer } from "@/components/site/Footer";
+import { CookieBanner, useCookieConsent } from "@/components/site/CookieBanner";
+import { buttonCls } from "@/components/site/ui";
+import { AuthProvider } from "@/lib/auth";
+import "@/lib/i18n"; // Initialize i18n
+
+function NotFoundComponent() {

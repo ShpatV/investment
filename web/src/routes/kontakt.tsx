@@ -5,8 +5,10 @@ import { toast } from "sonner";
 import { z } from "zod";
 import office from "@/assets/office.jpg";
 import { PageHero, Reveal, buttonCls } from "@/components/site/ui";
+import { useTranslation } from "react-i18next";
 import { Faq } from "./index";
-import { faqs, products } from "@/lib/site";
+import { products } from "@/lib/site";
+import { useTranslatedFaqs } from "@/lib/site-i18n";
 
 export const Route = createFileRoute("/kontakt")({
   head: () => ({
@@ -34,6 +36,8 @@ const schema = z.object({
 const field = "w-full border-0 border-b border-input bg-transparent px-0 py-3 text-base outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-gold focus:ring-0";
 
 function Contact() {
+  const { t } = useTranslation();
+  const faqs = useTranslatedFaqs();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -71,7 +75,7 @@ function Contact() {
               </Reveal>
             ))}
             <Reveal className="border-l-2 border-gold bg-secondary p-8">
-              <h2 className="text-2xl">A conversation you can return to</h2>
+              <h2 className="text-2xl">{t("kontakt.conversationTitle")}</h2>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">With a client login, your messages and documents stay together in one familiar place.</p>
             </Reveal>
           </aside>
@@ -79,9 +83,9 @@ function Contact() {
           <Reveal className="md:col-span-8">
             {sent ? (
               <div className="border border-border bg-card p-12 shadow-card" role="status">
-                <p className="eyebrow">Message received</p>
-                <h2 className="mt-4 text-4xl">Thank you. We’ll be in touch.</h2>
-                <p className="mt-4 text-muted-foreground">A member of our team will reply by email within two business days.</p>
+                <p className="eyebrow">{t("kontakt.messageReceived")}</p>
+                <h2 className="mt-4 text-4xl">{t("kontakt.thankYou")}</h2>
+                <p className="mt-4 text-muted-foreground">{t("kontakt.replyTime")}</p>
                 <button className={`${buttonCls("outline")} mt-8`} onClick={() => setSent(false)}>Send another message</button>
               </div>
             ) : (
@@ -107,7 +111,7 @@ function Contact() {
                   {errors["consent"] && <p className="mt-2 text-xs text-destructive">{errors["consent"]}</p>}
                 </div>
                 <div className="md:col-span-2">
-                  <button disabled={busy} className={buttonCls("navy")}>{busy ? "Sending…" : "Send message"}</button>
+                  <button disabled={busy} className={buttonCls("navy")}>{busy ? t("common.saving") : t("kontakt.sendMessage")}</button>
                 </div>
               </form>
             )}
@@ -116,7 +120,7 @@ function Contact() {
       </section>
       <section className="bg-secondary py-20 md:py-28">
         <div className="container-x grid gap-12 md:grid-cols-12">
-          <h2 className="text-4xl md:col-span-5 md:text-5xl">Before you write.</h2>
+          <h2 className="text-4xl md:col-span-5 md:text-5xl">{t("kontakt.beforeYouWrite")}</h2>
           <div className="md:col-span-7"><Faq items={faqs} /></div>
         </div>
       </section>

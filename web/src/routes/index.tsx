@@ -1,12 +1,14 @@
 ﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, FileText, LineChart, ShieldCheck, Plus } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import hero from "@/assets/hero.jpg";
 import office from "@/assets/office.jpg";
 import stone from "@/assets/stone.jpg";
 import { Calculator } from "@/components/site/Calculator";
 import { Reveal, SectionHeading, Sparkline, buttonCls } from "@/components/site/ui";
-import { faqs, markets, num, priceSeries, products } from "@/lib/site";
+import { faqs, num, priceSeries } from "@/lib/site";
+import { useTranslatedProducts, useTranslatedMarkets, useTranslatedFaqs } from "@/lib/site-i18n";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
@@ -23,13 +25,17 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const highlights = [
-  { icon: FileText, t: "Terms stated up front", d: "Every product page sets out conditions and risks before any next step is asked of you." },
-  { icon: LineChart, t: "Market view", d: "Reference prices published with their source and observation time — never without context." },
-  { icon: ShieldCheck, t: "Risk and tax notes in writing", d: "Risk warnings and tax notes sit on the page itself, not in a document you must request." },
+const highlights = (t: (key: string) => string) => [
+  { icon: FileText, label: t("highlights.termsTitle"), desc: t("highlights.termsDesc") },
+  { icon: LineChart, label: t("highlights.marketTitle"), desc: t("highlights.marketDesc") },
+  { icon: ShieldCheck, label: t("highlights.riskTitle"), desc: t("highlights.riskDesc") },
 ];
 
 function Home() {
+  const { t } = useTranslation();
+  const products = useTranslatedProducts();
+  const markets = useTranslatedMarkets();
+  const faqs = useTranslatedFaqs();
   return (
     <>
       {/* Hero */}
@@ -38,17 +44,17 @@ function Home() {
         <div className="absolute inset-0 bg-veil" />
         <div className="absolute inset-0 bg-fade" />
         <div className="container-x relative pb-20 pt-40 md:pb-28">
-          <p className="eyebrow flex items-center gap-4 animate-rise"><span className="gold-rule" />A little clarity goes a long way</p>
+          <p className="eyebrow flex items-center gap-4 animate-rise"><span className="gold-rule" />{t("index.heroEyebrow")}</p>
           <h1 className="mt-8 max-w-5xl text-[3.25rem] leading-[0.98] animate-rise sm:text-7xl lg:text-[6.5rem]" style={{ animationDelay: "120ms" }}>
-            Let’s start with <em className="text-gold-soft">what matters</em> to you.
+            {t("index.heroPrefix")} <em className="text-gold-soft">{t("index.heroHighlight")}</em> {t("index.heroSuffix")}
           </h1>
           <div className="mt-10 grid gap-10 md:grid-cols-12 md:items-end">
             <p className="max-w-xl text-lg leading-relaxed text-navy-muted animate-rise md:col-span-6" style={{ animationDelay: "240ms" }}>
-              Whether you are setting money aside or weighing an investment, there is room to take your time. Look around, try the planning tools, and bring the questions that come up.
+              {t("index.heroDescription")}
             </p>
             <div className="flex flex-wrap gap-3 animate-rise md:col-span-6 md:justify-end" style={{ animationDelay: "360ms" }}>
-              <a href="#products" className={buttonCls("gold")}>Take a look around <ArrowRight className="size-4" /></a>
-              <a href="#calculator" className={buttonCls("outlineLight")}>Work out a scenario</a>
+              <a href="#products" className={buttonCls("gold")}>{t("index.takeALook")} <ArrowRight className="size-4" /></a>
+              <a href="#calculator" className={buttonCls("outlineLight")}>{t("index.workOutScenario")}</a>
             </div>
           </div>
         </div>
@@ -70,11 +76,11 @@ function Home() {
       {/* Highlights */}
       <section className="py-24 md:py-32">
         <div className="container-x grid gap-px bg-white md:grid-cols-3">
-          {highlights.map((h, i) => (
-            <Reveal key={h.t} delay={i * 120} className="bg-background p-10 md:p-12">
+          {highlights(t).map((h, i) => (
+            <Reveal key={h.label} delay={i * 120} className="bg-background p-10 md:p-12">
               <h.icon className="size-6 text-gold" strokeWidth={1.25} />
-              <h3 className="mt-8 text-3xl">{h.t}</h3>
-              <p className="mt-4 leading-relaxed text-muted-foreground">{h.d}</p>
+              <h3 className="mt-8 text-3xl">{h.label}</h3>
+              <p className="mt-4 leading-relaxed text-muted-foreground">{h.desc}</p>
             </Reveal>
           ))}
         </div>
@@ -85,7 +91,7 @@ function Home() {
         <div className="container-x">
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
             <SectionHeading eyebrow="Explore the possibilities" title="There is more than one way to begin." intro="Browse the categories and see which fit the questions you have about your money." />
-            <Link to="/products" className="shrink-0 text-sm font-semibold link-underline">Compare all products →</Link>
+            <Link to="/products" className="shrink-0 text-sm font-semibold link-underline">{t("index.compareAllProducts")} →</Link>
           </div>
           <div className="mt-16 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
             {products.map((p, i) => (
@@ -96,7 +102,7 @@ function Home() {
                   <p className="mt-2 text-sm text-gold">{p.eyebrow}</p>
                   <p className="mt-5 text-sm leading-relaxed text-muted-foreground group-hover:text-navy-muted">{p.summary}</p>
                   <span className="mt-auto flex items-center justify-between pt-8 text-xs font-semibold uppercase tracking-[0.18em]">
-                    {p.rate ? <span>from <span className="font-display text-2xl normal-case tracking-normal">{p.rate.toFixed(2)}%</span> p.a.</span> : <span>Learn more</span>}
+                    {p.rate ? <span>{t("index.fromRate")} <span className="font-display text-2xl normal-case tracking-normal">{p.rate.toFixed(2)}%</span> {t("index.perAnnum")}</span> : <span>{t("index.learnMore")}</span>}
                     <ArrowRight className="size-4 transition-transform duration-500 group-hover:translate-x-1 group-hover:text-gold" />
                   </span>
                 </Link>
@@ -114,17 +120,17 @@ function Home() {
           </div>
           <div className="flex items-center px-6 py-24 md:px-16 lg:px-24">
             <div>
-              <SectionHeading light eyebrow="Our approach" title="Purpose first. Details next. Decisions in your own time." />
+              <SectionHeading light eyebrow={t("index.approachEyebrow")} title={t("index.approachTitle")} />
               <Reveal delay={150}>
                 <ul className="mt-12 space-y-8">
                   {[
-                    ["01", "Understand", "We begin with your goal and horizon, not with a product."],
-                    ["02", "Compare", "Terms, risks and costs are set out side by side, in plain language."],
-                    ["03", "Decide", "When you are ready — and only then — we prepare the documents."],
-                  ].map(([n, t, d]) => (
+                    ["01", t("index.approachStep1Title"), t("index.approachStep1Desc")],
+                    ["02", t("index.approachStep2Title"), t("index.approachStep2Desc")],
+                    ["03", t("index.approachStep3Title"), t("index.approachStep3Desc")],
+                  ].map(([n, title, d]) => (
                     <li key={n} className="grid grid-cols-[3rem_1fr] gap-4 border-t border-navy-border pt-6">
                       <span className="font-display text-xl text-gold">{n}</span>
-                      <div><p className="font-display text-2xl">{t}</p><p className="mt-1 text-sm text-navy-muted">{d}</p></div>
+                      <div><p className="font-display text-2xl">{title}</p><p className="mt-1 text-sm text-navy-muted">{d}</p></div>
                     </li>
                   ))}
                 </ul>
@@ -137,7 +143,7 @@ function Home() {
       {/* Calculator */}
       <section id="calculator" className="scroll-mt-20 py-24 md:py-32">
         <div className="container-x">
-          <SectionHeading eyebrow="Calculator" title="Try a few numbers." intro="Change the inputs to compare scenarios. Keep in mind the difference between an estimate and a confirmed product offer." />
+          <SectionHeading eyebrow={t("index.calculatorEyebrow")} title={t("index.calculatorTitle")} intro={t("index.calculatorIntro")} />
           <Reveal className="mt-14"><Calculator /></Reveal>
         </div>
       </section>
@@ -147,8 +153,8 @@ function Home() {
         <img src={stone} alt="" loading="lazy" width={1600} height={1088} className="absolute inset-0 h-full w-full object-cover opacity-25" />
         <div className="container-x relative">
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-            <SectionHeading light eyebrow="Market view" title="A look at reference prices." intro="Indicative references with source and observation time. Not executable quotes." />
-            <Link to="/markets" className="shrink-0 text-sm font-semibold text-gold link-underline">Full market overview →</Link>
+            <SectionHeading light eyebrow={t("index.marketEyebrow")} title={t("index.marketTitle")} intro={t("index.marketIntro")} />
+            <Link to="/markets" className="shrink-0 text-sm font-semibold text-gold link-underline">{t("index.fullMarketOverview")} →</Link>
           </div>
           <div className="mt-14 grid gap-px bg-navy-border sm:grid-cols-2 lg:grid-cols-3">
             {markets.map((m, i) => (
@@ -163,7 +169,7 @@ function Home() {
                     <span className="font-display text-3xl tabular-nums">{num(m.price)}</span>
                     <span className={cn("text-sm tabular-nums", m.change >= 0 ? "text-positive" : "text-negative")}>{m.change >= 0 ? "+" : ""}{m.change.toFixed(2)}%</span>
                   </div>
-                  <p className="mt-1 text-xs text-navy-muted">{m.unit} ·· {m.source}</p>
+                  <p className="mt-1 text-xs text-navy-muted">{m.unit} · {m.source}</p>
                 </Link>
               </Reveal>
             ))}
@@ -174,7 +180,7 @@ function Home() {
       {/* Stats */}
       <section className="border-b border-border py-20">
         <div className="container-x grid gap-10 text-center sm:grid-cols-3">
-          {[["8", "Product categories"], ["6", "Reference markets"], ["30 min", "Data refresh interval"]].map(([v, l], i) => (
+          {[["8", t("index.statsCategories")], ["6", t("index.statsMarkets")], ["30 min", t("index.statsRefresh")]].map(([v, l], i) => (
             <Reveal key={l} delay={i * 100}>
               <p className="font-display text-6xl md:text-7xl">{v}</p>
               <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{l}</p>
@@ -186,8 +192,8 @@ function Home() {
       {/* FAQ */}
       <section className="py-24 md:py-32">
         <div className="container-x grid gap-16 md:grid-cols-12">
-          <div className="md:col-span-5"><SectionHeading eyebrow="Questions" title="The questions you might already have." /></div>
-          <div className="md:col-span-7"><Faq /></div>
+          <div className="md:col-span-5"><SectionHeading eyebrow={t("index.questionsEyebrow")} title={t("index.questionsTitle")} /></div>
+          <div className="md:col-span-7"><Faq items={faqs} /></div>
         </div>
       </section>
 
@@ -195,10 +201,10 @@ function Home() {
       <section className="bg-navy text-navy-foreground">
         <div className="container-x flex flex-col items-start justify-between gap-10 py-20 md:flex-row md:items-center">
           <Reveal>
-            <p className="eyebrow">Start a conversation</p>
-            <h2 className="mt-4 max-w-2xl text-4xl md:text-5xl">Tell us what is on your mind.</h2>
+            <p className="eyebrow">{t("index.conversationEyebrow")}</p>
+            <h2 className="mt-4 max-w-2xl text-4xl md:text-5xl">{t("index.conversationTitle")}</h2>
           </Reveal>
-          <Link to="/kontakt" className={buttonCls("gold")}>Contact us <ArrowRight className="size-4" /></Link>
+          <Link to="/kontakt" className={buttonCls("gold")}>{t("index.contactUs")} <ArrowRight className="size-4" /></Link>
         </div>
       </section>
     </>

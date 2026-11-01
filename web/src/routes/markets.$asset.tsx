@@ -1,7 +1,9 @@
 ﻿import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Breadcrumb, PageHero, Reveal, buttonCls } from "@/components/site/ui";
-import { getMarket, markets, num, priceSeries } from "@/lib/site";
+import { getMarket, num, priceSeries } from "@/lib/site";
+import { useTranslatedMarkets } from "@/lib/site-i18n";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/markets/$asset")({
@@ -30,9 +32,11 @@ export const Route = createFileRoute("/markets/$asset")({
 const ranges = { "1M": 30, "3M": 60, "6M": 120, "1Y": 240 } as const;
 
 function Asset() {
+  const { t } = useTranslation();
+  const markets = useTranslatedMarkets();
   const loaded = Route.useLoaderData();
   const { asset } = Route.useParams();
-  const m = loaded?.market ?? getMarket(asset);
+  const m = markets.find((x) => x.slug === asset) ?? loaded?.market ?? getMarket(asset);
   const [range, setRange] = useState<keyof typeof ranges>("3M");
   const data = useMemo(() => m ? priceSeries(m, ranges[range]) : [], [m, range]);
   const [hover, setHover] = useState<number | null>(null);
@@ -51,7 +55,7 @@ function Asset() {
         <div className="container-x">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
-              <p className="eyebrow">{hover !== null ? "Point in range" : "Reference price"}</p>
+              <p className="eyebrow">{hover !== null ? t("markets.pointInRange") : t("markets.referencePrice")}</p>
               <p className="mt-3 font-display text-6xl tabular-nums md:text-7xl">{num(shown)}</p>
               <p className={cn("mt-2 tabular-nums", m.change >= 0 ? "text-positive" : "text-negative")}>{m.change >= 0 ? "+" : ""}{m.change.toFixed(2)}% · 24h · {m.source}</p>
             </div>
@@ -72,16 +76,16 @@ function Asset() {
               {hover !== null && <line x1={(hover / (data.length - 1)) * 100} x2={(hover / (data.length - 1)) * 100} y1="0" y2="100" stroke="var(--foreground)" strokeOpacity="0.3" vectorEffect="non-scaling-stroke" />}
             </svg>
           </Reveal>
-          <p className="mt-4 text-xs text-muted-foreground">Illustrative data. Reference prices are not executable quotes.</p>
+          <p className="mt-4 text-xs text-muted-foreground">{t("markets.illustrativeData")}</p>
 
           <div className="mt-20 grid gap-10 md:grid-cols-2">
             <div className="border-l-2 border-gold pl-8">
-              <h2 className="text-3xl">Are reference prices trading quotes?</h2>
+              <h2 className="text-3xl">{t("markets.areReferencePrices")}</h2>
               <p className="mt-4 leading-relaxed text-muted-foreground">No. They indicate where the market stood at the observation time. Actual buy and sell prices include spreads and can differ.</p>
-              <Link to="/kontakt" className={`${buttonCls("navy")} mt-8`}>Ask a specific question</Link>
+              <Link to="/kontakt" className={`${buttonCls("navy")} mt-8`}>{t("markets.askQuestion")}</Link>
             </div>
             <div>
-              <p className="eyebrow mb-4">Other markets</p>
+              <p className="eyebrow mb-4">{t("markets.otherMarkets")}</p>
               {markets.filter((x) => x.slug !== m.slug).map((x) => (
                 <Link key={x.slug} to="/markets/$asset" params={{ asset: x.slug }} className="flex items-baseline justify-between border-b border-border py-4 hover:text-gold">
                   <span className="font-display text-2xl">{x.name}</span>

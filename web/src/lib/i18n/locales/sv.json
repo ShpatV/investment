@@ -1,0 +1,615 @@
+{
+  "nav": {
+    "home": "Hem",
+    "products": "Produkter",
+    "markets": "Marknader",
+    "overview": "Översikt",
+    "contact": "Kontakt",
+    "signIn": "Logga in",
+    "speakWithUs": "Kontakta oss"
+  },
+  "portal": {
+    "client": "Kundportal",
+    "admin": "Administration",
+    "dashboard": "Översikt",
+    "investments": "Investeringar",
+    "transactions": "Transaktioner",
+    "documents": "Dokument",
+    "profile": "Profil",
+    "overview": "Översikt",
+    "clients": "Kunder",
+    "admins": "Administratörer",
+    "assignments": "Tilldelningar",
+    "publishedPrices": "Publicerade priser",
+    "auditLog": "Granskningslogg"
+  },
+  "common": {
+    "loading": "Laddar…",
+    "saving": "Skickar…",
+    "uploading": "Laddar upp…",
+    "search": "Sök",
+    "filter": "Filtrera",
+    "all": "Alla",
+    "allStatuses": "Alla statusar",
+    "prev": "Föregående",
+    "next": "Nästa",
+    "page": "Sida",
+    "of": "av",
+    "view": "Visa",
+    "edit": "Redigera",
+    "delete": "Ta bort",
+    "cancel": "Avbryt",
+    "save": "Spara",
+    "saveChanges": "Spara ändringar",
+    "add": "Lägg till",
+    "upload": "Ladda upp",
+    "download": "Ladda ner",
+    "archive": "Arkivera",
+    "close": "Stäng",
+    "confirm": "Bekräfta",
+    "signOut": "Logga ut",
+    "signedInAs": "Inloggad som",
+    "noUnread": "Inga olästa aviseringar",
+    "unread": "olästa",
+    "nothingMatches": "Inget matchar dessa filter.",
+    "welcomeBack": "Välkommen tillbaka"
+  },
+  "status": {
+    "active": "Aktiv",
+    "disabled": "Inaktiverad",
+    "pending": "Väntande",
+    "completed": "Slutförd",
+    "failed": "Misslyckad",
+    "matured": "Förfallen",
+    "closed": "Stängd",
+    "archived": "Arkiverad",
+    "stale": "Inaktuell",
+    "unavailable": "Otillgänglig",
+    "live": "Live",
+    "manualOverride": "Manuell åsidosättning"
+  },
+  "auth": {
+    "signIn": "Logga in",
+    "signOut": "Logga ut",
+    "email": "E-post",
+    "password": "Lösenord",
+    "forgotPassword": "Glömt lösenord",
+    "resetPassword": "Återställ lösenord",
+    "changePassword": "Byt lösenord",
+    "securityQuestion": "Säkerhetsfråga",
+    "securityAnswer": "Säkerhetssvar",
+    "enterEmailPassword": "Ange din e-postadress och lösenord.",
+    "signInFailed": "Inloggning misslyckades. Kontrollera dina uppgifter och försök igen.",
+    "welcomeBack": "Välkommen tillbaka, {{name}}.",
+    "secureArea": "Säker zon",
+    "familiarPlace": "En bekant plats att återvända till."
+  },
+  "dashboard": {
+    "projectedMaturityBalance": "Beräknat förfallovärde",
+    "totalInvested": "Totalt investerat",
+    "projectedReturn": "Beräknad avkastning",
+    "averageAnnualRate": "Genomsnittlig årsränta",
+    "yourHoldings": "Dina innehav",
+    "allocationByInstitution": "Fördelning per institution",
+    "recentActivity": "Senaste aktivitet",
+    "planning": "Planering",
+    "marketNews": "Marknadsnyheter",
+    "viewAll": "Visa alla",
+    "allTransactions": "Alla transaktioner"
+  },
+  "investments": {
+    "investment": "Investering",
+    "principal": "Kapital",
+    "annualRate": "Årsränta",
+    "maturity": "Förfallodag",
+    "projectedBalance": "Beräknat saldo",
+    "status": "Status",
+    "addInvestment": "Lägg till investering",
+    "saveInvestment": "Spara investering",
+    "investmentCreated": "Investering skapad.",
+    "name": "Namn",
+    "institution": "Institution",
+    "principalAmount": "Kapitalbelopp",
+    "annualInterestRate": "Årlig ränta",
+    "startDate": "Startdatum",
+    "maturityDate": "Förfallodatum",
+    "compoundingFrequency": "Räntesammansättningsfrekvens",
+    "notes": "Anteckningar"
+  },
+  "transactions": {
+    "transaction": "Transaktion",
+    "date": "Datum",
+    "type": "Typ",
+    "amount": "Belopp",
+    "description": "Beskrivning",
+    "addTransaction": "Lägg till transaktion",
+    "saveTransaction": "Spara transaktion",
+    "transactionRecorded": "Transaktion registrerad.",
+    "deposit": "Insättning",
+    "withdrawal": "Uttag",
+    "interest": "Ränta",
+    "all": "Alla",
+    "deposits": "Insättningar",
+    "withdrawals": "Uttag"
+  },
+  "documents": {
+    "document": "Dokument",
+    "title": "Titel",
+    "category": "Kategori",
+    "uploadDocument": "Ladda upp dokument",
+    "documentUploaded": "Dokument uppladdat.",
+    "download": "Ladda ner",
+    "archive": "Arkivera",
+    "file": "Fil",
+    "identification": "Identifiering",
+    "investmentAgreement": "Investeringsavtal",
+    "statement": "Kontoutdrag",
+    "taxDocument": "Skattedokument",
+    "other": "Övrigt"
+  },
+  "profile": {
+    "yourProfile": "Din profil",
+    "personalInformation": "Personuppgifter",
+    "accountSecurity": "Kontosäkerhet",
+    "firstName": "Förnamn",
+    "lastName": "Efternamn",
+    "email": "E-post",
+    "phone": "Telefon",
+    "address": "Adress",
+    "dateOfBirth": "Födelsedatum",
+    "assignedAdvisor": "Tilldelad rådgivare",
+    "profileSaved": "Profil sparad.",
+    "changePassword": "Byt lösenord",
+    "currentPassword": "Nuvarande lösenord",
+    "newPassword": "Nytt lösenord",
+    "confirmPassword": "Bekräfta lösenord"
+  },
+  "admin": {
+    "administrationOverview": "Administrationsöversikt",
+    "totalClients": "Totalt antal kunder",
+    "activeClients": "Aktiva kunder",
+    "investments": "Investeringar",
+    "assetsUnderManagement": "Tillgångar under förvaltning",
+    "administrators": "Administratörer",
+    "clientAssignments": "Kundtilldelningar",
+    "publishedPrices": "Publicerade priser",
+    "auditLog": "Granskningslogg",
+    "addClient": "Lägg till kund",
+    "addAdministrator": "Lägg till administratör",
+    "newAssignment": "Ny tilldelning",
+    "refreshFromProvider": "Uppdatera från leverantör",
+    "clientCreated": "Kund skapad",
+    "administratorCreated": "Administratör skapad",
+    "clientDisabled": "Kund inaktiverad.",
+    "clientEnabled": "Kund aktiverad.",
+    "searchClients": "Sök namn eller e-post",
+    "searchAdministrators": "Sök administratörer",
+    "searchAudit": "Sök i granskningslogg",
+    "filterByAdmin": "Filtrera per administratör",
+    "allAdministrators": "Alla administratörer",
+    "active": "Aktiv",
+    "disabled": "Inaktiverad"
+  },
+  "prices": {
+    "gold": "Guld",
+    "oil": "Olja",
+    "pricePerTroyOunce": "Pris per troy ounce",
+    "pricePerBarrel": "Pris per fat",
+    "currentMarketPrice": "Aktuellt marknadspris",
+    "currency": "Valuta",
+    "unit": "Enhet",
+    "source": "Källa",
+    "lastFetched": "Senast hämtad",
+    "lastPublished": "Senast publicerad",
+    "priceStatus": "Prisstatus",
+    "live": "Live",
+    "stale": "Inaktuell",
+    "manualOverride": "Manuell åsidosättning",
+    "unavailable": "Otillgänglig",
+    "editPrice": "Redigera pris",
+    "saveOverride": "Spara åsidosättning",
+    "clearOverride": "Rensa åsidosättning",
+    "returnToProvider": "Återgå till leverantörspris",
+    "reasonForOverride": "Anledning till åsidosättning",
+    "effectiveDate": "Giltighetsdatum/tid",
+    "overrideExpiration": "Åsidosättningsutgång"
+  },
+  "language": {
+    "select": "Språk",
+    "en": "English",
+    "sv": "Svenska",
+    "de": "Deutsch"
+  },
+  "index": {
+    "heroEyebrow": "Lite klarhet går långt.",
+    "exploreEyebrow": "Utforska möjligheterna",
+    "exploreTitle": "Det finns mer än ett sätt att börja.",
+    "exploreIntro": "Bläddra bland kategorierna. Hitta sedan produkten som passar.",
+    "approachEyebrow": "Vår approach",
+    "approachTitle": "Syfte först. Detaljer sedan. Beslut i din egen takt.",
+    "calculatorEyebrow": "Kalkylator",
+    "calculatorTitle": "Prova några siffror.",
+    "calculatorIntro": "Ändra inmatningarna för att jämföra scenarier.",
+    "marketEyebrow": "Marknadsöversikt",
+    "marketTitle": "En titt på referenspriser.",
+    "marketIntro": "Indikativa referenser med källa och observationstid.",
+    "questionsEyebrow": "Frågor",
+    "questionsTitle": "Frågorna du redan kan ha.",
+    "conversationEyebrow": "Starta en konversation",
+    "conversationTitle": "Berätta vad du tänker på.",
+    "heroPrefix": "Låt oss börja med",
+    "heroHighlight": "det som betyder något",
+    "heroSuffix": "för dig.",
+    "heroDescription": "Oavsett om du sparar eller överväger en investering finns det utrymme att ta din tid. Titta runt, prova planeringsverktygen och ta med dig de frågor som dyker upp.",
+    "takeALook": "Ta en titt",
+    "workOutScenario": "Räkna på ett scenario",
+    "compareAllProducts": "Jämför alla produkter",
+    "fromRate": "från",
+    "perAnnum": "p.a.",
+    "learnMore": "Läs mer",
+    "approachStep1Title": "Förstå",
+    "approachStep1Desc": "Vi börjar med ditt mål och din horisont, inte med en produkt.",
+    "approachStep2Title": "Jämför",
+    "approachStep2Desc": "Villkor, risker och kostnader presenteras sida vid sida, i klartext.",
+    "approachStep3Title": "Besluta",
+    "approachStep3Desc": "När du är redo — och först då — förbereder vi dokumenten.",
+    "fullMarketOverview": "Fullständig marknadsöversikt",
+    "statsCategories": "Produktkategorier",
+    "statsMarkets": "Referensmarknader",
+    "statsRefresh": "Datauppdateringsintervall",
+    "contactUs": "Kontakta oss"
+  },
+  "highlights": {
+    "termsTitle": "Villkor anges i förväg",
+    "termsDesc": "Varje produktsida anger villkor och risker innan nästa steg begärs av dig.",
+    "marketTitle": "Marknadsöversikt",
+    "marketDesc": "Referenspriser publicerade med källa och observationstid — aldrig utan kontext.",
+    "riskTitle": "Risk- och skatteanmärkningar skriftligt",
+    "riskDesc": "Riskvarningar och skatteanmärkningar finns på sidan, inte i ett dokument du måste begära."
+  },
+  "data": {
+    "products": {
+      "tagesgeld": {
+        "name": "Sparkonto",
+        "category": "Inlåning",
+        "eyebrow": "Daglig tillgång, rörlig ränta",
+        "summary": "Ett hem för reserver du kan behöva på kort varsel, med ränta som följer marknaden.",
+        "detail": "Sparkonton passar likviditet du vill hålla tillgänglig. Räntorna är rörliga och kan ändras när som helst; jämför den angivna räntan med dess giltighetsperiod.",
+        "risk": "Rörliga räntor kan falla. Insättningsgaranti beror på partnerbanken och dess nationella system.",
+        "facts": [
+          {
+            "label": "Tillgång",
+            "value": "Dagligen"
+          },
+          {
+            "label": "Räntetyp",
+            "value": "Rörlig"
+          },
+          {
+            "label": "Minimum",
+            "value": "€1"
+          },
+          {
+            "label": "Löptid",
+            "value": "Öppen"
+          }
+        ],
+        "considerations": [
+          "Vilken bank håller insättningen?",
+          "Hur länge gäller den kampanjräntan?",
+          "Vilket insättningsgarantisystem gäller?"
+        ]
+      },
+      "festgeld": {
+        "name": "Fast inlåning",
+        "category": "Inlåning",
+        "eyebrow": "Planerad ränta, planerad löptid",
+        "summary": "Bind kapital för en överenskommen period till en överenskommen ränta — klarhet i utbyte mot flexibilitet.",
+        "detail": "Fast inlåning betalar en ränta som fastställs i början för hela löptiden. Tidig tillgång är vanligtvis inte möjlig, så matcha löptiden med när du behöver pengarna.",
+        "risk": "Medel är generellt låsta till förfallodagen. Inflation kan urholka realavkastningen.",
+        "facts": [
+          {
+            "label": "Tillgång",
+            "value": "Vid förfall"
+          },
+          {
+            "label": "Räntetyp",
+            "value": "Fast"
+          },
+          {
+            "label": "Minimum",
+            "value": "€5,000"
+          },
+          {
+            "label": "Löptider",
+            "value": "6–60 månader"
+          }
+        ],
+        "considerations": [
+          "När behöver du pengarna?",
+          "Betalas räntan årligen eller vid förfall?",
+          "Vad händer vid löptidens slut?"
+        ]
+      },
+      "flexgeld": {
+        "name": "Flex inlåning",
+        "category": "Inlåning",
+        "eyebrow": "Mellan sparkonto och fast inlåning",
+        "summary": "En mellanväg: en fast horisont med definierade uppsägningstider som låter dig kliva ur om planerna ändras.",
+        "detail": "Flex inlåning kombinerar en planerad ränta med uppsägningsbaserad tillgång. Läs uppsägningstiden och eventuell räntejustering vid tidig uttag noggrant.",
+        "risk": "Tidigt uttag kan minska intjänad ränta. Uppsägningstider fördröjer tillgång.",
+        "facts": [
+          {
+            "label": "Tillgång",
+            "value": "Med uppsägning"
+          },
+          {
+            "label": "Räntetyp",
+            "value": "Fast / justerad"
+          },
+          {
+            "label": "Minimum",
+            "value": "€2,500"
+          },
+          {
+            "label": "Uppsägning",
+            "value": "31 dagar"
+          }
+        ],
+        "considerations": [
+          "Hur lång är uppsägningstiden?",
+          "Hur justeras räntan vid tidigt uttag?",
+          "Förnyas löptiden automatiskt?"
+        ]
+      },
+      "anleihen": {
+        "name": "Obligationer",
+        "category": "Kapitalmarknader",
+        "eyebrow": "Inkomst inom en definierad ram",
+        "summary": "Låna ut kapital till en emittent i utbyte mot schemalagd ränta — förstå vem som betalar och på vilka villkor.",
+        "detail": "Bedöm emittentens kreditkvalitet, känslighet för ränteförändringar, löptid och likviditet på andrahandsmarknaden tillsammans. En schemalagd kupong är ingen garanti.",
+        "risk": "Betalningar beror på emittenten. Försäljning före förfall kan ge mindre än investerat.",
+        "facts": [
+          {
+            "label": "Inkomst",
+            "value": "Kupong"
+          },
+          {
+            "label": "Nyckelfaktor",
+            "value": "Kredit & räntor"
+          },
+          {
+            "label": "Likviditet",
+            "value": "Börs / OTC"
+          },
+          {
+            "label": "Löptid",
+            "value": "Definierad"
+          }
+        ],
+        "considerations": [
+          "Vem är emittenten och hur är den värderad?",
+          "Hur påverkar en ränteförändring priset?",
+          "Kan du sälja före förfall?"
+        ]
+      },
+      "aktien": {
+        "name": "Aktier",
+        "category": "Kapitalmarknader",
+        "eyebrow": "Ägande i företag",
+        "summary": "Delta i tillväxten av företag — med den kursrörelse som ägande medför.",
+        "detail": "Aktier kan växa med företagens vinster över långa horisonter men svänger betydligt. Diversifiering och tidshorisont spelar större roll än timing.",
+        "risk": "Aktiekurser kan falla kraftigt. Utdelningar är inte garanterade. Totalförlust är möjlig.",
+        "facts": [
+          {
+            "label": "Avkastning",
+            "value": "Kurs & utdelning"
+          },
+          {
+            "label": "Volatilitet",
+            "value": "Hög"
+          },
+          {
+            "label": "Horisont",
+            "value": "5+ år"
+          },
+          {
+            "label": "Likviditet",
+            "value": "Börs"
+          }
+        ],
+        "considerations": [
+          "Hur koncentrerad är din exponering?",
+          "Kunde du hålla ut genom en 30% nedgång?",
+          "Vad är de fullständiga handelskostnaderna?"
+        ]
+      },
+      "ipo": {
+        "name": "IPO-tillgång",
+        "category": "Kapitalmarknader",
+        "eyebrow": "Tidig tillgång till nya noteringar",
+        "summary": "Teckna dig för företag som går in på den offentliga marknaden — läs prospektet innan rubrikerna.",
+        "detail": "Nya noteringar har begränsad handelshistorik. Allokering är inte garanterad, och första-dagens priser kan röra sig i båda riktningarna.",
+        "risk": "Begränsad track record, potentiella lock-ups och uttalad volatilitet efter notering.",
+        "facts": [
+          {
+            "label": "Dokument",
+            "value": "Prospekt"
+          },
+          {
+            "label": "Allokering",
+            "value": "Ej garanterad"
+          },
+          {
+            "label": "Volatilitet",
+            "value": "Mycket hög"
+          },
+          {
+            "label": "Horisont",
+            "value": "Lång sikt"
+          }
+        ],
+        "considerations": [
+          "Har du läst det godkända prospektet?",
+          "Hur bestäms erbjudandepriset?",
+          "Finns det lock-up-perioder?"
+        ]
+      },
+      "gold": {
+        "name": "Guld",
+        "category": "Råvaror",
+        "eyebrow": "Ett värdebevarande med långt minne",
+        "summary": "Fysiskt eller värdepapperiserat guld som diversifierare — ingen ränta, men en lång roll i att bevara välstånd.",
+        "detail": "Guld ger ingen inkomst och dess pris sätts i US-dollar, så valutarörelser spelar roll. Förvaring, försäkring och spreadar tillkommer i ägandekostnaden.",
+        "risk": "Priser kan falla under långa perioder. Valutaeffekter gäller för euroinvesterare.",
+        "facts": [
+          {
+            "label": "Inkomst",
+            "value": "Ingen"
+          },
+          {
+            "label": "Valuta",
+            "value": "USD-prissatt"
+          },
+          {
+            "label": "Form",
+            "value": "Fysisk / ETC"
+          },
+          {
+            "label": "Roll",
+            "value": "Diversifierare"
+          }
+        ],
+        "considerations": [
+          "Fysiska tackor eller värdepapperiserad produkt?",
+          "Var och hur förvaras det?",
+          "Vad är köp/sälj-spreaden?"
+        ]
+      },
+      "rohoel": {
+        "name": "Råolja",
+        "category": "Råvaror",
+        "eyebrow": "Exponering mot energicykeln",
+        "summary": "Oljeexponering via terminsbaserade produkter — drivs av utbud, efterfrågan och geopolitik.",
+        "detail": "De flesta detaljhandelsoljeprodukter spår terminer, inte spotpriset. Rullande kontrakt kan skapa avkastning som skiljer sig markant från rubrikpriset.",
+        "risk": "Hög volatilitet och rullkostnader. Inte lämplig som kärninnehav för de flesta investerare.",
+        "facts": [
+          {
+            "label": "Underliggande",
+            "value": "Brent / WTI"
+          },
+          {
+            "label": "Struktur",
+            "value": "Terminsbaserad"
+          },
+          {
+            "label": "Volatilitet",
+            "value": "Mycket hög"
+          },
+          {
+            "label": "Horisont",
+            "value": "Taktisk"
+          }
+        ],
+        "considerations": [
+          "Spårar produkten spot eller terminer?",
+          "Vad är rullkostnaderna?",
+          "Hur stor position är rimlig?"
+        ]
+      }
+    },
+    "markets": {
+      "gold": {
+        "name": "Guld",
+        "unit": "USD / oz",
+        "source": "LBMA-referens",
+        "description": "Den mest allmänt ägda ädelmetallen, traditionellt använd som värdebevarande och portföljdiversifierare."
+      },
+      "silver": {
+        "name": "Silver",
+        "unit": "USD / oz",
+        "source": "LBMA-referens",
+        "description": "En ädel- och industrimetall; efterfrågan från solenergi och elektronik gör den mer cyklisk än guld."
+      },
+      "platinum": {
+        "name": "Platina",
+        "unit": "USD / oz",
+        "source": "LPPM-referens",
+        "description": "Används i katalytiska omvandlare och smycken; utbudet är koncentrerat till några produktionsregioner."
+      },
+      "palladium": {
+        "name": "Palladium",
+        "unit": "USD / oz",
+        "source": "LPPM-referens",
+        "description": "En viktig insatsvara för bensinmotorkatalysatorer, med priser känsliga för fordons efterfrågan."
+      },
+      "bitcoin": {
+        "name": "Bitcoin",
+        "unit": "USD",
+        "source": "Aggregerade börser",
+        "description": "Den första och största krypto-tillgången efter marknadsvärde. Mycket volatil och inte insättningskyddad."
+      },
+      "ethereum": {
+        "name": "Ethereum",
+        "unit": "USD",
+        "source": "Aggregerade börser",
+        "description": "Ett programmerbart blockkedjenätverk vars inhemska tillgång driver smarta kontrakt. Mycket volatil."
+      }
+    }
+  },
+  "faqs": [
+    {
+      "q": "Behöver jag ett konto för att utforska?",
+      "a": "Nej. Varje produktsida, marknadsöversikten och kalkylatorn är öppna för alla. Ett konto behövs först när du vill spara dokument och konversationer på ett ställe."
+    },
+    {
+      "q": "Vad visar kalkylatorn egentligen?",
+      "a": "En enkel projektion baserad på de siffror du anger. Det är en uppskattning för orientering, inte ett erbjudande, och den tar inte hänsyn till skatter, avgifter eller ränteförändringar."
+    },
+    {
+      "q": "Är referenspriser handelskurser?",
+      "a": "Nej. Marknadsreferenser är indikativa och visas med källa och observationstid. De är inte exekverbara priser."
+    },
+    {
+      "q": "Vad är bra att inkludera i ett första meddelande?",
+      "a": "Ditt mål, ett ungefärligt belopp och tidshorisont, och allt du redan vet att du vill undvika. Det räcker för att börja en vettig konversation."
+    }
+  ],
+  "products": {
+    "pageTitle": "Förstå först. Besluta med perspektiv.",
+    "pageIntro": "Åtta kategorier, var och en med sina villkor, horisont och risker angivna på sidan.",
+    "calculatorTitle": "Räkna på ett scenario innan du binder dig."
+  },
+  "markets": {
+    "pointInRange": "Punkt i intervallet",
+    "referencePrice": "Referenspris",
+    "areReferencePrices": "Är referenspriser handelskurser?",
+    "otherMarkets": "Andra marknader",
+    "illustrativeData": "Illustrativa data. Referenspriser är inte exekverbara kurser.",
+    "askQuestion": "Ställ en specifik fråga"
+  },
+  "kontakt": {
+    "heroEyebrow": "Kontakt",
+    "heroTitle": "Berätta vad du tänker på.",
+    "heroIntro": "Det behöver inte vara helt uttänkt. Några rader om din situation och vad du försöker lösa räcker för att börja.",
+    "conversationTitle": "En konversation du kan återvända till",
+    "messageReceived": "Meddelande mottaget",
+    "thankYou": "Tack. Vi återkommer.",
+    "beforeYouWrite": "Innan du skriver.",
+    "connectedAccount": "Med en kundinloggning hålls dina meddelanden och dokument kopplade till ditt konto.",
+    "replyTime": "En medarbetare svarar via e-post inom två arbetsdagar.",
+    "sendMessage": "Skicka meddelande"
+  },
+  "productPage": {
+    "askAbout": "Fråga om",
+    "calculateScenario": "Räkna på ett scenario",
+    "startWithDocuments": "Börja med dokumenten",
+    "whatYouShouldKnow": "Vad du bör veta.",
+    "usefulChecks": "Några användbara kontroller på vägen",
+    "keepRiskInView": "Håll risken i sikte",
+    "calculatorTitle": "Prova några siffror för",
+    "continueExploring": "Fortsätt utforska",
+    "fromRate": "från",
+    "perAnnum": "p.a."
+  }
+}

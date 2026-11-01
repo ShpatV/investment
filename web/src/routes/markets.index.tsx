@@ -2,7 +2,9 @@
 import { ArrowRight } from "lucide-react";
 import stone from "@/assets/stone.jpg";
 import { PageHero, Reveal, Sparkline } from "@/components/site/ui";
-import { markets, num, priceSeries } from "@/lib/site";
+import { useTranslation } from "react-i18next";
+import { num, priceSeries } from "@/lib/site";
+import { useTranslatedMarkets } from "@/lib/site-i18n";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/markets/")({
@@ -20,6 +22,8 @@ export const Route = createFileRoute("/markets/")({
 });
 
 function Markets() {
+  const { t } = useTranslation();
+  const markets = useTranslatedMarkets();
   const observed = new Date().toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
   return (
     <>

@@ -4,7 +4,8 @@ import { useState } from "react";
 import stone from "@/assets/stone.jpg";
 import { Calculator } from "@/components/site/Calculator";
 import { PageHero, Reveal, SectionHeading } from "@/components/site/ui";
-import { products } from "@/lib/site";
+import { useTranslatedProducts } from "@/lib/site-i18n";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/products")({
@@ -24,11 +25,13 @@ export const Route = createFileRoute("/products")({
 const filters = ["All", "Deposits", "Capital markets", "Commodities"] as const;
 
 function Products() {
+  const { t } = useTranslation();
+  const products = useTranslatedProducts();
   const [f, setF] = useState<(typeof filters)[number]>("All");
   const list = products.filter((p) => f === "All" || p.category === f);
   return (
     <>
-      <PageHero image={stone} eyebrow="Products" title="Understand first. Decide with perspective." intro="Eight categories, each with its terms, horizon and risks stated on the page." />
+      <PageHero image={stone} eyebrow={t("nav.products")} title={t("products.pageTitle")} intro={t("products.pageIntro")} />
       <section className="py-20 md:py-28">
         <div className="container-x">
           <div role="tablist" aria-label="Filter by category" className="flex flex-wrap gap-2">
@@ -64,7 +67,7 @@ function Products() {
       </section>
       <section className="bg-secondary py-20 md:py-28">
         <div className="container-x">
-          <SectionHeading eyebrow="Calculator" title="Run a scenario before you commit." />
+          <SectionHeading eyebrow={t("index.calculatorEyebrow")} title={t("products.calculatorTitle")} />
           <Reveal className="mt-12"><Calculator /></Reveal>
         </div>
       </section>

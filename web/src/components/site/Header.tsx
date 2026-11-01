@@ -1,10 +1,13 @@
 ﻿import { Link, useRouterState } from "@tanstack/react-router";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { products, markets } from "@/lib/site";
+import { useTranslatedProducts, useTranslatedMarkets } from "@/lib/site-i18n";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
+import { setLanguage, getCurrentLanguage } from "@/lib/i18n";
 
 const groups = ["Deposits", "Capital markets", "Commodities"] as const;
+const groupLabels: Record<string, string> = { Deposits: "Deposits", "Capital markets": "Capital markets", Commodities: "Commodities" };
 
 export function Logo({ className }: { className?: string }) {
   return (
@@ -22,11 +25,15 @@ export function Logo({ className }: { className?: string }) {
 }
 
 export function Header() {
+  const { t } = useTranslation();
+  const products = useTranslatedProducts();
+  const markets = useTranslatedMarkets();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<null | "products" | "markets">(null);
   const [closeTimer, setCloseTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+  const [langOpen, setLangOpen] = useState(false);
   const overHero = pathname === "/" && !scrolled;
 
   useEffect(() => {
@@ -119,9 +126,44 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-6 lg:flex">
-          <Link to="/login" className={cn(navCls, "hover:text-gold")}>Sign in</Link>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setLangOpen(!langOpen)}
+              className={cn(navCls, "flex items-center gap-1 cursor-pointer hover:text-gold", overHero ? "text-navy-foreground" : "text-foreground")}
+              aria-label="Select language"
+            >
+              {getCurrentLanguage().toUpperCase()}
+              <svg className="size-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M3 4.5L6 7.5L9 4.5" />
+              </svg>
+            </button>
+            {langOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setLangOpen(false)} />
+                <div className="absolute right-0 top-full z-50 mt-2 min-w-[80px] rounded-lg border border-border bg-card py-1 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200">
+                  {["en", "sv", "de"].map((lang) => (
+                    <button
+                      key={lang}
+                      type="button"
+                      onClick={() => { setLanguage(lang); setLangOpen(false); }}
+                      className={cn(
+                        "block w-full px-3 py-1.5 text-left text-xs font-semibold uppercase tracking-wider transition-colors",
+                        getCurrentLanguage() === lang
+                          ? "text-gold bg-gold/5"
+                          : "text-foreground hover:bg-secondary/50 hover:text-gold",
+                      )}
+                    >
+                      {lang === "en" ? "English" : lang === "sv" ? "Svenska" : "Deutsch"}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+          <Link to="/login" className={cn(navCls, "hover:text-gold")}>{t("auth.signIn")}</Link>
           <Link to="/kontakt" className={cn("border px-5 py-2.5 text-[0.75rem] font-semibold uppercase tracking-[0.16em] transition-colors", overHero ? "border-gold text-gold hover:bg-gold hover:text-navy-deep" : "border-primary bg-primary text-primary-foreground hover:bg-navy-deep")}>
-            Speak with us
+            {t("nav.speakWithUs")}
           </Link>
         </div>
 
@@ -141,7 +183,15 @@ export function Header() {
                 ))}
               </div>
             ))}
-            <p className="eyebrow mb-3">Explore</p>
+            <div className="mb-6">
+            <p className="eyebrow mb-3">Language</p>
+            <div className="flex gap-2">
+              <button onClick={() => setLanguage("en")} className={cn("px-3 py-1.5 text-xs font-semibold uppercase tracking-wider border", getCurrentLanguage() === "en" ? "border-gold text-gold" : "border-border hover:border-gold")}>EN</button>
+              <button onClick={() => setLanguage("sv")} className={cn("px-3 py-1.5 text-xs font-semibold uppercase tracking-wider border", getCurrentLanguage() === "sv" ? "border-gold text-gold" : "border-border hover:border-gold")}>SV</button>
+              <button onClick={() => setLanguage("de")} className={cn("px-3 py-1.5 text-xs font-semibold uppercase tracking-wider border", getCurrentLanguage() === "de" ? "border-gold text-gold" : "border-border hover:border-gold")}>DE</button>
+            </div>
+          </div>
+          <p className="eyebrow mb-3">Explore</p>
             {[
               { to: "/products", l: "All products" },
               { to: "/markets", l: "Markets" },

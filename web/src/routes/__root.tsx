@@ -18,6 +18,7 @@ import { Footer } from "@/components/site/Footer";
 import { CookieBanner, useCookieConsent } from "@/components/site/CookieBanner";
 import { buttonCls } from "@/components/site/ui";
 import { AuthProvider } from "@/lib/auth";
+import "@/lib/i18n";
 
 function NotFoundComponent() {
   return (

@@ -1,0 +1,615 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "products": "Produkte",
+    "markets": "Märkte",
+    "overview": "Übersicht",
+    "contact": "Kontakt",
+    "signIn": "Anmelden",
+    "speakWithUs": "Sprechen Sie mit uns"
+  },
+  "portal": {
+    "client": "Kundenportal",
+    "admin": "Verwaltung",
+    "dashboard": "Übersicht",
+    "investments": "Investitionen",
+    "transactions": "Transaktionen",
+    "documents": "Dokumente",
+    "profile": "Profil",
+    "overview": "Übersicht",
+    "clients": "Kunden",
+    "admins": "Administratoren",
+    "assignments": "Zuweisungen",
+    "publishedPrices": "Veröffentlichte Preise",
+    "auditLog": "Prüfprotokoll"
+  },
+  "common": {
+    "loading": "Laden…",
+    "saving": "Senden…",
+    "uploading": "Hochladen…",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "all": "Alle",
+    "allStatuses": "Alle Status",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "page": "Seite",
+    "of": "von",
+    "view": "Anzeigen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "saveChanges": "Änderungen speichern",
+    "add": "Hinzufügen",
+    "upload": "Hochladen",
+    "download": "Herunterladen",
+    "archive": "Archivieren",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "signOut": "Abmelden",
+    "signedInAs": "Angemeldet als",
+    "noUnread": "Keine ungelesenen Benachrichtigungen",
+    "unread": "ungelesen",
+    "nothingMatches": "Keine Übereinstimmungen für diese Filter.",
+    "welcomeBack": "Willkommen zurück"
+  },
+  "status": {
+    "active": "Aktiv",
+    "disabled": "Deaktiviert",
+    "pending": "Ausstehend",
+    "completed": "Abgeschlossen",
+    "failed": "Fehlgeschlagen",
+    "matured": "Fällig",
+    "closed": "Geschlossen",
+    "archived": "Archiviert",
+    "stale": "Veraltet",
+    "unavailable": "Nicht verfügbar",
+    "live": "Live",
+    "manualOverride": "Manuelle Überschreibung"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signOut": "Abmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "forgotPassword": "Passwort vergessen",
+    "resetPassword": "Passwort zurücksetzen",
+    "changePassword": "Passwort ändern",
+    "securityQuestion": "Sicherheitsfrage",
+    "securityAnswer": "Sicherheitsantwort",
+    "enterEmailPassword": "Geben Sie Ihre E-Mail-Adresse und Ihr Passwort ein.",
+    "signInFailed": "Anmeldung fehlgeschlagen. Überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
+    "welcomeBack": "Willkommen zurück, {{name}}.",
+    "secureArea": "Sicherer Bereich",
+    "familiarPlace": "Ein vertrauter Ort zum Zurückkehren."
+  },
+  "dashboard": {
+    "projectedMaturityBalance": "Geschätzter Fälligkeitsbetrag",
+    "totalInvested": "Gesamt investiert",
+    "projectedReturn": "Geschätzte Rendite",
+    "averageAnnualRate": "Durchschnittlicher Jahreszins",
+    "yourHoldings": "Ihre Bestände",
+    "allocationByInstitution": "Verteilung nach Institution",
+    "recentActivity": "Letzte Aktivität",
+    "planning": "Planung",
+    "marketNews": "Marktnachrichten",
+    "viewAll": "Alle anzeigen",
+    "allTransactions": "Alle Transaktionen"
+  },
+  "investments": {
+    "investment": "Investition",
+    "principal": "Kapital",
+    "annualRate": "Jahreszins",
+    "maturity": "Fälligkeit",
+    "projectedBalance": "Geschätzter Saldo",
+    "status": "Status",
+    "addInvestment": "Investition hinzufügen",
+    "saveInvestment": "Investition speichern",
+    "investmentCreated": "Investition erstellt.",
+    "name": "Name",
+    "institution": "Institution",
+    "principalAmount": "Kapitalbetrag",
+    "annualInterestRate": "Jährlicher Zinssatz",
+    "startDate": "Startdatum",
+    "maturityDate": "Fälligkeitsdatum",
+    "compoundingFrequency": "Zinseszinsfrequenz",
+    "notes": "Notizen"
+  },
+  "transactions": {
+    "transaction": "Transaktion",
+    "date": "Datum",
+    "type": "Typ",
+    "amount": "Betrag",
+    "description": "Beschreibung",
+    "addTransaction": "Transaktion hinzufügen",
+    "saveTransaction": "Transaktion speichern",
+    "transactionRecorded": "Transaktion erfasst.",
+    "deposit": "Einzahlung",
+    "withdrawal": "Auszahlung",
+    "interest": "Zinsen",
+    "all": "Alle",
+    "deposits": "Einzahlungen",
+    "withdrawals": "Auszahlungen"
+  },
+  "documents": {
+    "document": "Dokument",
+    "title": "Titel",
+    "category": "Kategorie",
+    "uploadDocument": "Dokument hochladen",
+    "documentUploaded": "Dokument hochgeladen.",
+    "download": "Herunterladen",
+    "archive": "Archivieren",
+    "file": "Datei",
+    "identification": "Identifizierung",
+    "investmentAgreement": "Investitionsvereinbarung",
+    "statement": "Kontoauszug",
+    "taxDocument": "Steuerdokument",
+    "other": "Sonstiges"
+  },
+  "profile": {
+    "yourProfile": "Ihr Profil",
+    "personalInformation": "Persönliche Informationen",
+    "accountSecurity": "Kontosicherheit",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "address": "Adresse",
+    "dateOfBirth": "Geburtsdatum",
+    "assignedAdvisor": "Zugewiesener Berater",
+    "profileSaved": "Profil gespeichert.",
+    "changePassword": "Passwort ändern",
+    "currentPassword": "Aktuelles Passwort",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Passwort bestätigen"
+  },
+  "admin": {
+    "administrationOverview": "Verwaltungsübersicht",
+    "totalClients": "Gesamtkunden",
+    "activeClients": "Aktive Kunden",
+    "investments": "Investitionen",
+    "assetsUnderManagement": "Verwaltete Vermögenswerte",
+    "administrators": "Administratoren",
+    "clientAssignments": "Kundenzuweisungen",
+    "publishedPrices": "Veröffentlichte Preise",
+    "auditLog": "Prüfprotokoll",
+    "addClient": "Kunde hinzufügen",
+    "addAdministrator": "Administrator hinzufügen",
+    "newAssignment": "Neue Zuweisung",
+    "refreshFromProvider": "Vom Anbieter aktualisieren",
+    "clientCreated": "Kunde erstellt",
+    "administratorCreated": "Administrator erstellt",
+    "clientDisabled": "Kunde deaktiviert.",
+    "clientEnabled": "Kunde aktiviert.",
+    "searchClients": "Name oder E-Mail suchen",
+    "searchAdministrators": "Administratoren suchen",
+    "searchAudit": "Prüfprotokoll suchen",
+    "filterByAdmin": "Nach Administrator filtern",
+    "allAdministrators": "Alle Administratoren",
+    "active": "Aktiv",
+    "disabled": "Deaktiviert"
+  },
+  "prices": {
+    "gold": "Gold",
+    "oil": "Öl",
+    "pricePerTroyOunce": "Preis pro Feinunze",
+    "pricePerBarrel": "Preis pro Barrel",
+    "currentMarketPrice": "Aktueller Marktpreis",
+    "currency": "Währung",
+    "unit": "Einheit",
+    "source": "Quelle",
+    "lastFetched": "Zuletzt abgerufen",
+    "lastPublished": "Zuletzt veröffentlicht",
+    "priceStatus": "Preisstatus",
+    "live": "Live",
+    "stale": "Veraltet",
+    "manualOverride": "Manuelle Überschreibung",
+    "unavailable": "Nicht verfügbar",
+    "editPrice": "Preis bearbeiten",
+    "saveOverride": "Überschreibung speichern",
+    "clearOverride": "Überschreibung löschen",
+    "returnToProvider": "Zum Anbieterpreis zurückkehren",
+    "reasonForOverride": "Grund für Überschreibung",
+    "effectiveDate": "Gültigkeitsdatum/-zeit",
+    "overrideExpiration": "Überschreibungsablauf"
+  },
+  "language": {
+    "select": "Sprache",
+    "en": "English",
+    "sv": "Svenska",
+    "de": "Deutsch"
+  },
+  "index": {
+    "heroEyebrow": "Ein wenig Klarheit geht weit.",
+    "exploreEyebrow": "Möglichkeiten erkunden",
+    "exploreTitle": "Es gibt mehr als einen Weg zu beginnen.",
+    "exploreIntro": "Durchstöbern Sie die Kategorien. Finden Sie dann das passende Produkt.",
+    "approachEyebrow": "Unser Ansatz",
+    "approachTitle": "Zuerst der Zweck. Dann die Details. Entscheidungen in Ihrem eigenen Tempo.",
+    "calculatorEyebrow": "Rechner",
+    "calculatorTitle": "Probieren Sie ein paar Zahlen.",
+    "calculatorIntro": "Ändern Sie die Eingaben, um Szenarien zu vergleichen.",
+    "marketEyebrow": "Marktübersicht",
+    "marketTitle": "Ein Blick auf Referenzpreise.",
+    "marketIntro": "Indikative Referenzen mit Quelle und Beobachtungszeit.",
+    "questionsEyebrow": "Fragen",
+    "questionsTitle": "Die Fragen, die Sie vielleicht schon haben.",
+    "conversationEyebrow": "Gespräch beginnen",
+    "conversationTitle": "Sagen Sie uns, was Sie beschäftigt.",
+    "heroPrefix": "Lassen Sie uns mit",
+    "heroHighlight": "dem Wichtigen",
+    "heroSuffix": "beginnen.",
+    "heroDescription": "Ob Sie Geld beiseite legen oder eine Investition abwägen, es gibt Raum, sich Zeit zu nehmen. Schauen Sie sich um, probieren Sie die Planungswerkzeuge und bringen Sie die Fragen mit, die auftauchen.",
+    "takeALook": "Schauen Sie sich um",
+    "workOutScenario": "Szenario durchrechnen",
+    "compareAllProducts": "Alle Produkte vergleichen",
+    "fromRate": "ab",
+    "perAnnum": "p.a.",
+    "learnMore": "Mehr erfahren",
+    "approachStep1Title": "Verstehen",
+    "approachStep1Desc": "Wir beginnen mit Ihrem Ziel und Horizont, nicht mit einem Produkt.",
+    "approachStep2Title": "Vergleichen",
+    "approachStep2Desc": "Bedingungen, Risiken und Kosten werden nebeneinander in klarer Sprache dargestellt.",
+    "approachStep3Title": "Entscheiden",
+    "approachStep3Desc": "Wenn Sie bereit sind — und erst dann — bereiten wir die Dokumente vor.",
+    "fullMarketOverview": "Vollständige Marktübersicht",
+    "statsCategories": "Produktkategorien",
+    "statsMarkets": "Referenzmärkte",
+    "statsRefresh": "Datenaktualisierungsintervall",
+    "contactUs": "Kontaktieren Sie uns"
+  },
+  "highlights": {
+    "termsTitle": "Bedingungen im Voraus",
+    "termsDesc": "Jede Produktseite legt Bedingungen und Risiken dar, bevor ein nächster Schritt von Ihnen verlangt wird.",
+    "marketTitle": "Marktübersicht",
+    "marketDesc": "Referenzpreise mit Quelle und Beobachtungszeit veröffentlicht — niemals ohne Kontext.",
+    "riskTitle": "Risiko- und Steuerhinweise schriftlich",
+    "riskDesc": "Risikowarnungen und Steuerhinweise stehen auf der Seite, nicht in einem Dokument, das Sie anfordern müssen."
+  },
+  "data": {
+    "products": {
+      "tagesgeld": {
+        "name": "Sparkonto",
+        "category": "Einlagen",
+        "eyebrow": "Täglicher Zugriff, variabler Zins",
+        "summary": "Ein Ort für Reserven, die Sie kurzfristig brauchen könnten, mit Zinsen, die dem Markt folgen.",
+        "detail": "Sparkonten eignen sich für Liquidität, die verfügbar bleiben soll. Zinssätze sind variabel und können jederzeit ändern; vergleichen Sie den angegebenen Zins mit seiner Gültigkeitsdauer.",
+        "risk": "Variable Zinssätze können fallen. Die Einlagensicherung hängt von der Partnerbank und ihrem nationalen System ab.",
+        "facts": [
+          {
+            "label": "Zugang",
+            "value": "Täglich"
+          },
+          {
+            "label": "Zinstyp",
+            "value": "Variabel"
+          },
+          {
+            "label": "Minimum",
+            "value": "€1"
+          },
+          {
+            "label": "Laufzeit",
+            "value": "Unbefristet"
+          }
+        ],
+        "considerations": [
+          "Welche Bank hält die Einlage?",
+          "Wie lange gilt der Aktionszins?",
+          "Welches Einlagensicherungssystem gilt?"
+        ]
+      },
+      "festgeld": {
+        "name": "Festgeld",
+        "category": "Einlagen",
+        "eyebrow": "Planbarer Zins, planbare Laufzeit",
+        "summary": "Kapital für einen vereinbarten Zeitraum zu einem vereinbarten Zins binden — Klarheit im Austausch für Flexibilität.",
+        "detail": "Festgelder zahlen einen zu Beginn festgelegten Zins für die gesamte Laufzeit. Vorzeitiger Zugriff ist in der Regel nicht möglich, daher passen Sie die Laufzeit an, wann Sie das Geld benötigen.",
+        "risk": "Gelder sind in der Regel bis zur Fälligkeit gesperrt. Inflation kann die reale Rendite erodieren.",
+        "facts": [
+          {
+            "label": "Zugang",
+            "value": "Bei Fälligkeit"
+          },
+          {
+            "label": "Zinstyp",
+            "value": "Fix"
+          },
+          {
+            "label": "Minimum",
+            "value": "€5,000"
+          },
+          {
+            "label": "Laufzeiten",
+            "value": "6–60 Monate"
+          }
+        ],
+        "considerations": [
+          "Wann werden Sie die Mittel benötigen?",
+          "Wird der Zins jährlich oder bei Fälligkeit gezahlt?",
+          "Was passiert am Ende der Laufzeit?"
+        ]
+      },
+      "flexgeld": {
+        "name": "Flexgeld",
+        "category": "Einlagen",
+        "eyebrow": "Zwischen Sparkonto und Festgeld",
+        "summary": "Ein Mittelweg: ein fester Horizont mit definierten Kündigungsfristen, die Ihnen den Ausstieg ermöglichen, wenn sich Pläne ändern.",
+        "detail": "Flexgelder kombinieren einen planbaren Zins mit kündigungsabhängigem Zugang. Lesen Sie die Kündigungsfrist und eventuelle Zinsanpassungen bei vorzeitiger Abhebung sorgfältig.",
+        "risk": "Vorzeitige Abhebung kann die verdienten Zinsen reduzieren. Kündigungsfristen verzögern den Zugang.",
+        "facts": [
+          {
+            "label": "Zugang",
+            "value": "Mit Kündigung"
+          },
+          {
+            "label": "Zinstyp",
+            "value": "Fix / angepasst"
+          },
+          {
+            "label": "Minimum",
+            "value": "€2,500"
+          },
+          {
+            "label": "Kündigung",
+            "value": "31 Tage"
+          }
+        ],
+        "considerations": [
+          "Wie lang ist die Kündigungsfrist?",
+          "Wie wird der Zins bei vorzeitigem Ausstieg angepasst?",
+          "Verlängert sich die Laufzeit automatisch?"
+        ]
+      },
+      "anleihen": {
+        "name": "Anleihen",
+        "category": "Kapitalmärkte",
+        "eyebrow": "Einkommen in einem definierten Rahmen",
+        "summary": "Kapital an einen Emittenten leihen im Austausch für planmäßige Zinsen — verstehen, wer zahlt und zu welchen Bedingungen.",
+        "detail": "Bewerten Sie die Kreditqualität des Emittenten, die Sensitivität gegenüber Zinsbewegungen, die Laufzeit und die Liquidität am Sekundärmarkt zusammen. Ein planmäßiger Kupon ist keine Garantie.",
+        "risk": "Zahlungen hängen vom Emittenten ab. Verkauf vor Fälligkeit kann weniger erbringen als investiert.",
+        "facts": [
+          {
+            "label": "Einkommen",
+            "value": "Kupon"
+          },
+          {
+            "label": "Haupttreiber",
+            "value": "Kredit & Zinsen"
+          },
+          {
+            "label": "Liquidität",
+            "value": "Börse / OTC"
+          },
+          {
+            "label": "Laufzeit",
+            "value": "Definiert"
+          }
+        ],
+        "considerations": [
+          "Wer ist der Emittent und wie wird er bewertet?",
+          "Wie beeinflusst eine Zinsänderung den Preis?",
+          "Kann man vor Fälligkeit verkaufen?"
+        ]
+      },
+      "aktien": {
+        "name": "Aktien",
+        "category": "Kapitalmärkte",
+        "eyebrow": "Eigentum an Unternehmen",
+        "summary": "An der Entwicklung von Unternehmen teilhaben — mit der Kursbewegung, die Eigentum mit sich bringt.",
+        "detail": "Aktien können mit Unternehmensgewinnen über lange Horizonte wachsen, schwanken aber erheblich. Diversifikation und Zeithorizont sind wichtiger als Timing.",
+        "risk": "Aktienkurse können stark fallen. Dividenden sind nicht garantiert. Totalverlust ist möglich.",
+        "facts": [
+          {
+            "label": "Rendite",
+            "value": "Kurs & Dividende"
+          },
+          {
+            "label": "Volatilität",
+            "value": "Hoch"
+          },
+          {
+            "label": "Horizont",
+            "value": "5+ Jahre"
+          },
+          {
+            "label": "Liquidität",
+            "value": "Börse"
+          }
+        ],
+        "considerations": [
+          "Wie konzentriert ist Ihre Exponierung?",
+          "Könnten Sie einen 30%-igen Rückgang durchhalten?",
+          "Was sind die vollen Handelskosten?"
+        ]
+      },
+      "ipo": {
+        "name": "IPO-Zugang",
+        "category": "Kapitalmärkte",
+        "eyebrow": "Früher Zugang zu neuen Börsengängen",
+        "summary": "Unternehmen abonnieren, die den öffentlichen Markt betreten — lesen Sie den Prospekt vor den Schlagzeilen.",
+        "detail": "Neue Börsengänge haben begrenzte Handelshistorie. Allokation ist nicht garantiert, und Ersttagspreise können in beide Richtungen ausschlagen.",
+        "risk": "Begrenzte Track Record, mögliche Lock-ups und ausgeprägte Volatilität nach dem Börsengang.",
+        "facts": [
+          {
+            "label": "Dokument",
+            "value": "Prospekt"
+          },
+          {
+            "label": "Allokation",
+            "value": "Nicht garantiert"
+          },
+          {
+            "label": "Volatilität",
+            "value": "Sehr hoch"
+          },
+          {
+            "label": "Horizont",
+            "value": "Langfristig"
+          }
+        ],
+        "considerations": [
+          "Haben Sie den genehmigten Prospekt gelesen?",
+          "Wie wird der Angebotspreis bestimmt?",
+          "Gibt es Sperrfristen?"
+        ]
+      },
+      "gold": {
+        "name": "Gold",
+        "category": "Rohstoffe",
+        "eyebrow": "Ein Wertspeicher mit langem Gedächtnis",
+        "summary": "Physisches oder wertpapierisiertes Gold als Diversifikator — keine Zinsen, aber eine lange Rolle bei der Vermögenserhaltung.",
+        "detail": "Gold zahlt keine Zinsen und sein Preis wird in US-Dollar festgelegt, daher sind Währungsbewegungen wichtig. Lagerung, Versicherung und Spreads erhöhen die Eigentumskosten.",
+        "risk": "Preise können über längere Zeiträume fallen. Währungseffekte gelten für Euro-Investoren.",
+        "facts": [
+          {
+            "label": "Einkommen",
+            "value": "Keines"
+          },
+          {
+            "label": "Währung",
+            "value": "USD-basiert"
+          },
+          {
+            "label": "Form",
+            "value": "Physisch / ETC"
+          },
+          {
+            "label": "Rolle",
+            "value": "Diversifikator"
+          }
+        ],
+        "considerations": [
+          "Physische Barren oder ein wertpapierisiertes Produkt?",
+          "Wo und wie wird es gelagert?",
+          "Was ist der Kauf-/Verkaufsspread?"
+        ]
+      },
+      "rohoel": {
+        "name": "Rohöl",
+        "category": "Rohstoffe",
+        "eyebrow": "Exponierung gegenüber dem Energiezyklus",
+        "summary": "Ölexponierung über futures-basierte Produkte — getrieben von Angebot, Nachfrage und Geopolitik.",
+        "detail": "Die meisten Einzelhandelsölprodukte verfolgen Termine, nicht den Spotpreis. Rolling-Kontrakte können Renditen erzeugen, die sich deutlich vom Schlagzeilenpreis unterscheiden.",
+        "risk": "Hohe Volatilität und Rollkosten. Nicht als Kerninvestment für die meisten Anleger geeignet.",
+        "facts": [
+          {
+            "label": "Underlying",
+            "value": "Brent / WTI"
+          },
+          {
+            "label": "Struktur",
+            "value": "Futures-basiert"
+          },
+          {
+            "label": "Volatilität",
+            "value": "Sehr hoch"
+          },
+          {
+            "label": "Horizont",
+            "value": "Taktisch"
+          }
+        ],
+        "considerations": [
+          "Verfolgt das Produkt Spot oder Futures?",
+          "Was sind die Rollkosten?",
+          "Welche Positiongröße macht Sinn?"
+        ]
+      }
+    },
+    "markets": {
+      "gold": {
+        "name": "Gold",
+        "unit": "USD / oz",
+        "source": "LBMA-Referenz",
+        "description": "Das am weitesten verbreitete Edelmetall, traditionell als Wertspeicher und Portfoliodiversifikator verwendet."
+      },
+      "silver": {
+        "name": "Silber",
+        "unit": "USD / oz",
+        "source": "LBMA-Referenz",
+        "description": "Ein Edel- und Industriemetall; Nachfrage aus Solar- und Elektronikindustrie macht es zyklischer als Gold."
+      },
+      "platinum": {
+        "name": "Platin",
+        "unit": "USD / oz",
+        "source": "LPPM-Referenz",
+        "description": "Verwendet in Katalysatoren und Schmuck; das Angebot ist auf wenige Produktionsregionen konzentriert."
+      },
+      "palladium": {
+        "name": "Palladium",
+        "unit": "USD / oz",
+        "source": "LPPM-Referenz",
+        "description": "Ein wichtiger Input für Benzinmotorkatalysatoren, mit Preisen, die auf die Automobilnachfrage reagieren."
+      },
+      "bitcoin": {
+        "name": "Bitcoin",
+        "unit": "USD",
+        "source": "Aggregierte Börsen",
+        "description": "Der erste und größte Krypto-Vermögenswert nach Marktwert. Sehr volatil und nicht einlagengeschützt."
+      },
+      "ethereum": {
+        "name": "Ethereum",
+        "unit": "USD",
+        "source": "Aggregierte Börsen",
+        "description": "Ein programmierbares Blockchain-Netzwerk, dessen nativer Vermögenswert Smart Contracts antreibt. Sehr volatil."
+      }
+    }
+  },
+  "faqs": [
+    {
+      "q": "Brauche ich ein Konto zum Erkunden?",
+      "a": "Nein. Jede Produktseite, die Marktübersicht und der Rechner sind für alle offen. Ein Konto wird erst benötigt, wenn Sie Dokumente und Gespräche an einem Ort aufbewahren möchten."
+    },
+    {
+      "q": "Was zeigt der Rechner eigentlich?",
+      "a": "Eine einfache Projektion basierend auf den von Ihnen eingegebenen Zahlen. Es ist eine Schätzung zur Orientierung, kein Angebot, und berücksichtigt keine Steuern, Gebühren oder Zinsänderungen."
+    },
+    {
+      "q": "Sind Referenzpreise Handelskurse?",
+      "a": "Nein. Marktreferenzen sind indikativ und werden mit Quelle und Beobachtungszeit angezeigt. Sie sind keine ausführbaren Preise."
+    },
+    {
+      "q": "Was ist sinnvoll in einer ersten Nachricht?",
+      "a": "Ihr Ziel, ein ungefährer Betrag und Zeithorizont, und alles, was Sie bereits wissen, dass Sie vermeiden möchten. Das reicht, um ein sinnvolles Gespräch zu beginnen."
+    }
+  ],
+  "products": {
+    "pageTitle": "Erst verstehen. Dann mit Perspektive entscheiden.",
+    "pageIntro": "Acht Kategorien, jede mit ihren Bedingungen, ihrem Horizont und ihren Risiken auf der Seite.",
+    "calculatorTitle": "Rechnen Sie ein Szenario durch, bevor Sie sich binden."
+  },
+  "markets": {
+    "pointInRange": "Punkt im Bereich",
+    "referencePrice": "Referenzpreis",
+    "areReferencePrices": "Sind Referenzpreise Handelskurse?",
+    "otherMarkets": "Andere Märkte",
+    "illustrativeData": "Illustrative Daten. Referenzpreise sind keine ausführbaren Kurse.",
+    "askQuestion": "Stellen Sie eine spezifische Frage"
+  },
+  "kontakt": {
+    "heroEyebrow": "Kontakt",
+    "heroTitle": "Sagen Sie uns, was Sie beschäftigt.",
+    "heroIntro": "Es muss nicht alles durchdacht sein. Ein paar Zeilen über Ihre Situation und was Sie lösen möchten, reichen, um zu beginnen.",
+    "conversationTitle": "Ein Gespräch, zu dem Sie zurückkehren können",
+    "messageReceived": "Nachricht erhalten",
+    "thankYou": "Danke. Wir melden uns.",
+    "beforeYouWrite": "Bevor Sie schreiben.",
+    "connectedAccount": "Mit einer Kundenanmeldung bleiben Ihre Nachrichten und Dokumente mit Ihrem Konto verbunden.",
+    "replyTime": "Ein Mitglied unseres Teams antwortet per E-Mail innerhalb von zwei Werktagen.",
+    "sendMessage": "Nachricht senden"
+  },
+  "productPage": {
+    "askAbout": "Fragen Sie nach",
+    "calculateScenario": "Szenario durchrechnen",
+    "startWithDocuments": "Beginnen Sie mit den Dokumenten",
+    "whatYouShouldKnow": "Was Sie wissen sollten.",
+    "usefulChecks": "Einige nützliche Prüfungen auf dem Weg",
+    "keepRiskInView": "Risiko im Blick behalten",
+    "calculatorTitle": "Probieren Sie ein paar Zahlen für",
+    "continueExploring": "Weiter erkunden",
+    "fromRate": "ab",
+    "perAnnum": "p.a."
+  }
+}
