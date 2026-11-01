@@ -1,4 +1,4 @@
-export type Product = {
+﻿export type Product = {
   slug: string;
   name: string;
   category: "Deposits" | "Capital markets" | "Commodities";
@@ -23,7 +23,7 @@ export const products: Product[] = [
     facts: [
       { label: "Access", value: "Daily" },
       { label: "Rate type", value: "Variable" },
-      { label: "Minimum", value: "€1" },
+      { label: "Minimum", value: "â‚¬1" },
       { label: "Term", value: "Open-ended" },
     ],
     considerations: ["Which bank holds the deposit?", "How long is the promotional rate valid?", "Which deposit protection scheme applies?"],
@@ -34,14 +34,14 @@ export const products: Product[] = [
     name: "Fixed deposits",
     category: "Deposits",
     eyebrow: "Planned rate, planned term",
-    summary: "Commit capital for an agreed period at an agreed rate — clarity in exchange for flexibility.",
+    summary: "Commit capital for an agreed period at an agreed rate â€” clarity in exchange for flexibility.",
     detail: "Fixed deposits pay a rate set at the outset for the full term. Early access is usually not possible, so match the term to when you will need the money.",
     risk: "Funds are generally locked until maturity. Inflation can erode real returns.",
     facts: [
       { label: "Access", value: "At maturity" },
       { label: "Rate type", value: "Fixed" },
-      { label: "Minimum", value: "€5,000" },
-      { label: "Terms", value: "6–60 months" },
+      { label: "Minimum", value: "â‚¬5,000" },
+      { label: "Terms", value: "6â€“60 months" },
     ],
     considerations: ["When will you need the funds?", "Is interest paid annually or at maturity?", "What happens at the end of the term?"],
     rate: 3.1,
@@ -57,7 +57,7 @@ export const products: Product[] = [
     facts: [
       { label: "Access", value: "With notice" },
       { label: "Rate type", value: "Fixed / adjusted" },
-      { label: "Minimum", value: "€2,500" },
+      { label: "Minimum", value: "â‚¬2,500" },
       { label: "Notice", value: "31 days" },
     ],
     considerations: ["How long is the notice period?", "How is the rate adjusted if you exit early?", "Is the term renewed automatically?"],
@@ -68,7 +68,7 @@ export const products: Product[] = [
     name: "Bonds",
     category: "Capital markets",
     eyebrow: "Income within a defined framework",
-    summary: "Lend capital to an issuer in return for scheduled interest — understand who pays, and on what terms.",
+    summary: "Lend capital to an issuer in return for scheduled interest â€” understand who pays, and on what terms.",
     detail: "Assess the issuer's credit quality, sensitivity to interest-rate moves, maturity and secondary-market liquidity together. A scheduled coupon is not a guarantee.",
     risk: "Payments depend on the issuer. Selling before maturity may return less than invested.",
     facts: [
@@ -85,7 +85,7 @@ export const products: Product[] = [
     name: "Stocks",
     category: "Capital markets",
     eyebrow: "Ownership in companies",
-    summary: "Participate in the growth of businesses — with the price movement that ownership brings.",
+    summary: "Participate in the growth of businesses â€” with the price movement that ownership brings.",
     detail: "Equities can grow with company earnings over long horizons but fluctuate considerably. Diversification and time horizon matter more than timing.",
     risk: "Share prices can fall sharply. Dividends are not guaranteed. Total loss is possible.",
     facts: [
@@ -101,7 +101,7 @@ export const products: Product[] = [
     name: "IPO access",
     category: "Capital markets",
     eyebrow: "Early access to new listings",
-    summary: "Subscribe to companies entering the public market — read the prospectus before the headlines.",
+    summary: "Subscribe to companies entering the public market â€” read the prospectus before the headlines.",
     detail: "New listings have limited trading history. Allocation is not guaranteed, and first-day prices can move in either direction.",
     risk: "Limited track record, potential lock-ups and pronounced volatility after listing.",
     facts: [
@@ -117,7 +117,7 @@ export const products: Product[] = [
     name: "Gold",
     category: "Commodities",
     eyebrow: "A store of value with a long memory",
-    summary: "Physical or securitised gold as a diversifier — no interest, but a long role in preserving wealth.",
+    summary: "Physical or securitised gold as a diversifier â€” no interest, but a long role in preserving wealth.",
     detail: "Gold pays no income and its price is set in US dollars, so currency moves matter. Storage, insurance and spreads add to the cost of ownership.",
     risk: "Prices can fall for extended periods. Currency effects apply for euro investors.",
     facts: [
@@ -133,7 +133,7 @@ export const products: Product[] = [
     name: "Crude oil",
     category: "Commodities",
     eyebrow: "Exposure to the energy cycle",
-    summary: "Oil exposure via futures-based products — driven by supply, demand and geopolitics.",
+    summary: "Oil exposure via futures-based products â€” driven by supply, demand and geopolitics.",
     detail: "Most retail oil products track futures, not the spot price. Rolling contracts can create returns that differ markedly from the headline price.",
     risk: "High volatility and roll costs. Not suitable as a core holding for most investors.",
     facts: [
@@ -220,8 +220,8 @@ export const legalDocs: Record<string, { title: string; updated: string; section
     title: "Legal notice",
     updated: "October 2026",
     sections: [
-      { h: "Provider", p: "Corestone Investment, Frankfurt am Main, Germany. Details of the registered office, commercial register entry and authorised representatives are provided here." },
-      { h: "Contact", p: "Email: contact@corestonepartners.de. Please use the contact form for enquiries so that we can respond in an orderly way." },
+      { h: "Provider", p: "Avencrestcorp, Frankfurt am Main, Germany. Details of the registered office, commercial register entry and authorised representatives are provided here." },
+      { h: "Contact", p: "Email: contact@Avencrestcorppartners.de. Please use the contact form for enquiries so that we can respond in an orderly way." },
       { h: "Supervisory information", p: "Information about applicable supervisory authorities and licences is listed for each product partner on the respective product page." },
       { h: "Liability for content", p: "We prepare content with care but cannot guarantee completeness or timeliness. Information on this website does not constitute investment advice." },
     ],
@@ -230,8 +230,8 @@ export const legalDocs: Record<string, { title: string; updated: string; section
     title: "Privacy policy",
     updated: "October 2026",
     sections: [
-      { h: "Controller", p: "Corestone Investment is responsible for processing personal data on this website." },
-      { h: "Data we process", p: "When you contact us, we process the details you provide — such as name, email and message — solely to respond to your enquiry." },
+      { h: "Controller", p: "Avencrestcorp is responsible for processing personal data on this website." },
+      { h: "Data we process", p: "When you contact us, we process the details you provide â€” such as name, email and message â€” solely to respond to your enquiry." },
       { h: "Legal basis", p: "Processing is based on Art. 6(1)(b) and (f) GDPR: pre-contractual measures and our legitimate interest in answering enquiries." },
       { h: "Your rights", p: "You have the right to access, rectification, erasure, restriction, portability and objection, and to lodge a complaint with a supervisory authority." },
     ],
@@ -255,3 +255,4 @@ export const legalDocs: Record<string, { title: string; updated: string; section
     ],
   },
 };
+

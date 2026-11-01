@@ -4,6 +4,7 @@ import { prisma } from '../../lib/prisma';
 import { AppError } from '../../lib/errors';
 import { recordAudit } from '../../lib/audit';
 import { parseBody } from '../../lib/http';
+import { authenticate, currentUser } from '../../plugins/auth';
 import { isoDateTimeSchema } from '../../lib/schemas';
 
 const createSchema = z.object({
@@ -12,14 +13,13 @@ const createSchema = z.object({
   phone: z.string().trim().max(40).optional(),
   topic: z.string().min(1, 'Please choose a topic'),
   message: z.string().trim().min(10, 'A few more words would help').max(2000),
-  consent: z.literal(true, { errorMap: () => ({ message: 'Please accept the privacy policy' }) }),
+  consent: z.literal(true),
 });
 
 export async function contactRoutes(app: FastifyInstance): Promise<void> {
   app.post(
     '/contact',
     {
-      preHandler: [authenticate],
       schema: { tags: ['Contact'], summary: 'Submit a contact form enquiry' },
     },
     async (request, reply) => {

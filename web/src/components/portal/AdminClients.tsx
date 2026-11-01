@@ -3,7 +3,21 @@ import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Eye, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Badge, Donut, input, Modal, PageHeader, Pager, Panel, Stat, Table, Tabs } from "./kit";
+import {
+  Badge,
+  Donut,
+  FilterBar,
+  FilterField,
+  FilterInput,
+  FilterSelect,
+  Modal,
+  PageHeader,
+  Pager,
+  Panel,
+  Stat,
+  Table,
+  Tabs,
+} from "./kit";
 import { ClientForm } from "./ClientForm";
 import { Documents, Investments, Transactions } from "./Records";
 import { useAuth } from "@/lib/auth";
@@ -103,40 +117,37 @@ export function AdminClients() {
         }
       />
 
-      <div className="mb-5 flex flex-wrap gap-3">
-        <input
-          aria-label="Search clients"
-          className={`${input} max-w-xs`}
-          placeholder="Search name or email"
-          value={search}
-          onChange={(event) => reset(() => setSearch(event.target.value))}
-        />
-        <select
-          aria-label="Client status"
-          className={`${input} w-auto`}
-          value={status}
-          onChange={(event) => reset(() => setStatus(event.target.value as UserStatus | ""))}
-        >
-          <option value="">All statuses</option>
-          <option value="ACTIVE">Active</option>
-          <option value="DISABLED">Disabled</option>
-        </select>
+      <FilterBar>
+        <FilterField label="Search">
+          <FilterInput
+            value={search}
+            onChange={(value) => reset(() => setSearch(value))}
+            placeholder="Search name or email"
+          />
+        </FilterField>
+        <FilterField label="Status">
+          <FilterSelect
+            value={status}
+            onChange={(value) => reset(() => setStatus(value as UserStatus | ""))}
+            options={[
+              { label: "Active", value: "ACTIVE" },
+              { label: "Disabled", value: "DISABLED" },
+            ]}
+          />
+        </FilterField>
         {superAdmin && (
-          <select
-            aria-label="Assigned administrator"
-            className={`${input} w-auto`}
-            value={adminFilter}
-            onChange={(event) => reset(() => setAdminFilter(event.target.value))}
-          >
-            <option value="">All administrators</option>
-            {(admins.data?.data ?? []).map((admin) => (
-              <option key={admin.id} value={admin.id}>
-                {admin.fullName}
-              </option>
-            ))}
-          </select>
+          <FilterField label="Assigned administrator">
+            <FilterSelect
+              value={adminFilter}
+              onChange={(value) => reset(() => setAdminFilter(value))}
+              options={(admins.data?.data ?? []).map((admin) => ({
+                label: admin.fullName,
+                value: admin.id,
+              }))}
+            />
+          </FilterField>
         )}
-      </div>
+      </FilterBar>
 
       {clients.error && <p className="mb-4 text-sm text-destructive">{errorText(clients.error)}</p>}
 

@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+﻿import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { PageHero } from "@/components/site/ui";
 import { legalDocs } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -11,13 +11,13 @@ export const Route = createFileRoute("/legal/$doc")({
   },
   head: ({ loaderData }) => {
     const d = loaderData?.doc;
-    if (!d) return { meta: [{ title: "Unavailable — Corestone Investment" }, { name: "robots", content: "noindex" }] };
+    if (!d) return { meta: [{ title: "Unavailable â€” Avencrestcorp" }, { name: "robots", content: "noindex" }] };
     return {
       meta: [
-        { title: `${d.title} — Corestone Investment` },
-        { name: "description", content: `${d.title} for the Corestone Investment website.` },
-        { property: "og:title", content: `${d.title} — Corestone Investment` },
-        { property: "og:description", content: `${d.title} for the Corestone Investment website.` },
+        { title: `${d.title} â€” Avencrestcorp` },
+        { name: "description", content: `${d.title} for the Avencrestcorp website.` },
+        { property: "og:title", content: `${d.title} â€” Avencrestcorp` },
+        { property: "og:description", content: `${d.title} for the Avencrestcorp website.` },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
       ],
@@ -49,7 +49,7 @@ function Legal() {
           <article className="max-w-2xl md:col-span-9">
             {doc.sections.map((s, i) => (
               <section key={s.h} className="border-b border-border py-8 first:pt-0">
-                <h2 className="text-3xl"><span className="mr-4 text-gold">§{i + 1}</span>{s.h}</h2>
+                <h2 className="text-3xl"><span className="mr-4 text-gold">Â§{i + 1}</span>{s.h}</h2>
                 <p className="mt-4 leading-relaxed text-muted-foreground">{s.p}</p>
               </section>
             ))}
@@ -59,3 +59,4 @@ function Legal() {
     </>
   );
 }
+

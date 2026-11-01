@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+﻿import { Link, useNavigate } from "@tanstack/react-router";
 import { CheckCircle2, KeyRound } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
@@ -86,7 +86,7 @@ export function SetPasswordForm({
   return (
     <div className="mx-auto max-w-md px-6 py-24">
       <KeyRound className="size-6 text-gold" strokeWidth={1.5} />
-      <h1 className="mt-6 text-4xl">{kind === "invitation" ? "Welcome to Corestone" : "Set a new password"}</h1>
+      <h1 className="mt-6 text-4xl">{kind === "invitation" ? "Welcome to Avencrestcorp" : "Set a new password"}</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         {kind === "invitation"
           ? "Choose a password to activate your account."
@@ -120,7 +120,7 @@ export function SetPasswordForm({
             const ok = rule.test(password);
             return (
               <li key={rule.label} className={ok ? "text-positive" : "text-muted-foreground"}>
-                {ok ? "✓" : "·"} {rule.label}
+                {ok ? "âœ“" : "Â·"} {rule.label}
               </li>
             );
           })}
@@ -131,7 +131,7 @@ export function SetPasswordForm({
           </p>
         )}
         <Button className={`${buttonCls("navy")} mt-8 w-full`} disabled={submitting}>
-          {submitting ? "Saving…" : "Set password"}
+          {submitting ? "Savingâ€¦" : "Set password"}
         </Button>
         <button
           type="button"
@@ -144,3 +144,4 @@ export function SetPasswordForm({
     </div>
   );
 }
+

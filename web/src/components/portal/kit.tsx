@@ -138,6 +138,149 @@ export function Tabs<T extends string>({ value, options, onChange }: { value: T;
   );
 }
 
+export function FilterBar({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col sm:flex-row sm:items-end gap-3 mb-6",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function FilterField({
+  label,
+  children,
+  className,
+}: {
+  label: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex flex-col gap-1.5 min-w-[150px]", className)}>
+      <label className="text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">{label}</label>
+      <div className="flex items-end gap-2">{children}</div>
+    </div>
+  );
+}
+
+export function FilterInput({
+  value,
+  onChange,
+  placeholder,
+  className,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  className?: string;
+}) {
+  return (
+    <input
+      type="text"
+      className={cn(input, "w-auto max-w-xs sm:max-w-md", className)}
+      placeholder={placeholder}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  );
+}
+
+export function FilterSelect({
+  value,
+  onChange,
+  options,
+  placeholder = "All",
+  className,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  options: { label: string; value: string }[];
+  placeholder?: string;
+  className?: string;
+}) {
+  return (
+    <select
+      className={cn(input, "w-auto max-w-xs sm:max-w-md", className)}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    >
+      <option value="">{placeholder}</option>
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+export function DateRange({
+  from,
+  to,
+  onFromChange,
+  onToChange,
+  className,
+}: {
+  from: string;
+  to: string;
+  onFromChange: (value: string) => void;
+  onToChange: (value: string) => void;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex flex-col gap-1.5 min-w-[170px]", className)}>
+      <label className="text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">Date range</label>
+      <div className="flex gap-2">
+        <input
+          type="date"
+          className={cn(input, "w-auto max-w-xs sm:max-w-md", className)}
+          value={from}
+          onChange={(e) => onFromChange(e.target.value)}
+        />
+        <input
+          type="date"
+          className={cn(input, "w-auto max-w-xs sm:max-w-md", className)}
+          value={to}
+          onChange={(e) => onToChange(e.target.value)}
+        />
+      </div>
+    </div>
+  );
+}
+
+export function DatePicker({
+  value,
+  onChange,
+  placeholder,
+  className,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  className?: string;
+}) {
+  return (
+    <input
+      type="date"
+      className={cn(input, "w-auto max-w-xs sm:max-w-md", className)}
+      placeholder={placeholder}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  );
+}
+
 export function Modal({ open, title, onClose, children }: { open: boolean; title: string; onClose: () => void; children: ReactNode }) {
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}><DialogContent aria-describedby={undefined} className="max-h-[85svh] max-w-xl overflow-y-auto"><DialogTitle className="font-display text-3xl">{title}</DialogTitle>{children}</DialogContent></Dialog>

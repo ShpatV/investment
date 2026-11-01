@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+﻿import { createFileRoute } from "@tanstack/react-router";
 import { Clock, Mail, MapPin } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
@@ -11,9 +11,9 @@ import { faqs, products } from "@/lib/site";
 export const Route = createFileRoute("/kontakt")({
   head: () => ({
     meta: [
-      { title: "Contact — Corestone Investment" },
+      { title: "Contact â€” Avencrestcorp" },
       { name: "description", content: "Tell us what is on your mind. Send a first message about your goals, horizon or a specific product." },
-      { property: "og:title", content: "Contact — Corestone Investment" },
+      { property: "og:title", content: "Contact â€” Avencrestcorp" },
       { property: "og:description", content: "A conversation you can return to." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -51,7 +51,7 @@ function Contact() {
     await new Promise((res) => setTimeout(res, 900));
     setBusy(false);
     setSent(true);
-    toast.success("Thank you — your message has been received.");
+    toast.success("Thank you â€” your message has been received.");
   };
 
   return (
@@ -61,7 +61,7 @@ function Contact() {
         <div className="container-x grid gap-16 md:grid-cols-12">
           <aside className="space-y-10 md:col-span-4">
             {[
-              { i: Mail, t: "Email", d: "contact@corestonepartners.de" },
+              { i: Mail, t: "Email", d: "contact@Avencrestcorppartners.de" },
               { i: Clock, t: "Response time", d: "Within two business days" },
               { i: MapPin, t: "Office", d: "Frankfurt am Main, Germany" },
             ].map((x) => (
@@ -80,7 +80,7 @@ function Contact() {
             {sent ? (
               <div className="border border-border bg-card p-12 shadow-card" role="status">
                 <p className="eyebrow">Message received</p>
-                <h2 className="mt-4 text-4xl">Thank you. We’ll be in touch.</h2>
+                <h2 className="mt-4 text-4xl">Thank you. Weâ€™ll be in touch.</h2>
                 <p className="mt-4 text-muted-foreground">A member of our team will reply by email within two business days.</p>
                 <button className={`${buttonCls("outline")} mt-8`} onClick={() => setSent(false)}>Send another message</button>
               </div>
@@ -97,7 +97,7 @@ function Contact() {
                   </select>
                 </Field>
                 <div className="md:col-span-2">
-                  <Field label="Your message" name="message" error={errors["message"]}><textarea id="message" name="message" rows={5} className={field} placeholder="Your goal, an approximate amount and time horizon…" /></Field>
+                  <Field label="Your message" name="message" error={errors["message"]}><textarea id="message" name="message" rows={5} className={field} placeholder="Your goal, an approximate amount and time horizonâ€¦" /></Field>
                 </div>
                 <div className="md:col-span-2">
                   <label className="flex items-start gap-3 text-sm text-muted-foreground">
@@ -107,7 +107,7 @@ function Contact() {
                   {errors["consent"] && <p className="mt-2 text-xs text-destructive">{errors["consent"]}</p>}
                 </div>
                 <div className="md:col-span-2">
-                  <button disabled={busy} className={buttonCls("navy")}>{busy ? "Sending…" : "Send message"}</button>
+                  <button disabled={busy} className={buttonCls("navy")}>{busy ? "Sendingâ€¦" : "Send message"}</button>
                 </div>
               </form>
             )}
@@ -133,3 +133,4 @@ function Field({ label, name, error, children }: { label: string; name: string; 
     </div>
   );
 }
+

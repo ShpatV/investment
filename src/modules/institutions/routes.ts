@@ -27,7 +27,7 @@ const updateSchema = z
 export async function institutionRoutes(app: FastifyInstance): Promise<void> {
   app.get(
     '/institutions',
-    { preHandler: [authenticate], schema: { tags: ['Institutions'], summary: 'List institutions' } },
+    { schema: { tags: ['Institutions'], summary: 'List institutions' } },
     async (request, reply) => {
       const query = parseQuery(
         z.object({

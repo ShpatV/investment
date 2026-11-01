@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+﻿import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Breadcrumb, PageHero, Reveal, buttonCls } from "@/components/site/ui";
 import { getMarket, markets, num, priceSeries } from "@/lib/site";
@@ -12,12 +12,12 @@ export const Route = createFileRoute("/markets/$asset")({
   },
   head: ({ loaderData }) => {
     const m = loaderData?.market;
-    if (!m) return { meta: [{ title: "Unavailable — Corestone Investment" }, { name: "robots", content: "noindex" }] };
+    if (!m) return { meta: [{ title: "Unavailable â€” Avencrestcorp" }, { name: "robots", content: "noindex" }] };
     return {
       meta: [
-        { title: `${m.name} (${m.symbol}) reference price — Corestone Investment` },
+        { title: `${m.name} (${m.symbol}) reference price â€” Avencrestcorp` },
         { name: "description", content: m.description },
-        { property: "og:title", content: `${m.name} reference price — Corestone` },
+        { property: "og:title", content: `${m.name} reference price â€” Avencrestcorp` },
         { property: "og:description", content: m.description },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
@@ -44,7 +44,7 @@ function Asset() {
 
   return (
     <>
-      <PageHero eyebrow={`${m.symbol} · ${m.unit}`} title={m.name} intro={m.description}>
+      <PageHero eyebrow={`${m.symbol} Â· ${m.unit}`} title={m.name} intro={m.description}>
         <Breadcrumb items={[{ label: "Home", to: "/" }, { label: "Markets", to: "/markets" }, { label: m.name }]} />
       </PageHero>
       <section className="py-20 md:py-28">
@@ -53,7 +53,7 @@ function Asset() {
             <div>
               <p className="eyebrow">{hover !== null ? "Point in range" : "Reference price"}</p>
               <p className="mt-3 font-display text-6xl tabular-nums md:text-7xl">{num(shown)}</p>
-              <p className={cn("mt-2 tabular-nums", m.change >= 0 ? "text-positive" : "text-negative")}>{m.change >= 0 ? "+" : ""}{m.change.toFixed(2)}% · 24h · {m.source}</p>
+              <p className={cn("mt-2 tabular-nums", m.change >= 0 ? "text-positive" : "text-negative")}>{m.change >= 0 ? "+" : ""}{m.change.toFixed(2)}% Â· 24h Â· {m.source}</p>
             </div>
             <div role="tablist" aria-label="Range" className="flex border border-border">
               {(Object.keys(ranges) as (keyof typeof ranges)[]).map((r) => (
@@ -95,3 +95,4 @@ function Asset() {
     </>
   );
 }
+

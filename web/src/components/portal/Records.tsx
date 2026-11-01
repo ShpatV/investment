@@ -2,7 +2,20 @@ import { useState, type FormEvent } from "react";
 import { Archive, Download, Eye, Plus, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Badge, F, input, Modal, Pager, Table, Tabs } from "./kit";
+import {
+  Badge,
+  DateRange,
+  FilterBar,
+  FilterField,
+  FilterInput,
+  FilterSelect,
+  F,
+  input,
+  Modal,
+  Pager,
+  Table,
+  Tabs,
+} from "./kit";
 import {
   useArchiveDocument,
   useCreateInvestment,
@@ -84,40 +97,37 @@ export function Investments({ clientId, editable = false }: { clientId?: string;
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-end gap-3">
-        <input
-          aria-label="Search investments"
-          className={`${input} max-w-xs`}
-          placeholder="Search investments"
-          value={search}
-          onChange={(event) => {
-            setSearch(event.target.value);
-            setPage(1);
-          }}
-        />
-        <select
-          aria-label="Investment status"
-          className={`${input} w-auto`}
-          value={status}
-          onChange={(event) => {
-            setStatus(event.target.value as InvestmentStatus | "");
-            setPage(1);
-          }}
-        >
-          <option value="">All statuses</option>
-          {INVESTMENT_STATUSES.map((value) => (
-            <option key={value} value={value}>
-              {investmentStatusLabel[value]}
-            </option>
-          ))}
-        </select>
+      <FilterBar>
+        <FilterField label="Search">
+          <FilterInput
+            value={search}
+            onChange={(value) => {
+              setSearch(value);
+              setPage(1);
+            }}
+            placeholder="Search investments"
+          />
+        </FilterField>
+        <FilterField label="Status">
+          <FilterSelect
+            value={status}
+            onChange={(value) => {
+              setStatus(value as InvestmentStatus | "");
+              setPage(1);
+            }}
+            options={INVESTMENT_STATUSES.map((value) => ({
+              label: investmentStatusLabel[value],
+              value,
+            }))}
+          />
+        </FilterField>
         {editable && (
           <Button onClick={() => setEdit("new")} disabled={!clientId} title={clientId ? undefined : "Open a client account to add investments"}>
             <Plus />
             Add investment
           </Button>
         )}
-      </div>
+      </FilterBar>
 
       {error && <p className="text-sm text-destructive">{errorText(error)}</p>}
 
@@ -444,50 +454,39 @@ export function Transactions({ clientId, editable = false }: { clientId?: string
         )}
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <input
-          className={input}
-          aria-label="Search transactions"
-          placeholder="Search transactions"
-          value={search}
-          onChange={(event) => reset(() => setSearch(event.target.value))}
-        />
-        <select
-          className={input}
-          aria-label="Transaction status"
-          value={status}
-          onChange={(event) => reset(() => setStatus(event.target.value as TransactionStatus | ""))}
-        >
-          <option value="">All statuses</option>
-          {TRANSACTION_STATUSES.map((value) => (
-            <option key={value} value={value}>
-              {transactionStatusLabel[value]}
-            </option>
-          ))}
-        </select>
-        <F label="From">
-          {(id) => (
-            <input
-              id={id}
-              className={input}
-              type="date"
-              value={from}
-              onChange={(event) => reset(() => setFrom(event.target.value))}
-            />
-          )}
-        </F>
-        <F label="To">
-          {(id) => (
-            <input
-              id={id}
-              className={input}
-              type="date"
-              value={to}
-              onChange={(event) => reset(() => setTo(event.target.value))}
-            />
-          )}
-        </F>
-      </div>
+      <FilterBar>
+        <FilterField label="Search">
+          <FilterInput
+            value={search}
+            onChange={(value) => reset(() => setSearch(value))}
+            placeholder="Search transactions"
+          />
+        </FilterField>
+        <FilterField label="Status">
+          <FilterSelect
+            value={status}
+            onChange={(value) => reset(() => setStatus(value as TransactionStatus | ""))}
+            options={TRANSACTION_STATUSES.map((value) => ({
+              label: transactionStatusLabel[value],
+              value,
+            }))}
+          />
+        </FilterField>
+        <FilterField label="Date range">
+          <DateRange
+            from={from}
+            to={to}
+            onFromChange={(value) => reset(() => setFrom(value))}
+            onToChange={(value) => reset(() => setTo(value))}
+          />
+        </FilterField>
+        {editable && (
+          <Button onClick={() => setOpen(true)} disabled={!clientId}>
+            <Plus />
+            Add transaction
+          </Button>
+        )}
+      </FilterBar>
 
       {error && <p className="text-sm text-destructive">{errorText(error)}</p>}
 
@@ -678,42 +677,39 @@ export function Documents({ clientId, editable = false }: { clientId?: string; e
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-end gap-3">
-        <input
-          aria-label="Search documents"
-          className={`${input} max-w-xs`}
-          placeholder="Search documents"
-          value={search}
-          onChange={(event) => reset(() => setSearch(event.target.value))}
-        />
-        <select
-          aria-label="Document category"
-          className={`${input} w-auto`}
-          value={category}
-          onChange={(event) => reset(() => setCategory(event.target.value as DocumentCategory | ""))}
-        >
-          <option value="">All categories</option>
-          {DOCUMENT_CATEGORIES.map((value) => (
-            <option key={value} value={value}>
-              {documentCategoryLabel[value]}
-            </option>
-          ))}
-        </select>
-        <select
-          aria-label="Document status"
-          className={`${input} w-auto`}
-          value={status}
-          onChange={(event) => reset(() => setStatus(event.target.value as "ACTIVE" | "ARCHIVED" | ""))}
-        >
-          <option value="">All statuses</option>
-          <option value="ACTIVE">Active</option>
-          <option value="ARCHIVED">Archived</option>
-        </select>
+      <FilterBar>
+        <FilterField label="Search">
+          <FilterInput
+            value={search}
+            onChange={(value) => reset(() => setSearch(value))}
+            placeholder="Search documents"
+          />
+        </FilterField>
+        <FilterField label="Category">
+          <FilterSelect
+            value={category}
+            onChange={(value) => reset(() => setCategory(value as DocumentCategory | ""))}
+            options={DOCUMENT_CATEGORIES.map((value) => ({
+              label: documentCategoryLabel[value],
+              value,
+            }))}
+          />
+        </FilterField>
+        <FilterField label="Status">
+          <FilterSelect
+            value={status}
+            onChange={(value) => reset(() => setStatus(value as "ACTIVE" | "ARCHIVED" | ""))}
+            options={[
+              { label: "Active", value: "ACTIVE" },
+              { label: "Archived", value: "ARCHIVED" },
+            ]}
+          />
+        </FilterField>
         <Button onClick={() => setOpen(true)}>
           <Upload />
           Upload document
         </Button>
-      </div>
+      </FilterBar>
 
       {error && <p className="text-sm text-destructive">{errorText(error)}</p>}
 

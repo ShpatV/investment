@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+﻿import { Link, useRouterState } from "@tanstack/react-router";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { products, markets } from "@/lib/site";
@@ -14,7 +14,7 @@ export function Logo({ className }: { className?: string }) {
         <rect x="8" y="8" width="12" height="12" fill="var(--gold)" />
       </svg>
       <span className="leading-none">
-        <span className="block font-display text-xl tracking-wide">Corestone</span>
+        <span className="block font-display text-xl tracking-wide">Avencrestcorp</span>
         <span className="mt-0.5 block text-[0.6rem] font-semibold uppercase tracking-[0.32em] opacity-70">Investment</span>
       </span>
     </span>
@@ -51,7 +51,7 @@ export function Header() {
       )}
     >
       <div className="container-x flex h-20 items-center justify-between">
-        <Link to="/" aria-label="Corestone Investment home"><Logo /></Link>
+        <Link to="/" aria-label="Avencrestcorp home"><Logo /></Link>
 
         <nav aria-label="Main" className="hidden items-center gap-9 lg:flex" onMouseLeave={() => setMenu(null)}>
           <div className="relative" onMouseEnter={() => setMenu("products")}>
@@ -85,8 +85,8 @@ export function Header() {
                       </div>
                     ))}
                     <div className="border-l border-border pl-8">
-                      <p className="text-sm text-muted-foreground">Compare every category side by side — terms, horizon and risk.</p>
-                      <Link to="/products" className="mt-4 inline-block text-sm font-semibold link-underline">All products →</Link>
+                      <p className="text-sm text-muted-foreground">Compare every category side by side â€” terms, horizon and risk.</p>
+                      <Link to="/products" className="mt-4 inline-block text-sm font-semibold link-underline">All products â†’</Link>
                     </div>
                   </>
                 ) : (
@@ -101,7 +101,7 @@ export function Header() {
                     </div>
                     <div className="border-l border-border pl-8">
                       <p className="text-sm text-muted-foreground">Reference prices with visible sources and observation times.</p>
-                      <Link to="/markets" className="mt-4 inline-block text-sm font-semibold link-underline">Market overview →</Link>
+                      <Link to="/markets" className="mt-4 inline-block text-sm font-semibold link-underline">Market overview â†’</Link>
                     </div>
                   </>
                 )}
@@ -149,3 +149,4 @@ export function Header() {
     </header>
   );
 }
+

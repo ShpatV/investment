@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+﻿import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { AlertTriangle, ArrowRight, Check } from "lucide-react";
 import office from "@/assets/office.jpg";
 import { Calculator } from "@/components/site/Calculator";
@@ -13,12 +13,12 @@ export const Route = createFileRoute("/$product")({
   },
   head: ({ loaderData }) => {
     const p = loaderData?.product;
-    if (!p) return { meta: [{ title: "Unavailable — Corestone Investment" }, { name: "robots", content: "noindex" }] };
+    if (!p) return { meta: [{ title: "Unavailable â€” Avencrestcorp" }, { name: "robots", content: "noindex" }] };
     return {
       meta: [
-        { title: `${p.name} — Corestone Investment` },
+        { title: `${p.name} â€” Avencrestcorp` },
         { name: "description", content: p.summary },
-        { property: "og:title", content: `${p.name} — Corestone Investment` },
+        { property: "og:title", content: `${p.name} â€” Avencrestcorp` },
         { property: "og:description", content: p.summary },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
@@ -107,3 +107,4 @@ function ProductPage() {
     </>
   );
 }
+

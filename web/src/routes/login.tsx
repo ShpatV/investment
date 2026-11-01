@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+﻿import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
@@ -31,12 +31,12 @@ export const Route = createFileRoute("/login")({
   },
   head: () => ({
     meta: [
-      { title: "Sign in — Corestone Investment" },
+      { title: "Sign in â€” Avencrestcorp" },
       {
         name: "description",
         content: "Sign in to keep your documents, activity and portfolio in one place.",
       },
-      { property: "og:title", content: "Sign in — Corestone Investment" },
+      { property: "og:title", content: "Sign in â€” Avencrestcorp" },
       { property: "og:description", content: "A familiar place to return to." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -121,9 +121,9 @@ function Login() {
           <p className="eyebrow">Secure area</p>
           <h1 className="mt-4 max-w-md text-5xl">A familiar place to return to.</h1>
           <ul className="mt-8 space-y-3 text-sm text-navy-muted">
-            <li>— Documents, without the search</li>
-            <li>— Activity with context</li>
-            <li>— Your advisor, one message away</li>
+            <li>â€” Documents, without the search</li>
+            <li>â€” Activity with context</li>
+            <li>â€” Your advisor, one message away</li>
           </ul>
         </div>
       </div>
@@ -214,7 +214,7 @@ function Login() {
                 </p>
               )}
               <Button className={`${buttonCls("navy")} mt-8 w-full`} disabled={submitting}>
-                {submitting ? "Signing in…" : "Sign in"}
+                {submitting ? "Signing inâ€¦" : "Sign in"}
                 {!submitting && <ArrowRight />}
               </Button>
               <button
@@ -230,7 +230,7 @@ function Login() {
               </button>
               {import.meta.env.DEV && (
                 <p className="mt-8 border-t border-border pt-4 text-[11px] leading-relaxed text-muted-foreground">
-                  Development shortcuts: client@example.com · admin@example.com · superadmin@example.com.
+                  Development shortcuts: client@example.com Â· admin@example.com Â· superadmin@example.com.
                   Passwords come from the backend seed.
                 </p>
               )}
@@ -260,3 +260,4 @@ function defaultPasswordForMode(mode: Mode): string {
   if (mode === "Admin") return "Admin1234!";
   return "Client1234!";
 }
+

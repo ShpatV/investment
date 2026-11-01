@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, FileText, LineChart, ShieldCheck, Plus } from "lucide-react";
 import { useState } from "react";
 import hero from "@/assets/hero.jpg";
@@ -12,9 +12,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Corestone Investment — Understand first. Decide with perspective." },
-      { name: "description", content: "Savings, fixed deposits, bonds, equities and commodities — explained clearly, with terms, risks and reference prices in view." },
-      { property: "og:title", content: "Corestone Investment" },
+      { title: "Avencrestcorp â€” Understand first. Decide with perspective." },
+      { name: "description", content: "Savings, fixed deposits, bonds, equities and commodities â€” explained clearly, with terms, risks and reference prices in view." },
+      { property: "og:title", content: "Avencrestcorp" },
       { property: "og:description", content: "A considered approach to your next financial step." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/")({
 
 const highlights = [
   { icon: FileText, t: "Terms stated up front", d: "Every product page sets out conditions and risks before any next step is asked of you." },
-  { icon: LineChart, t: "Market view", d: "Reference prices published with their source and observation time — never without context." },
+  { icon: LineChart, t: "Market view", d: "Reference prices published with their source and observation time â€” never without context." },
   { icon: ShieldCheck, t: "Risk and tax notes in writing", d: "Risk warnings and tax notes sit on the page itself, not in a document you must request." },
 ];
 
@@ -34,13 +34,13 @@ function Home() {
     <>
       {/* Hero */}
       <section className="relative flex min-h-[100svh] items-end overflow-hidden bg-navy-deep text-navy-foreground">
-        <img src={hero} alt="Corestone offices at dusk" className="absolute inset-0 h-full w-full object-cover animate-slowzoom" width={1920} height={1088} />
+        <img src={hero} alt="Avencrestcorp offices at dusk" className="absolute inset-0 h-full w-full object-cover animate-slowzoom" width={1920} height={1088} />
         <div className="absolute inset-0 bg-veil" />
         <div className="absolute inset-0 bg-fade" />
         <div className="container-x relative pb-20 pt-40 md:pb-28">
           <p className="eyebrow flex items-center gap-4 animate-rise"><span className="gold-rule" />A little clarity goes a long way</p>
           <h1 className="mt-8 max-w-5xl text-[3.25rem] leading-[0.98] animate-rise sm:text-7xl lg:text-[6.5rem]" style={{ animationDelay: "120ms" }}>
-            Let’s start with <em className="text-gold-soft">what matters</em> to you.
+            Letâ€™s start with <em className="text-gold-soft">what matters</em> to you.
           </h1>
           <div className="mt-10 grid gap-10 md:grid-cols-12 md:items-end">
             <p className="max-w-xl text-lg leading-relaxed text-navy-muted animate-rise md:col-span-6" style={{ animationDelay: "240ms" }}>
@@ -85,13 +85,13 @@ function Home() {
         <div className="container-x">
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
             <SectionHeading eyebrow="Explore the possibilities" title="There is more than one way to begin." intro="Browse the categories and see which fit the questions you have about your money." />
-            <Link to="/products" className="shrink-0 text-sm font-semibold link-underline">Compare all products →</Link>
+            <Link to="/products" className="shrink-0 text-sm font-semibold link-underline">Compare all products â†’</Link>
           </div>
           <div className="mt-16 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
             {products.map((p, i) => (
               <Reveal key={p.slug} delay={(i % 4) * 80}>
                 <Link to="/$product" params={{ product: p.slug }} className="group relative flex h-full min-h-80 flex-col bg-card p-8 transition-colors duration-500 hover:bg-navy hover:text-navy-foreground">
-                  <span className="text-xs tabular-nums text-muted-foreground group-hover:text-navy-muted">0{i + 1} · {p.category}</span>
+                  <span className="text-xs tabular-nums text-muted-foreground group-hover:text-navy-muted">0{i + 1} Â· {p.category}</span>
                   <h3 className="mt-10 text-4xl">{p.name}</h3>
                   <p className="mt-2 text-sm text-gold">{p.eyebrow}</p>
                   <p className="mt-5 text-sm leading-relaxed text-muted-foreground group-hover:text-navy-muted">{p.summary}</p>
@@ -120,7 +120,7 @@ function Home() {
                   {[
                     ["01", "Understand", "We begin with your goal and horizon, not with a product."],
                     ["02", "Compare", "Terms, risks and costs are set out side by side, in plain language."],
-                    ["03", "Decide", "When you are ready — and only then — we prepare the documents."],
+                    ["03", "Decide", "When you are ready â€” and only then â€” we prepare the documents."],
                   ].map(([n, t, d]) => (
                     <li key={n} className="grid grid-cols-[3rem_1fr] gap-4 border-t border-navy-border pt-6">
                       <span className="font-display text-xl text-gold">{n}</span>
@@ -148,7 +148,7 @@ function Home() {
         <div className="container-x relative">
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
             <SectionHeading light eyebrow="Market view" title="A look at reference prices." intro="Indicative references with source and observation time. Not executable quotes." />
-            <Link to="/markets" className="shrink-0 text-sm font-semibold text-gold link-underline">Full market overview →</Link>
+            <Link to="/markets" className="shrink-0 text-sm font-semibold text-gold link-underline">Full market overview â†’</Link>
           </div>
           <div className="mt-14 grid gap-px bg-navy-border sm:grid-cols-2 lg:grid-cols-3">
             {markets.map((m, i) => (
@@ -163,7 +163,7 @@ function Home() {
                     <span className="font-display text-3xl tabular-nums">{num(m.price)}</span>
                     <span className={cn("text-sm tabular-nums", m.change >= 0 ? "text-positive" : "text-negative")}>{m.change >= 0 ? "+" : ""}{m.change.toFixed(2)}%</span>
                   </div>
-                  <p className="mt-1 text-xs text-navy-muted">{m.unit} · {m.source}</p>
+                  <p className="mt-1 text-xs text-navy-muted">{m.unit} Â· {m.source}</p>
                 </Link>
               </Reveal>
             ))}
@@ -225,3 +225,4 @@ export function Faq({ items = faqs }: { items?: { q: string; a: string }[] }) {
     </div>
   );
 }
+

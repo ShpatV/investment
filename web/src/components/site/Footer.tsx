@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+﻿import { Link } from "@tanstack/react-router";
 import { products, markets } from "@/lib/site";
 import { Logo } from "./Header";
 
@@ -33,7 +33,7 @@ export function Footer({ onCookies }: { onCookies: () => void }) {
           </p>
           <div className="flex shrink-0 gap-6">
             <button onClick={onCookies} className="link-underline hover:text-navy-foreground">Cookie settings</button>
-            <span>© {new Date().getFullYear()} Corestone Investment</span>
+            <span>Â© {new Date().getFullYear()} Avencrestcorp</span>
           </div>
         </div>
       </div>
@@ -56,3 +56,4 @@ function FooterCol({ title, items }: { title: string; items: { label: string; to
     </div>
   );
 }
+

@@ -35,9 +35,13 @@ const overrideSchema = z
 export async function priceRoutes(app: FastifyInstance): Promise<void> {
   app.get(
     '/prices',
-    { preHandler: [authenticate], schema: { tags: ['Prices'], summary: 'Get published gold and oil prices' } },
+    { schema: { tags: ['Prices'], summary: 'Get published gold and oil prices' } },
     async (request, reply) => {
-      const auth = currentUser(request);
+      let auth: ReturnType<typeof currentUser> | null = null;
+      if (request.headers.authorization) {
+        await authenticate(request, reply);
+        auth = currentUser(request);
+      }
       const prices = await listPrices();
       return reply.send({
         data: {
@@ -45,7 +49,7 @@ export async function priceRoutes(app: FastifyInstance): Promise<void> {
           primaryProvider: config.priceProvider,
           activeProviders: [...new Set(prices.map((price) => price.provider))],
           staleAfterMinutes: config.priceStaleMinutes,
-          canOverride: await canOverridePrices(auth),
+          canOverride: auth ? await canOverridePrices(auth) : false,
           notes:
             'Published prices are informational only and never alter contractual investment terms or balances.',
         },

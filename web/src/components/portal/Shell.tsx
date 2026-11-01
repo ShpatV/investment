@@ -89,6 +89,7 @@ export function PortalShell({ area }: { area: "client" | "admin" }) {
             <Link
               key={n.to}
               to={n.to}
+              onClick={() => setOpen(false)}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 text-sm transition-colors",
                 active ? "bg-navy text-gold" : "text-navy-muted hover:bg-navy hover:text-navy-foreground",

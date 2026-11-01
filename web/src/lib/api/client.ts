@@ -13,8 +13,8 @@ const DEFAULT_BASE_URL = "http://localhost:4000/api";
 
 export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? DEFAULT_BASE_URL).replace(/\/+$/, "");
 
-const REFRESH_STORAGE_KEY = "corestone.auth.refreshToken";
-const PORTAL_STORAGE_KEY = "corestone.auth.portal";
+const REFRESH_STORAGE_KEY = "avencrestcorp.auth.refreshToken";
+const PORTAL_STORAGE_KEY = "avencrestcorp.auth.portal";
 
 export type PortalName = "client" | "admin" | "super-admin";
 

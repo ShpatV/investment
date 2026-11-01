@@ -24,6 +24,7 @@ import { dashboardRoutes } from './modules/dashboard/routes';
 import { auditRoutes } from './modules/audit/routes';
 import { notificationRoutes } from './modules/notifications/routes';
 import { settingRoutes } from './modules/settings/routes';
+import { contactRoutes } from './modules/contact/routes';
 import { ensureStorageDir } from './lib/storage';
 
 export interface BuildOptions {
@@ -150,6 +151,7 @@ export async function buildApp(options: BuildOptions = {}): Promise<FastifyInsta
       await api.register(auditRoutes);
       await api.register(notificationRoutes);
       await api.register(settingRoutes);
+      await api.register(contactRoutes);
     },
     { prefix: '/api' },
   );

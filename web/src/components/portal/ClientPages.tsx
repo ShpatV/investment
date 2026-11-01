@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+﻿import { useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, CalendarDays, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
@@ -35,7 +35,7 @@ export function ClientDashboard() {
   const { user } = useAuth();
 
   if (dashboard.isPending) {
-    return <p className="text-sm text-muted-foreground">Loading your portfolio…</p>;
+    return <p className="text-sm text-muted-foreground">Loading your portfolioâ€¦</p>;
   }
   if (dashboard.error || !dashboard.data) {
     return <p className="text-sm text-destructive">{errorText(dashboard.error)}</p>;
@@ -58,14 +58,14 @@ export function ClientDashboard() {
           </Button>
         }
       >
-        {client.firstName} {client.lastName} · Portfolio overview as of {fmtDate(dashboard.data.asOf)}
+        {client.firstName} {client.lastName} Â· Portfolio overview as of {fmtDate(dashboard.data.asOf)}
       </PageHeader>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Stat
           label="Projected maturity balance"
           value={usd(summary.projectedMaturityBalance, 0)}
-          hint="Estimated · active investments"
+          hint="Estimated Â· active investments"
         />
         <Stat
           label="Total invested"
@@ -75,7 +75,7 @@ export function ClientDashboard() {
         <Stat
           label="Projected return"
           value={usd(summary.projectedReturn, 0)}
-          hint="Full contractual term · estimate"
+          hint="Full contractual term Â· estimate"
         />
         <Stat
           label="Average annual rate"
@@ -96,7 +96,7 @@ export function ClientDashboard() {
           />
         </Panel>
         <section className="relative min-h-60 overflow-hidden bg-navy-deep p-7 text-navy-foreground">
-          <img src={office} alt="Corestone office" className="absolute inset-0 h-full w-full object-cover opacity-25" />
+          <img src={office} alt="Avencrestcorp office" className="absolute inset-0 h-full w-full object-cover opacity-25" />
           <div className="absolute inset-0 bg-veil" />
           <div className="relative">
             <p className="eyebrow">Your advisor</p>
@@ -113,14 +113,17 @@ export function ClientDashboard() {
       </div>
 
       <div className="mt-8">
-        <Panel
-          title="Your holdings"
-          action={
-            <Link to="/portal/investments" className="text-xs font-semibold text-gold">
-              View all →
-            </Link>
-          }
-        >
+          <Panel
+            title="Your holdings"
+            action={
+              <Link
+                to="/portal/investments"
+                className="text-xs font-semibold text-gold cursor-pointer hover:underline"
+              >
+                View all â†’
+              </Link>
+            }
+          >
           <Investments />
         </Panel>
       </div>
@@ -135,7 +138,7 @@ export function ClientDashboard() {
                     <span className="font-semibold">{entry.name}</span>
                     <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
                       <CalendarDays className="size-3" />
-                      {fmtDate(entry.maturityDate)} · {entry.daysRemaining} days remaining
+                      {fmtDate(entry.maturityDate)} Â· {entry.daysRemaining} days remaining
                     </p>
                   </span>
                   <span className="text-right text-sm tabular-nums">{usd(entry.projectedMaturityBalance, 0)}</span>
@@ -161,8 +164,11 @@ export function ClientDashboard() {
         <Panel
           title="Recent activity"
           action={
-            <Link to="/portal/transactions" className="text-xs font-semibold text-gold">
-              All transactions →
+            <Link
+              to="/portal/transactions"
+              className="text-xs font-semibold text-gold cursor-pointer hover:underline"
+            >
+              All transactions â†’
             </Link>
           }
         >
@@ -174,7 +180,7 @@ export function ClientDashboard() {
                     <span className="text-sm font-semibold">{transactionTypeLabel[transaction.type]}</span>
                     <p className="mt-1 text-xs text-muted-foreground">
                       {fmtDateTime(transaction.transactionDate)}
-                      {transaction.investment ? ` · ${transaction.investment.name}` : ""}
+                      {transaction.investment ? ` Â· ${transaction.investment.name}` : ""}
                     </p>
                   </span>
                   <span className="text-right">
@@ -194,7 +200,7 @@ export function ClientDashboard() {
 
       <div className="mt-8">
         <Panel title="Market headlines">
-          {news.isPending && <p className="text-sm text-muted-foreground">Loading headlines…</p>}
+          {news.isPending && <p className="text-sm text-muted-foreground">Loading headlinesâ€¦</p>}
           {news.error && (
             <p className="text-sm text-muted-foreground">Headlines are temporarily unavailable.</p>
           )}
@@ -211,7 +217,7 @@ export function ClientDashboard() {
                     {article.title}
                   </a>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {article.source} · {article.publishedAt ? fmtDateTime(article.publishedAt) : "Undated"}
+                    {article.source} Â· {article.publishedAt ? fmtDateTime(article.publishedAt) : "Undated"}
                   </p>
                 </li>
               ))}
@@ -266,7 +272,7 @@ export function ClientProfile() {
   const [questionOpen, setQuestionOpen] = useState(false);
 
   if (profile.isPending) {
-    return <p className="text-sm text-muted-foreground">Loading your profile…</p>;
+    return <p className="text-sm text-muted-foreground">Loading your profileâ€¦</p>;
   }
   if (profile.error || !profile.data) {
     return <p className="text-sm text-destructive">{errorText(profile.error)}</p>;
@@ -360,7 +366,7 @@ export function ClientProfile() {
             </F>
             <div className="sm:col-span-2">
               <Button disabled={updateProfile.isPending}>
-                {updateProfile.isPending ? "Saving…" : "Save changes"}
+                {updateProfile.isPending ? "Savingâ€¦" : "Save changes"}
               </Button>
             </div>
           </form>
@@ -391,7 +397,7 @@ export function ClientProfile() {
               )}
               <div className="flex justify-between">
                 <dt>Last sign-in</dt>
-                <dd>{client.lastLoginAt ? fmtDateTime(client.lastLoginAt) : "—"}</dd>
+                <dd>{client.lastLoginAt ? fmtDateTime(client.lastLoginAt) : "â€”"}</dd>
               </div>
             </dl>
           </Panel>
@@ -432,7 +438,7 @@ export function ClientProfile() {
               Cancel
             </Button>
             <Button disabled={changePassword.isPending}>
-              {changePassword.isPending ? "Saving…" : "Change password"}
+              {changePassword.isPending ? "Savingâ€¦" : "Change password"}
             </Button>
           </div>
         </form>
@@ -486,8 +492,9 @@ function SecurityQuestionForm({
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button disabled={submitting}>{submitting ? "Saving…" : "Save question"}</Button>
+        <Button disabled={submitting}>{submitting ? "Savingâ€¦" : "Save question"}</Button>
       </div>
     </form>
   );
 }
+
