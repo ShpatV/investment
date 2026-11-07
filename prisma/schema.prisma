@@ -184,6 +184,7 @@ model Investment {
   clientId             String               @map("client_id") @db.Uuid
   institutionId        String               @map("institution_id") @db.Uuid
   name                 String               @db.VarChar(200)
+  productType          String?              @map("product_type") @db.VarChar(100)
   principalAmount      Decimal              @map("principal_amount") @db.Decimal(20, 2)
   currency             String               @default("USD") @db.VarChar(3)
   annualInterestRate   Decimal              @map("annual_interest_rate") @db.Decimal(9, 4)

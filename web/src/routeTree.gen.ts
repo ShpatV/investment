@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductRouteImport } from './routes/$product'
 import { Route as AcceptInvitationRouteImport } from './routes/accept-invitation'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as InternalAccessRouteImport } from './routes/internal-access'
 import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PortalRouteImport } from './routes/portal'
@@ -52,6 +53,11 @@ const AcceptInvitationRoute = AcceptInvitationRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InternalAccessRoute = InternalAccessRouteImport.update({
+  id: '/internal-access',
+  path: '/internal-access',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KontaktRoute = KontaktRouteImport.update({
@@ -160,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/$product': typeof ProductRoute
   '/accept-invitation': typeof AcceptInvitationRoute
   '/admin': typeof AdminRouteWithChildren
+  '/internal-access': typeof InternalAccessRoute
   '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
   '/portal': typeof PortalRouteWithChildren
@@ -185,6 +192,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$product': typeof ProductRoute
   '/accept-invitation': typeof AcceptInvitationRoute
+  '/internal-access': typeof InternalAccessRoute
   '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
   '/products': typeof ProductsRoute
@@ -211,6 +219,7 @@ export interface FileRoutesById {
   '/$product': typeof ProductRoute
   '/accept-invitation': typeof AcceptInvitationRoute
   '/admin': typeof AdminRouteWithChildren
+  '/internal-access': typeof InternalAccessRoute
   '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
   '/portal': typeof PortalRouteWithChildren
@@ -239,6 +248,7 @@ export interface FileRouteTypes {
     | '/$product'
     | '/accept-invitation'
     | '/admin'
+    | '/internal-access'
     | '/kontakt'
     | '/login'
     | '/portal'
@@ -264,6 +274,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$product'
     | '/accept-invitation'
+    | '/internal-access'
     | '/kontakt'
     | '/login'
     | '/products'
@@ -289,6 +300,7 @@ export interface FileRouteTypes {
     | '/$product'
     | '/accept-invitation'
     | '/admin'
+    | '/internal-access'
     | '/kontakt'
     | '/login'
     | '/portal'
@@ -316,6 +328,7 @@ export interface RootRouteChildren {
   ProductRoute: typeof ProductRoute
   AcceptInvitationRoute: typeof AcceptInvitationRoute
   AdminRoute: typeof AdminRouteWithChildren
+  InternalAccessRoute: typeof InternalAccessRoute
   KontaktRoute: typeof KontaktRoute
   LoginRoute: typeof LoginRoute
   PortalRoute: typeof PortalRouteWithChildren
@@ -354,6 +367,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/internal-access': {
+      id: '/internal-access'
+      path: '/internal-access'
+      fullPath: '/internal-access'
+      preLoaderRoute: typeof InternalAccessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kontakt': {
@@ -545,6 +565,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProductRoute: ProductRoute,
   AcceptInvitationRoute: AcceptInvitationRoute,
   AdminRoute: AdminRouteWithChildren,
+  InternalAccessRoute: InternalAccessRoute,
   KontaktRoute: KontaktRoute,
   LoginRoute: LoginRoute,
   PortalRoute: PortalRouteWithChildren,

@@ -10,14 +10,12 @@ import { useAuth } from "@/lib/auth";
 import { errorMessage, type PortalName } from "@/lib/api/client";
 import { authApi } from "@/lib/api/endpoints";
 
-type Mode = "Client" | "Admin" | "Super admin";
+type Mode = "Client";
 
-const MODES: Mode[] = ["Client", "Admin", "Super admin"];
+const MODES: Mode[] = ["Client"];
 
 const MODE_PORTAL: Record<Mode, PortalName> = {
   Client: "client",
-  Admin: "admin",
-  "Super admin": "super-admin",
 };
 
 const field = "mt-2 w-full border border-input bg-card px-4 py-3.5 outline-none transition-colors focus:border-gold";
@@ -49,7 +47,7 @@ function Login() {
   const { login, status, user } = useAuth();
   const navigate = useNavigate();
   const search = Route.useSearch();
-  const [mode, setMode] = useState<Mode>(search.portal === 'super-admin' ? 'Super admin' : search.portal === 'admin' ? 'Admin' : 'Client');
+  const [mode, setMode] = useState<Mode>("Client");
   const [show, setShow] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -79,7 +77,7 @@ function Login() {
     try {
       const signedIn = await login(MODE_PORTAL[mode], email, password);
       toast.success(`Welcome back, ${signedIn.firstName}.`);
-      const target = mode === "Client" ? "/portal" : "/admin";
+      const target = "/portal";
       await navigate({ to: target, replace: true });
     } catch (caught) {
       setError(errorMessage(caught, "Sign in failed. Check your details and try again."));
@@ -252,14 +250,12 @@ function Login() {
 }
 
 function defaultEmailForMode(mode: Mode): string {
-  if (mode === "Super admin") return "superadmin@example.com";
-  if (mode === "Admin") return "admin@example.com";
+  if (false) return "superadmin@example.com";
+  if (false) return "admin@example.com";
   return "client@example.com";
 }
 
 function defaultPasswordForMode(mode: Mode): string {
-  if (mode === "Super admin") return "SuperAdmin123!";
-  if (mode === "Admin") return "Admin1234!";
-  return "Client1234!";
+  return "Client123!";
 }
 

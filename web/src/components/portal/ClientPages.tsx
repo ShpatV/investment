@@ -66,7 +66,6 @@ export function ClientDashboard() {
   }
 
   const { client, summary, allocation, planning, recentActivity } = dashboard.data;
-  const advisor = user?.advisor ?? null;
 
   return (
     <>
@@ -119,21 +118,15 @@ export function ClientDashboard() {
             format={(value) => usd(value, 0)}
           />
         </Panel>
-        <section className="relative min-h-60 overflow-hidden bg-navy-deep p-7 text-navy-foreground">
-          <img src={office} alt="Avencrestcorp office" className="absolute inset-0 h-full w-full object-cover opacity-25" />
-          <div className="absolute inset-0 bg-veil" />
-          <div className="relative">
-            <p className="eyebrow">Your advisor</p>
-            <h2 className="mt-4 text-3xl">{advisor?.fullName ?? "Not yet assigned"}</h2>
-            <p className="mt-2 text-sm text-navy-muted">{advisor?.email ?? "Your account manager will be introduced shortly."}</p>
-            <Button variant="outline" asChild className="mt-6 border-navy-muted bg-transparent text-navy-foreground">
-              <Link to="/portal/profile">
-                Account details
-                <ArrowRight />
-              </Link>
-            </Button>
-          </div>
-        </section>
+        <Panel title="Account details">
+          <p className="text-sm text-muted-foreground">View and manage your personal information and security settings.</p>
+          <Button variant="outline" asChild className="mt-4">
+            <Link to="/portal/profile">
+              View profile
+              <ArrowRight />
+            </Link>
+          </Button>
+        </Panel>
       </div>
 
       <div className="mt-8">
@@ -269,7 +262,7 @@ export function ClientInvestments() {
   return (
     <>
       <PageHeader eyebrow="Portfolio" title="Investments">
-        Investment terms managed by your advisor.
+        Investment terms managed on your behalf.
       </PageHeader>
       <Investments />
     </>
@@ -289,7 +282,7 @@ export function ClientDocuments() {
   return (
     <>
       <PageHeader eyebrow="Your records" title="Documents">
-        Upload identification or tax documents; statements and agreements are shared by your advisor.
+        Upload identification or tax documents; statements and agreements are shared with you.
       </PageHeader>
       <Documents />
     </>
@@ -323,7 +316,6 @@ export function ClientProfile() {
   }
 
   const client = profile.data;
-  const advisor = client.advisor;
 
   const saveProfile = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -429,16 +421,7 @@ export function ClientProfile() {
                 <dt>Client since</dt>
                 <dd>{fmtDate(client.createdAt)}</dd>
               </div>
-              <div className="flex justify-between gap-4">
-                <dt>Assigned advisor</dt>
-                <dd className="text-right">{advisor?.fullName ?? "Unassigned"}</dd>
-              </div>
-              {advisor?.email && (
-                <div className="flex justify-between gap-4">
-                  <dt>Advisor email</dt>
-                  <dd className="text-right">{advisor.email}</dd>
-                </div>
-              )}
+
               <div className="flex justify-between">
                 <dt>Last sign-in</dt>
                 <dd>{client.lastLoginAt ? fmtDateTime(client.lastLoginAt) : "—"}</dd>

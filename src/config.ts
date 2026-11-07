@@ -157,10 +157,6 @@ export const config = {
   seed: {
     superAdminEmail: env.SEED_SUPER_ADMIN_EMAIL,
     superAdminPassword: env.SEED_SUPER_ADMIN_PASSWORD,
-    adminEmail: env.SEED_ADMIN_EMAIL,
-    adminPassword: env.SEED_ADMIN_PASSWORD,
-    clientEmail: env.SEED_CLIENT_EMAIL,
-    clientPassword: env.SEED_CLIENT_PASSWORD,
   },
 };
 
